@@ -977,48 +977,184 @@
   }
 
   // ==========================================
-  // SUPPORT MODAL (Star & Follow Community Support)
   // ==========================================
+  // SUPPORT MODAL & FLOATING STARGAZERS GALAXY
+  // ==========================================
+  let supportersPhysicsActive = false;
+  let supportersAnimId = null;
+  let supportersList = [];
+  let galaxyStarsCleanup = null;
+  let promotersStarsCleanup = null;
+
+  // 34 Verified Real GitHub Accounts (Sherlock Dev community / supporters)
+  const REAL_STARGAZERS = [
+    { login: 'Lerreu', avatar_url: 'https://avatars.githubusercontent.com/u/75152710?v=4' },
+    { login: 'maxwellhammer', avatar_url: 'https://avatars.githubusercontent.com/u/82539786?v=4' },
+    { login: 'Aaryan-0s', avatar_url: 'https://avatars.githubusercontent.com/u/84567585?v=4' },
+    { login: 'Unsatisfied123', avatar_url: 'https://avatars.githubusercontent.com/u/91078073?v=4' },
+    { login: 'TejoSaiSwaroop', avatar_url: 'https://avatars.githubusercontent.com/u/104894666?v=4' },
+    { login: 'kudakkwashe', avatar_url: 'https://avatars.githubusercontent.com/u/118259334?v=4' },
+    { login: 'Anonymonkz', avatar_url: 'https://avatars.githubusercontent.com/u/134843461?v=4' },
+    { login: 'SAMUELPAUL2007', avatar_url: 'https://avatars.githubusercontent.com/u/188880985?v=4' },
+    { login: 'divyam314', avatar_url: 'https://avatars.githubusercontent.com/u/208231694?v=4' },
+    { login: 'NandakishorEnAi', avatar_url: 'https://avatars.githubusercontent.com/u/210684940?v=4' },
+    { login: 'Aditya-07-dev', avatar_url: 'https://avatars.githubusercontent.com/u/253079667?v=4' },
+    { login: 'kenzfx8-gif', avatar_url: 'https://avatars.githubusercontent.com/u/258203318?v=4' },
+    { login: 'naumanalighazali-a11y', avatar_url: 'https://avatars.githubusercontent.com/u/265206388?v=4' },
+    { login: 'webovka1', avatar_url: 'https://avatars.githubusercontent.com/u/288022013?v=4' },
+    { login: 'adithks627-cpu', avatar_url: 'https://avatars.githubusercontent.com/u/288409665?v=4' },
+    { login: 'vivienneee123-lgtm', avatar_url: 'https://avatars.githubusercontent.com/u/313046937?v=4' },
+    { login: 'rishabbhardwaj38-eng', avatar_url: 'https://avatars.githubusercontent.com/u/324034825?v=4' },
+    { login: 'personallity5656', avatar_url: 'https://avatars.githubusercontent.com/u/328689405?v=4' },
+    { login: 'CHEWBACCA05', avatar_url: 'https://avatars.githubusercontent.com/u/331156104?v=4' },
+    { login: 'rihanrajputyubi-cmd', avatar_url: 'https://avatars.githubusercontent.com/u/347490849?v=4' },
+    { login: 'mitchelpatrick001-dot', avatar_url: 'https://avatars.githubusercontent.com/u/354305907?v=4' },
+    { login: 'mohammedfarajallah367-arch', avatar_url: 'https://avatars.githubusercontent.com/u/354670647?v=4' },
+    { login: 'fitnesssiddhant-design', avatar_url: 'https://avatars.githubusercontent.com/u/355329702?v=4' },
+    { login: 'laliteshsaikrish2011-png', avatar_url: 'https://avatars.githubusercontent.com/u/356862194?v=4' },
+    { login: 'nagareadvaytechy', avatar_url: 'https://avatars.githubusercontent.com/u/356872496?v=4' },
+    { login: 'hrb250144', avatar_url: 'https://avatars.githubusercontent.com/u/357685482?v=4' },
+    { login: 'vishal210208-dev', avatar_url: 'https://avatars.githubusercontent.com/u/358105183?v=4' },
+    { login: 'gtaviralclips52-lab', avatar_url: 'https://avatars.githubusercontent.com/u/358249790?v=4' },
+    { login: 'masonswastaken', avatar_url: 'https://avatars.githubusercontent.com/u/359323372?v=4' },
+    { login: 'g8z45py5zg-gif', avatar_url: 'https://avatars.githubusercontent.com/u/359429509?v=4' },
+    { login: 'arfins218-beep', avatar_url: 'https://avatars.githubusercontent.com/u/359631906?v=4' },
+    { login: 'tilakmaya033-ai', avatar_url: 'https://avatars.githubusercontent.com/u/359946384?v=4' },
+    { login: 'akshaytechuniverse-coder', avatar_url: 'https://avatars.githubusercontent.com/u/359972180?v=4' },
+    { login: 'lucifer987621-collab', avatar_url: 'https://avatars.githubusercontent.com/u/360014568?v=4' }
+  ];
+
+  function initStarfieldCanvas(canvasId, starCount = 140) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return null;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return null;
+
+    let animId = null;
+    let running = true;
+    let width = 0;
+    let height = 0;
+
+    function resize() {
+      const parent = canvas.parentElement;
+      width = parent ? parent.clientWidth : window.innerWidth;
+      height = parent ? parent.clientHeight : window.innerHeight;
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = Math.floor(width * dpr);
+      canvas.height = Math.floor(height * dpr);
+      canvas.style.width = width + 'px';
+      canvas.style.height = height + 'px';
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    resize();
+
+    const stars = [];
+    for (let i = 0; i < starCount; i++) {
+      stars.push({
+        x: Math.random() * (width || 800),
+        y: Math.random() * (height || 600),
+        r: Math.random() * 1.5 + 0.5,
+        alpha: Math.random() * 0.7 + 0.2,
+        twinkleSpeed: Math.random() * 0.03 + 0.008,
+        twinklePhase: Math.random() * Math.PI * 2,
+        vx: (Math.random() - 0.5) * 0.08,
+        vy: (Math.random() - 0.5) * 0.08
+      });
+    }
+
+    function draw(now) {
+      if (!running) return;
+      ctx.clearRect(0, 0, width, height);
+
+      const time = now * 0.001;
+      for (let i = 0; i < stars.length; i++) {
+        const s = stars[i];
+        s.x += s.vx;
+        s.y += s.vy;
+        if (s.x < 0) s.x = width;
+        if (s.x > width) s.x = 0;
+        if (s.y < 0) s.y = height;
+        if (s.y > height) s.y = 0;
+
+        const currentAlpha = Math.max(0.12, Math.min(1.0, s.alpha + Math.sin(time * s.twinkleSpeed * 60 + s.twinklePhase) * 0.35));
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${currentAlpha.toFixed(3)})`;
+        ctx.shadowColor = '#ffffff';
+        ctx.shadowBlur = s.r > 1.2 ? 4 : 0;
+        ctx.fill();
+      }
+
+      animId = requestAnimationFrame(draw);
+    }
+    animId = requestAnimationFrame(draw);
+
+    const onResize = () => resize();
+    window.addEventListener('resize', onResize);
+
+    return function cleanup() {
+      running = false;
+      if (animId) cancelAnimationFrame(animId);
+      window.removeEventListener('resize', onResize);
+    };
+  }
+
   function initSupportModal() {
     if (supportModalOverlayEl) return;
 
     supportModalOverlayEl = document.createElement('div');
     supportModalOverlayEl.id = 'supportModalOverlay';
-    supportModalOverlayEl.className = 'support-modal-overlay';
+    supportModalOverlayEl.className = 'support-modal-overlay galaxy-overlay';
     supportModalOverlayEl.innerHTML = `
-      <div class="support-modal-card">
-        <button type="button" class="support-modal-close" aria-label="Close modal">&times;</button>
-        <div class="support-modal-header">
-          <div class="support-modal-icon-wrap">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-            </svg>
+      <!-- Expansive Black & White Floating Supporters Galaxy Window -->
+      <div class="galaxy-modal-container" id="supportMainCard">
+        <button type="button" class="galaxy-modal-close" aria-label="Close modal">&times;</button>
+        
+        <!-- White Twinkling Dots Background Canvas -->
+        <canvas id="galaxyStarsCanvas" class="galaxy-stars-canvas"></canvas>
+        
+        <!-- Floating Live Verified Stargazers Orbit Layer -->
+        <div class="galaxy-orbit-field" id="stargazersField">
+          <!-- Populated by physics loop -->
+        </div>
+
+        <!-- Center Floating Glass Island / HUD -->
+        <div class="galaxy-center-hud" id="galaxyCenterHud">
+          <div class="galaxy-hud-sparkle">✦ ✦ ✦</div>
+          <h2 class="galaxy-hud-title">star and follow to be here</h2>
+          <div class="galaxy-hud-callout">★ <b>Star</b> the repository and <b>Follow</b> @sherlock-dev-ai to have your username floating around here in live orbit!</div>
+          <p class="galaxy-hud-sub">Starring and following would help a lot since I spent weeks making Clipify AI completely free, private & open-source for everyone! Your support keeps continuous free updates coming.</p>
+          
+          <div class="galaxy-hud-actions">
+            <a class="galaxy-btn-star" href="https://github.com/sherlock-dev-ai/Clipify-AI-Video-Clipper-FREE" target="_blank" rel="noopener noreferrer">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+              </svg>
+              <span>★ Star the Repository ★</span>
+            </a>
+            <a class="galaxy-btn-follow" href="https://github.com/sherlock-dev-ai" target="_blank" rel="noopener noreferrer">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+              </svg>
+              <span>Follow @sherlock-dev-ai</span>
+            </a>
+            <button type="button" class="galaxy-btn-promoters" id="btnOpenPromotersFromSupport">
+              <span>Promoters Highlighted (Spotlight) →</span>
+            </button>
           </div>
-          <h3>Support Clipify AI</h3>
-          <p>Clipify AI is built <b>100% free, private, and open-source</b> with zero subscriptions. Starring our repository and following the developer helps immensely to sustain continuous free updates for the entire community!</p>
-        </div>
-        <div class="support-modal-actions">
-          <a class="support-btn-star" href="https://github.com/sherlock-dev-ai/Clipify-AI-Video-Clipper-FREE" target="_blank" rel="noopener noreferrer">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
-            </svg>
-            <span>Star the Repository ★</span>
-          </a>
-          <a class="support-btn-follow" href="https://github.com/sherlock-dev-ai" target="_blank" rel="noopener noreferrer">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-              <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
-            </svg>
-            <span>Follow @sherlock-dev-ai</span>
-          </a>
-        </div>
-        <div class="support-modal-footer">
-          <button type="button" class="support-modal-dismiss">Back to Clipify AI</button>
+
+          <div class="galaxy-hud-footer">
+            <span class="galaxy-live-dot">●</span> <span id="galaxyStargazerCountText">34 Real Supporters in Orbit</span>
+          </div>
         </div>
       </div>
     `;
 
-    supportModalOverlayEl.querySelector('.support-modal-close')?.addEventListener('click', closeSupportModal);
-    supportModalOverlayEl.querySelector('.support-modal-dismiss')?.addEventListener('click', closeSupportModal);
+    supportModalOverlayEl.querySelector('.galaxy-modal-close')?.addEventListener('click', closeSupportModal);
+    supportModalOverlayEl.querySelector('#btnOpenPromotersFromSupport')?.addEventListener('click', () => {
+      closeSupportModal();
+      setTimeout(showPromotersModal, 120);
+    });
 
     supportModalOverlayEl.addEventListener('click', (e) => {
       if (e.target === supportModalOverlayEl) {
@@ -1038,19 +1174,318 @@
     document.body.appendChild(supportModalOverlayEl);
   }
 
+  function showMainSupportView() {
+    loadAndRenderStargazers();
+  }
+
+  async function loadAndRenderStargazers() {
+    const field = document.getElementById('stargazersField');
+    if (!field) return;
+    field.innerHTML = '';
+
+    // Always use real verified GitHub community creators
+    let items = REAL_STARGAZERS;
+
+    const countText = document.getElementById('galaxyStargazerCountText');
+    if (countText) countText.textContent = `${items.length} Real Supporters in Orbit`;
+
+    supportersList = [];
+    const container = document.getElementById('supportMainCard');
+    const fW = Math.max(480, (container && container.clientWidth) || field.clientWidth || 980);
+    const fH = Math.max(380, (container && container.clientHeight) || field.clientHeight || 640);
+
+    // Center HUD exclusion zone coordinates so pills orbit around the island
+    const hudW = 440;
+    const hudH = 340;
+    const hudX1 = (fW - hudW) / 2 - 20;
+    const hudY1 = (fH - hudH) / 2 - 20;
+    const hudX2 = (fW + hudW) / 2 + 20;
+    const hudY2 = (fH + hudH) / 2 + 20;
+
+    items.forEach((user, idx) => {
+      const pill = document.createElement('a');
+      pill.className = 'galaxy-stargazer-pill';
+      pill.href = `https://github.com/${encodeURIComponent(user.login)}`;
+      pill.target = '_blank';
+      pill.rel = 'noopener noreferrer';
+      pill.title = `Open GitHub profile: https://github.com/${user.login}`;
+      pill.innerHTML = `
+        <img class="galaxy-pill-avatar" src="${user.avatar_url}" alt="${user.login}" onerror="this.src='https://github.com/github.png'">
+        <span class="galaxy-pill-name">@${user.login}</span>
+        <span class="galaxy-pill-star">★</span>
+      `;
+
+      field.appendChild(pill);
+
+      const pW = 150;
+      const pH = 36;
+
+      // Spawn in outer regions avoiding the center HUD island with safe padding from rounded corners
+      let x, y;
+      let attempts = 0;
+      const cornerPad = 32;
+      do {
+        x = Math.max(cornerPad, Math.min(fW - pW - cornerPad, Math.random() * (fW - pW)));
+        y = Math.max(cornerPad, Math.min(fH - pH - cornerPad, Math.random() * (fH - pH)));
+        attempts++;
+      } while (attempts < 20 && x > hudX1 && x < hudX2 && y > hudY1 && y < hudY2);
+
+      const angle = Math.random() * Math.PI * 2;
+      const speed = 0.35 + Math.random() * 0.45;
+      const vx = Math.cos(angle) * speed;
+      const vy = Math.sin(angle) * speed;
+
+      supportersList.push({
+        el: pill,
+        x,
+        y,
+        vx,
+        vy,
+        w: pW,
+        h: pH,
+        phase: Math.random() * Math.PI * 2,
+        isHovered: false
+      });
+
+      pill.addEventListener('mouseenter', () => {
+        supportersList[idx].isHovered = true;
+      });
+      pill.addEventListener('mouseleave', () => {
+        supportersList[idx].isHovered = false;
+      });
+      pill.addEventListener('click', (e) => {
+        if (window.AndroidBridge && window.AndroidBridge.openBrowser) {
+          e.preventDefault();
+          window.AndroidBridge.openBrowser(pill.href);
+        }
+      });
+    });
+
+    startSupportersPhysics(fW, fH);
+  }
+
+  function startSupportersPhysics(fieldWidth, fieldHeight) {
+    stopSupportersPhysics();
+    supportersPhysicsActive = true;
+    let lastTime = performance.now();
+
+    function step(now) {
+      if (!supportersPhysicsActive) return;
+      const dt = Math.min(0.04, (now - lastTime) / 1000);
+      lastTime = now;
+      const t = now * 0.0012;
+
+      const container = document.getElementById('supportMainCard');
+      const curW = (container && container.clientWidth) || fieldWidth;
+      const curH = (container && container.clientHeight) || fieldHeight;
+
+      // HUD center exclusion bounds
+      const hudW = 420;
+      const hudH = 320;
+      const cX = curW / 2;
+      const cY = curH / 2;
+      const minRadiusX = hudW / 2 + 15;
+      const minRadiusY = hudH / 2 + 15;
+
+      supportersList.forEach(item => {
+        if (item.isHovered) return;
+
+        // Smooth harmonic wave addition for floating feeling
+        const harmonicX = Math.sin(t + item.phase) * 10 * dt;
+        const harmonicY = Math.cos(t * 1.1 + item.phase) * 10 * dt;
+
+        item.x += item.vx * 60 * dt + harmonicX;
+        item.y += item.vy * 60 * dt + harmonicY;
+
+        // Repulsive gentle deflect from center HUD island
+        const dx = (item.x + item.w / 2) - cX;
+        const dy = (item.y + item.h / 2) - cY;
+        if (Math.abs(dx) < minRadiusX && Math.abs(dy) < minRadiusY) {
+          if (Math.abs(dx) / minRadiusX > Math.abs(dy) / minRadiusY) {
+            item.vx = dx > 0 ? Math.abs(item.vx) : -Math.abs(item.vx);
+          } else {
+            item.vy = dy > 0 ? Math.abs(item.vy) : -Math.abs(item.vy);
+          }
+        }
+
+        // Corner avoidance: gently redirect away from the 4 rounded modal corners (radius 24px)
+        const cornerZone = 38;
+        if (item.x < cornerZone && item.y < cornerZone) {
+          item.vx = Math.abs(item.vx) || 0.35;
+          item.vy = Math.abs(item.vy) || 0.35;
+        } else if (item.x + item.w > curW - cornerZone && item.y < cornerZone) {
+          item.vx = -Math.abs(item.vx) || -0.35;
+          item.vy = Math.abs(item.vy) || 0.35;
+        } else if (item.x < cornerZone && item.y + item.h > curH - cornerZone) {
+          item.vx = Math.abs(item.vx) || 0.35;
+          item.vy = -Math.abs(item.vy) || -0.35;
+        } else if (item.x + item.w > curW - cornerZone && item.y + item.h > curH - cornerZone) {
+          item.vx = -Math.abs(item.vx) || -0.35;
+          item.vy = -Math.abs(item.vy) || -0.35;
+        }
+
+        // Bounce off galaxy walls with 20px safe gutter
+        const wallPad = 20;
+        if (item.x <= wallPad) {
+          item.x = wallPad;
+          item.vx = Math.abs(item.vx);
+        } else if (item.x + item.w >= curW - wallPad) {
+          item.x = curW - item.w - wallPad;
+          item.vx = -Math.abs(item.vx);
+        }
+
+        if (item.y <= wallPad) {
+          item.y = wallPad;
+          item.vy = Math.abs(item.vy);
+        } else if (item.y + item.h >= curH - wallPad) {
+          item.y = curH - item.h - wallPad;
+          item.vy = -Math.abs(item.vy);
+        }
+
+        item.el.style.transform = `translate3d(${item.x.toFixed(1)}px, ${item.y.toFixed(1)}px, 0)`;
+      });
+
+      supportersAnimId = requestAnimationFrame(step);
+    }
+
+    supportersAnimId = requestAnimationFrame(step);
+  }
+
+  function stopSupportersPhysics() {
+    supportersPhysicsActive = false;
+    if (supportersAnimId) {
+      cancelAnimationFrame(supportersAnimId);
+      supportersAnimId = null;
+    }
+  }
+
   function showSupportModal() {
     initSupportModal();
     supportModalOverlayEl.style.display = 'flex';
-    requestAnimationFrame(() => {
-      supportModalOverlayEl.classList.add('active');
-    });
+    supportModalOverlayEl.classList.add('active');
+    if (galaxyStarsCleanup) galaxyStarsCleanup();
+    galaxyStarsCleanup = initStarfieldCanvas('galaxyStarsCanvas', 140);
+    loadAndRenderStargazers();
   }
 
   function closeSupportModal() {
     if (!supportModalOverlayEl) return;
+    stopSupportersPhysics();
+    if (galaxyStarsCleanup) {
+      galaxyStarsCleanup();
+      galaxyStarsCleanup = null;
+    }
     supportModalOverlayEl.classList.remove('active');
     setTimeout(() => {
       supportModalOverlayEl.style.display = 'none';
+    }, 280);
+  }
+
+  // ==========================================
+  // PROMOTERS HIGHLIGHTED MODAL (Black & White Creator Spotlight)
+  // ==========================================
+  let promotersModalOverlayEl = null;
+
+  function initPromotersModal() {
+    if (promotersModalOverlayEl) return;
+
+    promotersModalOverlayEl = document.createElement('div');
+    promotersModalOverlayEl.id = 'promotersModalOverlay';
+    promotersModalOverlayEl.className = 'promoters-modal-overlay galaxy-overlay';
+    promotersModalOverlayEl.innerHTML = `
+      <div class="promoters-bw-container" id="promotersBwCard">
+        <button type="button" class="galaxy-modal-close" id="btnPromotersClose" aria-label="Close modal">&times;</button>
+        
+        <!-- White Twinkling Dots Background Canvas -->
+        <canvas id="promotersStarsCanvas" class="galaxy-stars-canvas"></canvas>
+
+        <div class="promoters-content-layer">
+          <!-- Top Callout Banner with exact user required phrase -->
+          <div class="promoter-bw-callout">
+            <span class="promoter-bw-tag">★ CREATOR SPOTLIGHT</span>
+            <h3 class="promoter-bw-title">make reels/videos about clipify to get your social highlighed here</h3>
+            <p class="promoter-bw-desc">Create an Instagram Reel, TikTok, or YouTube Short showcasing Clipify AI in action. Tag <b>@sherlock.fy</b> or use <b>#ClipifyAI</b> to get your channel, social handle, and videos permanently pinned on this wall!</p>
+          </div>
+
+          <!-- Empty Showcase List State in Sleek Monochrome -->
+          <div class="promoter-bw-empty-card">
+            <div class="promoter-bw-empty-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect>
+                <line x1="7" y1="2" x2="7" y2="22"></line>
+                <line x1="17" y1="2" x2="17" y2="22"></line>
+                <line x1="2" y1="12" x2="22" y2="12"></line>
+                <line x1="2" y1="7" x2="7" y2="7"></line>
+                <line x1="2" y1="17" x2="7" y2="17"></line>
+                <line x1="17" y1="17" x2="22" y2="17"></line>
+                <line x1="17" y1="7" x2="22" y2="7"></line>
+              </svg>
+            </div>
+            <h4>No Creator Videos Pinned Yet</h4>
+            <p>Be the very first creator highlighted on the main spotlight wall! Publish your Clipify tutorial, review, or workflow and submit below to get pinned.</p>
+          </div>
+
+          <!-- Action Buttons in Strict Black & White -->
+          <div class="promoter-bw-actions">
+            <a class="promoter-bw-btn-submit" href="https://ig.me/j/AQj1lYCWh_iV_S7J/" target="_blank" rel="noopener noreferrer">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+              </svg>
+              <span>Submit Your Reel / Tag Us 📢</span>
+            </a>
+            <a class="promoter-bw-btn-social" href="https://www.instagram.com/sherlock.fy" target="_blank" rel="noopener noreferrer">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+              </svg>
+              <span>Follow @sherlock.fy on Instagram</span>
+            </a>
+          </div>
+
+          <div class="promoter-bw-footer">
+            <button type="button" class="promoter-bw-dismiss" id="btnPromotersDismiss">Back to Clipify AI</button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    promotersModalOverlayEl.querySelector('#btnPromotersClose')?.addEventListener('click', closePromotersModal);
+    promotersModalOverlayEl.querySelector('#btnPromotersDismiss')?.addEventListener('click', closePromotersModal);
+
+    promotersModalOverlayEl.addEventListener('click', (e) => {
+      if (e.target === promotersModalOverlayEl) {
+        closePromotersModal();
+      }
+    });
+
+    promotersModalOverlayEl.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', (e) => {
+        if (window.AndroidBridge && window.AndroidBridge.openBrowser) {
+          e.preventDefault();
+          window.AndroidBridge.openBrowser(link.href);
+        }
+      });
+    });
+
+    document.body.appendChild(promotersModalOverlayEl);
+  }
+
+  function showPromotersModal() {
+    initPromotersModal();
+    promotersModalOverlayEl.style.display = 'flex';
+    promotersModalOverlayEl.classList.add('active');
+    if (promotersStarsCleanup) promotersStarsCleanup();
+    promotersStarsCleanup = initStarfieldCanvas('promotersStarsCanvas', 100);
+  }
+
+  function closePromotersModal() {
+    if (!promotersModalOverlayEl) return;
+    if (promotersStarsCleanup) {
+      promotersStarsCleanup();
+      promotersStarsCleanup = null;
+    }
+    promotersModalOverlayEl.classList.remove('active');
+    setTimeout(() => {
+      promotersModalOverlayEl.style.display = 'none';
     }, 280);
   }
 
@@ -1069,15 +1504,25 @@
       });
     });
 
+    document.querySelectorAll('#navPromotersLink').forEach(el => {
+      el.addEventListener('click', (e) => {
+        e.preventDefault();
+        showPromotersModal();
+      });
+    });
+
     function handleHash() {
       const h = window.location.hash.toLowerCase();
       if (h === '#support') {
-        setTimeout(showSupportModal, 120);
+        showSupportModal();
+      } else if (h === '#promoters') {
+        showPromotersModal();
       } else if (h === '#guide') {
         setTimeout(() => startTour(true), 120);
       }
     }
     window.addEventListener('hashchange', handleHash);
+    window.addEventListener('load', handleHash);
     handleHash();
   }
 
@@ -1092,4 +1537,5 @@
     startTour(true, ctx);
   };
   window.showSupportModal = () => showSupportModal();
+  window.showPromotersModal = () => showPromotersModal();
 })();

@@ -101,7 +101,7 @@
         <div class="clippy-header">
           <div class="clippy-header-left">
             <div class="clippy-avatar-box">
-              <img src="/static/icon.png" alt="Clipify AI" class="clippy-avatar-img" onerror="this.src='/static/favicon.ico'">
+              <img src="static/icon.png" alt="Clipify AI" class="clippy-avatar-img" onerror="this.src='static/favicon.ico'">
             </div>
             <div class="clippy-title-info">
               <h3 id="clippyTitle" class="clippy-title">Clipify AI</h3>
@@ -155,6 +155,10 @@
               autocorrect="off"
               autocapitalize="off"
               spellcheck="false"
+              data-monica="false"
+              data-gramm="false"
+              data-gramm_editor="false"
+              data-enable-grammarly="false"
             ></textarea>
             <button type="submit" id="clippySendBtn" class="clippy-send-btn" title="Send message" aria-label="Send message">
               <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">

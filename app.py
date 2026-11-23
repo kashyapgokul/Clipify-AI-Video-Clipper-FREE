@@ -2709,9 +2709,9 @@ def import_youtube():
             command = [*yt_dlp_cmd, "--no-playlist", "--no-warnings", "--newline", "--progress",
                        "--progress-template", "download:[clip-prog] %(progress._percent_str)s|%(progress.downloaded_bytes)s|%(progress.total_bytes|progress.total_bytes_estimate)s|%(progress.speed)s|%(progress.eta)s",
                        "--restrict-filenames", "--merge-output-format", "mp4",
-                       "--socket-timeout", "25", "--retries", "5", "--fragment-retries", "5",
+                       "--socket-timeout", "60", "--retries", "10", "--fragment-retries", "10",
                        "--concurrent-fragments", "4", "--buffer-size", "16M", "--http-chunk-size", "10M",
-                       "-f", "bestvideo[height<=720][ext=mp4]+bestaudio[ext=m4a]/best[height<=720][ext=mp4]/bestvideo[height<=720]+bestaudio/best[height<=720]/bestvideo[height<=1080]+bestaudio/best",
+                       "-f", "bestvideo[height<=720][ext=mp4]+bestaudio[ext=m4a]/bestvideo[height<=480][ext=mp4]+bestaudio[ext=m4a]/bestvideo[height<=720]+bestaudio/best[height<=720]/bestvideo[height<=480]+bestaudio/best[height<=480]/best",
                        "--ffmpeg-location", str(Path(ffmpeg_path).parent)]
             node_binary = shutil.which("node") or shutil.which("node.exe")
             if node_binary:
@@ -3067,6 +3067,25 @@ def start():
     if max_duration <= min_duration:
         max_duration = min_duration + 1
 
+    def _safe_f(v: Any, default: float) -> float:
+        try:
+            if v is None or v == "" or str(v).lower() in ("nan", "null", "undefined"):
+                return default
+            return float(v)
+        except (TypeError, ValueError):
+            return default
+
+    def _safe_i(v: Any, default: int) -> int:
+        try:
+            if v is None or v == "" or str(v).lower() in ("nan", "null", "undefined"):
+                return default
+            return int(float(v))
+        except (TypeError, ValueError):
+            return default
+
+    trim_start = _safe_f(data.get("trim_start", data.get("trimStart")), 0.0)
+    trim_end = _safe_f(data.get("trim_end", data.get("trimEnd")), 0.0)
+
     # A source shorter than the requested minimum can never yield a clip, and
     # the pipeline then fails with "No final captioned Shorts were produced."
     # Shorten the requested window to fit the footage instead, and say so.
@@ -3075,13 +3094,48 @@ def start():
         return jsonify({"error": "Job not found."}), 404
     input_dir = job_dir / "input"
     if input_dir.is_dir():
-        sources = sorted(p for p in input_dir.iterdir() if p.suffix.lower() in {".mp4", ".mov", ".mkv", ".webm", ".avi", ".m4v"})
+        sources = sorted(p for p in input_dir.iterdir() if p.suffix.lower() in {".mp4", ".mov", ".mkv", ".webm", ".avi", ".m4v"} and not p.name.startswith("original_"))
         if sources:
             if all(s.stat().st_size < 1024 for s in sources):
                 return jsonify({
                     "error": "The input video file is incomplete or empty (< 1 KB). The download may still be running, was interrupted, or disk space was exhausted. Please wait for the download to finish or re-import the video."
                 }), 400
             source_seconds = _media_duration_seconds(str(sources[0]))
+
+            # If user selected a trimmed window in Beta or manual controls, extract it cleanly
+            if trim_end > trim_start and (trim_start > 0.0 or (source_seconds > 0 and trim_end < source_seconds - 1.0)):
+                ffmpeg_bin = _ffmpeg_path()
+                trimmed_dest = input_dir / f"trimmed_{job_id}.mp4"
+                trim_cmd = [
+                    ffmpeg_bin, "-y", "-ss", str(trim_start), "-to", str(trim_end),
+                    "-i", str(sources[0]), "-c:v", "libx264", "-preset", "veryfast",
+                    "-crf", "18", "-c:a", "aac", "-b:a", "192k", "-movflags", "+faststart",
+                    str(trimmed_dest)
+                ]
+                trim_proc = _run_hidden(trim_cmd, timeout=300, check=False)
+                if trim_proc.returncode == 0 and trimmed_dest.is_file() and trimmed_dest.stat().st_size >= 1024:
+                    orig_target = input_dir / f"original_{sources[0].name}"
+                    sources[0].rename(orig_target)
+                    trimmed_dest.rename(sources[0])
+                    source_seconds = _media_duration_seconds(str(sources[0]))
+                    emit(job_id, "log", f"[Setup] Trimmed video footage to range {trim_start:.1f}s – {trim_end:.1f}s ({source_seconds:.1f}s)")
+            elif source_seconds and source_seconds > 2400.0:
+                # Extra-long stream safety: if stream is > 40 minutes and untrimmed, automatically focus on the first 30 minutes
+                ffmpeg_bin = _ffmpeg_path()
+                capped_dest = input_dir / f"capped_{job_id}.mp4"
+                cap_cmd = [
+                    ffmpeg_bin, "-y", "-t", "1800",
+                    "-i", str(sources[0]), "-c:v", "copy", "-c:a", "copy", "-movflags", "+faststart",
+                    str(capped_dest)
+                ]
+                cap_proc = _run_hidden(cap_cmd, timeout=120, check=False)
+                if cap_proc.returncode == 0 and capped_dest.is_file() and capped_dest.stat().st_size >= 1024:
+                    orig_target = input_dir / f"original_{sources[0].name}"
+                    sources[0].rename(orig_target)
+                    capped_dest.rename(sources[0])
+                    source_seconds = _media_duration_seconds(str(sources[0]))
+                    emit(job_id, "log", f"[Setup] Long video stream ({sources[0].stat().st_size / (1024*1024):.1f} MB) auto-focused to first 30 minutes ({source_seconds:.0f}s) for rapid high-impact candidate clipping.")
+
             if source_seconds and source_seconds < min_duration:
                 fitted_max = max(6, int(source_seconds))
                 fitted_min = max(5, min(fitted_max - 1, int(source_seconds * 0.6)))
@@ -3115,7 +3169,7 @@ def start():
                 _input_check = _job_dir_check / "input"
                 _disk_sources = sorted(
                     p for p in (_input_check.iterdir() if _input_check.is_dir() else [])
-                    if p.suffix.lower() in {".mp4", ".mov", ".mkv", ".webm", ".avi"}
+                    if p.suffix.lower() in {".mp4", ".mov", ".mkv", ".webm", ".avi"} and not p.name.startswith("original_")
                 )
                 if _disk_sources:
                     job = {
@@ -3153,35 +3207,35 @@ def start():
         "logo_enabled": bool(branding_raw.get("logo_enabled", branding_raw.get("watermark_enabled", False))),
         "logo_path": str(branding_raw.get("logo_path", branding_raw.get("watermark_path", str(ROOT / "static" / "clipify-ai-mark.png")))).strip(),
         "logo_position": str(branding_raw.get("logo_position", branding_raw.get("watermark_position", "top-right"))),
-        "logo_size": max(1, min(50, int(branding_raw.get("logo_size", branding_raw.get("watermark_size", 8))))),
-        "logo_opacity": max(0, min(100, int(branding_raw.get("logo_opacity", branding_raw.get("watermark_opacity", 80))))),
-        "logo_margin": max(0, min(500, int(branding_raw.get("logo_margin", branding_raw.get("watermark_margin", 40))))),
-        "logo_x": max(0, min(100, float(branding_raw.get("logo_x", branding_raw.get("watermark_x", 92))))),
-        "logo_y": max(0, min(100, float(branding_raw.get("logo_y", branding_raw.get("watermark_y", 8))))),
+        "logo_size": max(1, min(50, _safe_i(branding_raw.get("logo_size", branding_raw.get("watermark_size")), 8))),
+        "logo_opacity": max(0, min(100, _safe_i(branding_raw.get("logo_opacity", branding_raw.get("watermark_opacity")), 80))),
+        "logo_margin": max(0, min(500, _safe_i(branding_raw.get("logo_margin", branding_raw.get("watermark_margin")), 40))),
+        "logo_x": max(0.0, min(100.0, _safe_f(branding_raw.get("logo_x", branding_raw.get("watermark_x")), 92.0))),
+        "logo_y": max(0.0, min(100.0, _safe_f(branding_raw.get("logo_y", branding_raw.get("watermark_y")), 8.0))),
         "logo_bg_remove": bool(branding_raw.get("logo_bg_remove", branding_raw.get("watermark_bg_remove", False))),
         "logo_bg_color": "#" + _hex6(str(branding_raw.get("logo_bg_color", branding_raw.get("watermark_bg_color", "#9B5CFF")))),
-        "logo_bg_similarity": max(0.01, min(1.0, float(branding_raw.get("logo_bg_similarity", branding_raw.get("watermark_bg_similarity", 0.22))))),
-        "logo_bg_blend": max(0.0, min(1.0, float(branding_raw.get("logo_bg_blend", 0.05)))),
+        "logo_bg_similarity": max(0.01, min(1.0, _safe_f(branding_raw.get("logo_bg_similarity", branding_raw.get("watermark_bg_similarity")), 0.22))),
+        "logo_bg_blend": max(0.0, min(1.0, _safe_f(branding_raw.get("logo_bg_blend"), 0.05))),
         "text_enabled": bool(branding_raw.get("text_enabled", False)),
         "text": str(branding_raw.get("text", "")).strip()[:100],
         "text_position": str(branding_raw.get("text_position", "bottom-center")),
-        "text_size": max(3, min(12, int(branding_raw.get("text_size", 6)))),
+        "text_size": max(3, min(12, _safe_i(branding_raw.get("text_size"), 6))),
         "text_color": str(branding_raw.get("text_color", "#FFFFFF")),
         "text_bg_enabled": bool(branding_raw.get("text_bg_enabled", True)),
         "text_bg_color": str(branding_raw.get("text_bg_color", "#000000")),
-        "text_bg_opacity": max(0, min(100, int(branding_raw.get("text_bg_opacity", 65)))),
-        "text_margin": max(20, min(500, int(branding_raw.get("text_margin", 110)))),
-        "text_x": max(0, min(100, float(branding_raw.get("text_x", 50)))),
-        "text_y": max(0, min(100, float(branding_raw.get("text_y", 75)))),
+        "text_bg_opacity": max(0, min(100, _safe_i(branding_raw.get("text_bg_opacity"), 65))),
+        "text_margin": max(20, min(500, _safe_i(branding_raw.get("text_margin"), 110))),
+        "text_x": max(0.0, min(100.0, _safe_f(branding_raw.get("text_x"), 50.0))),
+        "text_y": max(0.0, min(100.0, _safe_f(branding_raw.get("text_y"), 75.0))),
         "watermark_text_enabled": bool(branding_raw.get("watermark_text_enabled", False)),
         "watermark_text": str(branding_raw.get("watermark_text", "")).strip()[:100],
         "watermark_text_position": str(branding_raw.get("watermark_text_position", "center")),
-        "watermark_text_size": max(3, min(20, int(branding_raw.get("watermark_text_size", 6)))),
-        "watermark_text_opacity": max(0, min(100, int(branding_raw.get("watermark_text_opacity", 35)))),
-        "watermark_text_angle": max(-45, min(45, int(branding_raw.get("watermark_text_angle", -20)))),
+        "watermark_text_size": max(3, min(20, _safe_i(branding_raw.get("watermark_text_size"), 6))),
+        "watermark_text_opacity": max(0, min(100, _safe_i(branding_raw.get("watermark_text_opacity"), 35))),
+        "watermark_text_angle": max(-45, min(45, _safe_i(branding_raw.get("watermark_text_angle"), -20))),
         "watermark_text_color": "#" + _hex6(str(branding_raw.get("watermark_text_color", "#FFFFFF"))),
-        "watermark_text_x": max(0, min(100, float(branding_raw.get("watermark_text_x", 50)))),
-        "watermark_text_y": max(0, min(100, float(branding_raw.get("watermark_text_y", 50)))),
+        "watermark_text_x": max(0.0, min(100.0, _safe_f(branding_raw.get("watermark_text_x"), 50.0))),
+        "watermark_text_y": max(0.0, min(100.0, _safe_f(branding_raw.get("watermark_text_y"), 50.0))),
         "premium_captions": bool(branding_raw.get("premium_captions", data.get("premium_captions", True))),
         "situational_cues": bool(branding_raw.get("situational_cues", data.get("situational_cues", True))),
         "caption_preset": str(branding_raw.get("caption_preset", data.get("caption_preset", "center_seam" if (gaming_split or split_screen) else "lower_safe"))),
@@ -4505,7 +4559,7 @@ def _read_app_version() -> str:
                     return str(data["version"])
         except Exception:
             pass
-    return "v4.0.12"
+    return "v5.0.0"
 
 APP_VERSION = _read_app_version()
 GITHUB_REPO = "sherlock-dev-ai/Clipify-AI-Video-Clipper-FREE"
@@ -4709,7 +4763,7 @@ def updater_apply():
 
         # Record latest version in version.json
         try:
-            latest_v = (rel_data.get("tag_name") or "v4.0.12").strip() if "rel_data" in locals() and rel_data else "v4.0.12"
+            latest_v = (rel_data.get("tag_name") or "v5.0.0").strip() if "rel_data" in locals() and rel_data else "v5.0.0"
             with open(ROOT / "version.json", "w", encoding="utf-8") as vf:
                 json.dump({"version": latest_v, "updated_at": __import__("time").time()}, vf, indent=2)
         except Exception:
@@ -5096,7 +5150,7 @@ Key User Requests & Links:
    👉 [**Join Official Instagram Creator Community**](https://ig.me/j/AQj1lYCWh_iV_S7J/)
    and creator contact `@sherlock.fy`.
 2. If the user asks about updates, what's new, or the latest version:
-   Explain that they are running **Clipify AI v4.0.12**! Highlight the Dual-Handle Visual Timeline Scrubber in Beta Lab, Multi-Color Action Cues (*SHOCKED* in red, *LAUGHS* in gold, *LOOKS* in cyan) + Studio SFX, Promoters Spotlight, Orbiting Stargazers Physics, and Live Studio RTMP clipping. Tell them they can click the "Update" button on the left sidebar to check and install 1-click in-place updates.
+   Explain that they are running **Clipify AI v5.0.0**! Highlight the Dual-Handle Visual Timeline Scrubber in Beta Lab, Multi-Color Action Cues (*SHOCKED* in red, *LAUGHS* in gold, *LOOKS* in cyan) + Studio SFX, Promoters Spotlight, Orbiting Stargazers Physics, and Live Studio RTMP clipping. Tell them they can click the "Update" button on the left sidebar to check and install 1-click in-place updates.
 3. When the user asks how to use any feature (e.g. clipping live streams, adding text overlays in Beta Lab, creating AI voiceovers, or generating vertical shorts):
    - Give a simple, clear explanation in plain English.
    - Remind the user to click the "App Guide" button on the left sidebar if they want a guided, step-by-step interactive walkthrough.
@@ -5108,7 +5162,7 @@ Key User Requests & Links:
      - For video editing / branding / projects: [NAVIGATE:editor]
 
 App facts:
-- Version: v4.0.12
+- Version: v5.0.0
 - Clipify AI is 100% free, private, local-first. No API keys or paid tiers.
 - Live Studio (/live): Ingests OBS RTMP stream at rtmp://localhost:1935/live for instant highlight clipping.
 - Narration Studio (/narrate): Pairs Kokoro neural voices with gameplay backgrounds.

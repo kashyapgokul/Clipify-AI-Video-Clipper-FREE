@@ -163,7 +163,9 @@ input?.addEventListener('change', e => e.target.files[0] && setFile(e.target.fil
 
 drop?.addEventListener('drop', e => {
   const f = e.dataTransfer.files[0];
-  if (f && f.type.startsWith('video/')) setFile(f)
+  if (f && (f.type.startsWith('video/') || /\.(mp4|mov|mkv|webm|avi|m4v|ts|flv)$/i.test(f.name))) {
+    setFile(f);
+  }
 });
 
 async function importYouTube() {
@@ -282,6 +284,38 @@ async function waitForYouTubeDownload(jobId) {
 
         youtubeImport.disabled = false;
         youtubeImport.textContent = 'Import video';
+
+        // Keep Beta Testing Lab in sync with downloaded YouTube video
+        if (typeof betaState !== 'undefined') {
+          betaState.jobId = jobId;
+          betaState.sourceFile = null;
+          betaState.downloading = false;
+          const bDrop = $('#betaDropZone');
+          const bInfo = $('#betaSourceInfo');
+          const bName = $('#betaSourceName');
+          const bMeta = $('#betaSourceMeta');
+          const bRun = $('#betaRunPipelineBtn');
+          if (bDrop) bDrop.style.display = 'none';
+          if (bInfo) bInfo.style.display = 'flex';
+          if (bName) bName.textContent = d.filename;
+          if (bMeta) bMeta.textContent = `Project ${jobId} · Ready to Clip`;
+          if (bRun) { bRun.disabled = false; bRun.textContent = '⚡ Run Beta AI Pipeline'; }
+          const bVideo = $('#betaResultVideo');
+          const bPlaceholder = $('#betaPlaceholder');
+          if (bVideo) {
+            bVideo.src = mediaUrl;
+            bVideo.load();
+            bVideo.style.display = 'block';
+            if (bPlaceholder) bPlaceholder.style.display = 'none';
+            bVideo.onloadedmetadata = () => {
+              const dur = Math.round(bVideo.duration || 0);
+              const scrubber = $('#betaScrubberTimeline');
+              if (scrubber) scrubber.style.display = 'block';
+              const bEnd = $('#betaTextEnd');
+              if (bEnd) bEnd.value = dur.toFixed(1);
+            };
+          }
+        }
 
         if (!state.modelsAvailable) {
           try { await loadOptions(); } catch { }
@@ -1304,10 +1338,10 @@ function selectedBranding() {
       +($('#logoMargin')?.value || 40),
 
     logo_x:
-      +($('#previewLogo')?.dataset.x || 92),
+      +($('#previewLogo')?.dataset?.x || 92) || 92,
 
     logo_y:
-      +($('#previewLogo')?.dataset.y || 8),
+      +($('#previewLogo')?.dataset?.y || 8) || 8,
 
     logo_bg_remove:
       $('#logoBgRemove')?.checked || false,
@@ -1316,7 +1350,7 @@ function selectedBranding() {
       $('#logoBgColor')?.value || '#9B5CFF',
 
     logo_bg_similarity:
-      +($('#logoBgSimilarity')?.value || 0.22),
+      +($('#logoBgSimilarity')?.value || 0.22) || 0.22,
 
     text_enabled:
       $('#textEnabled')?.checked || false,
@@ -1329,7 +1363,7 @@ function selectedBranding() {
       'bottom-center',
 
     text_size:
-      +($('#textSize')?.value || 6),
+      +($('#textSize')?.value || 6) || 6,
 
     text_color:
       $('#textColor')?.value ||
@@ -1343,16 +1377,16 @@ function selectedBranding() {
       '#000000',
 
     text_bg_opacity:
-      +($('#textBgOpacity')?.value || 65),
+      +($('#textBgOpacity')?.value || 65) || 65,
 
     text_margin:
-      +($('#textMargin')?.value || 110),
+      +($('#textMargin')?.value || 110) || 110,
 
     text_x:
-      +($('#previewText')?.dataset.x || 50),
+      +($('#previewText')?.dataset?.x || 50) || 50,
 
     text_y:
-      +($('#previewText')?.dataset.y || 75),
+      +($('#previewText')?.dataset?.y || 75) || 75,
 
     watermark_text_enabled:
       $('#watermarkTextEnabled')?.checked || false,
@@ -1364,22 +1398,22 @@ function selectedBranding() {
       $('#watermarkTextPosition')?.value || 'center',
 
     watermark_text_size:
-      +($('#watermarkTextSize')?.value || 6),
+      +($('#watermarkTextSize')?.value || 6) || 6,
 
     watermark_text_opacity:
-      +($('#watermarkTextOpacity')?.value || 35),
+      +($('#watermarkTextOpacity')?.value || 35) || 35,
 
     watermark_text_angle:
-      +($('#watermarkTextAngle')?.value || -20),
+      +($('#watermarkTextAngle')?.value || -20) || -20,
 
     watermark_text_color:
       $('#watermarkTextColor')?.value || '#FFFFFF',
 
     watermark_text_x:
-      +($('#watermarkTextX')?.value || 50),
+      +($('#watermarkTextX')?.value || 50) || 50,
 
     watermark_text_y:
-      +($('#watermarkTextY')?.value || 50),
+      +($('#watermarkTextY')?.value || 50) || 50,
 
     premium_captions:
       $('#premiumCaptionsToggle')?.checked ?? false,
@@ -1396,20 +1430,38 @@ function selectedBranding() {
 }
 
 async function start() {
+  const origBtnHtml = create.innerHTML;
 
-  if (!state.source && youtubeUrl && youtubeUrl.value.trim()) {
-    const trimmedUrl = youtubeUrl.value.trim();
-    if (trimmedUrl.includes('youtube.com/') || trimmedUrl.includes('youtu.be/')) {
+  // Adopt from betaState if user uploaded or imported video there
+  if (!state.source && !state.jobId && typeof betaState !== 'undefined' && betaState.jobId) {
+    state.jobId = betaState.jobId;
+    state.source = { name: 'Video Project', size: 0, origin: 'youtube', jobId: betaState.jobId };
+  } else if (!state.source && typeof betaState !== 'undefined' && betaState.sourceFile) {
+    state.source = betaState.sourceFile;
+  }
+
+  create.disabled = true;
+  create.innerHTML = '<span class="spinner-inline"></span> <span>Preparing Video…</span>';
+
+  // If YouTube link is pasted in either tab, auto-import if not loaded yet
+  if (!state.source && !state.jobId) {
+    const rawUrl = (youtubeUrl?.value || $('#betaYtUrl')?.value || '').trim();
+    if (rawUrl.includes('youtube.com/') || rawUrl.includes('youtu.be/')) {
       addLog('[YouTube] Importing video link before generating…');
+      create.innerHTML = '<span class="spinner-inline"></span> <span>Importing YouTube Video…</span>';
+      if (youtubeUrl) youtubeUrl.value = rawUrl;
       await importYouTube();
-      if (!state.source) {
+      if (!state.source && !state.jobId) {
         create.disabled = false;
+        create.innerHTML = origBtnHtml;
         return;
       }
     }
   }
 
-  if (!state.source) {
+  if (!state.source && !state.jobId) {
+    create.disabled = false;
+    create.innerHTML = origBtnHtml;
     alert('Please upload a video or paste a YouTube link to generate Shorts.');
     if (drop) {
       drop.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -1430,11 +1482,54 @@ async function start() {
       if (state.source && state.source.origin === 'youtube' && state.source.jobId) {
         state.jobId = state.source.jobId;
       } else if (state.source instanceof File) {
+        // Immediate visual feedback for long video uploads
+        progressPanel.hidden = false;
+        results.hidden = true;
+        progressPanel.dataset.state = 'running';
+        progressPanel.dataset.progress = '0';
+        $('#progressTitle').textContent = 'Uploading Source Video…';
+        $('#progressStatus').textContent = 'UPLOADING';
+        $('#progressBar').style.width = '0%';
+        $('#progressPercent').textContent = '0%';
+        $('#stageIcon').textContent = '↑';
+        $('#stageText').textContent = 'Transferring video file to Clipify AI workspace…';
+        $('#subStage').textContent = `${state.source.name} (${formatBytes(state.source.size)})`;
+        addLog(`[Upload] Uploading ${state.source.name} (${formatBytes(state.source.size)})…`);
+
         const uploadForm = new FormData();
         uploadForm.append('video', state.source);
-        const uploadResponse = await fetch('/api/upload', { method: 'POST', body: uploadForm });
-        const uploadData = await safeJson(uploadResponse, 'Could not upload the video.');
-        if (!uploadResponse.ok) throw Error(uploadData.error || 'Could not upload the video.');
+
+        const uploadData = await new Promise((resolve, reject) => {
+          const xhr = new XMLHttpRequest();
+          xhr.open('POST', '/api/upload');
+          xhr.upload.onprogress = (e) => {
+            if (e.lengthComputable && e.total > 0) {
+              const pct = Math.min(99, Math.round((e.loaded / e.total) * 100));
+              $('#progressBar').style.width = pct + '%';
+              $('#progressPercent').textContent = pct + '%';
+              $('#subStage').textContent = `${formatBytes(e.loaded)} / ${formatBytes(e.total)} (${pct}%)`;
+              create.innerHTML = `<span class="spinner-inline"></span> <span>Uploading (${pct}%)…</span>`;
+            }
+          };
+          xhr.onload = () => {
+            if (xhr.status >= 200 && xhr.status < 300) {
+              try {
+                const res = JSON.parse(xhr.responseText);
+                resolve(res);
+              } catch (err) { reject(err); }
+            } else {
+              try {
+                const res = JSON.parse(xhr.responseText);
+                reject(new Error(res.error || `Upload failed (${xhr.status})`));
+              } catch {
+                reject(new Error(`Upload failed with status ${xhr.status}`));
+              }
+            }
+          };
+          xhr.onerror = () => reject(new Error('Network error uploading video.'));
+          xhr.send(uploadForm);
+        });
+
         state.jobId = uploadData.job_id;
         addLog(`[Upload] Video ready as project ${state.jobId}`);
       } else {
@@ -1455,6 +1550,7 @@ async function start() {
     addLog(`[Error] ${error.message}`);
     alert(error.message);
     create.disabled = false;
+    create.innerHTML = origBtnHtml;
     return;
   }
 
@@ -1489,6 +1585,16 @@ async function start() {
   form.append(
     'max_duration',
     maxDuration.value
+  );
+
+  form.append(
+    'trim_start',
+    $('#betaTextStart')?.value || '0'
+  );
+
+  form.append(
+    'trim_end',
+    $('#betaTextEnd')?.value || '0'
   );
 
   form.append(
@@ -2728,7 +2834,10 @@ $('#newBtn')
     location.hash = 'create';
   };
 
-if (create) create.onclick = start;
+if (create) {
+  create.onclick = start;
+  create.addEventListener('click', start);
+}
 
 function navigateTo(id) {
   const target = id || 'create';
@@ -2744,28 +2853,32 @@ function navigateTo(id) {
     }
     return;
   }
-  if (target === 'models') {
-    if (window.openModelHub) window.openModelHub();
-    return;
-  }
-  if (target === 'update') {
-    if (window.openClipifyUpdate) window.openClipifyUpdate();
-    return;
-  }
-  if (target === 'guide') {
-    if (window.startClipifyTour) window.startClipifyTour();
+  if (['support', 'promoters', 'models', 'update', 'guide'].includes(target)) {
+    // Ensure base section is visible so the main workspace is never pitch black behind modals
+    const currentVisible = document.querySelector('.page-section.visible') || document.getElementById('create');
+    if (currentVisible) {
+      currentVisible.classList.add('visible');
+      currentVisible.style.display = 'block';
+    }
+    if (target === 'models' && window.openModelHub) window.openModelHub();
+    if (target === 'update' && window.openClipifyUpdate) window.openClipifyUpdate();
+    if (target === 'guide' && window.startClipifyTour) window.startClipifyTour();
+    if (target === 'support' && window.showSupportModal) window.showSupportModal();
+    if (target === 'promoters' && window.showPromotersModal) window.showPromotersModal();
     return;
   }
   if (location.hash.slice(1) !== target) {
     location.hash = target;
   }
+  const knownSection = document.getElementById(target);
+  const activeSectionId = (knownSection && knownSection.classList.contains('page-section')) ? target : 'create';
   $$('.page-section').forEach(s => {
-    const isTarget = s.id === target;
+    const isTarget = s.id === activeSectionId;
     s.classList.toggle('visible', isTarget);
     s.style.display = isTarget ? 'block' : 'none';
   });
   $$('[data-nav]').forEach(a =>
-    a.classList.toggle('active', a.dataset.nav === target)
+    a.classList.toggle('active', a.dataset.nav === activeSectionId)
   );
   if (target === 'projects') loadProjects();
   if (target === 'assets') loadProjects().then(loadAssets);
@@ -2874,6 +2987,12 @@ if (initialHash === 'live') {
   try { navigateTo(initialHash); } catch (e) { console.warn(e); }
 } else if (initialHash === 'models') {
   if (window.openModelHub) window.openModelHub();
+} else if (initialHash === 'support') {
+  try { navigateTo('create'); } catch (e) { }
+  if (window.showSupportModal) setTimeout(() => window.showSupportModal(), 100);
+} else if (initialHash === 'promoters') {
+  try { navigateTo('create'); } catch (e) { }
+  if (window.showPromotersModal) setTimeout(() => window.showPromotersModal(), 100);
 } else {
   try { window.dispatchEvent(new Event('hashchange')); } catch (e) { console.warn(e); }
   try { navigateTo('create'); } catch (e) { console.warn(e); }
@@ -3435,6 +3554,25 @@ function initBetaTestingSection() {
     sourceInfo.style.display = 'flex';
     sourceName.textContent = file.name;
     sourceMeta.textContent = `${(file.size / (1024 * 1024)).toFixed(1)} MB · Local Upload`;
+
+    // Immediately show video in preview and reveal the dual-handle timeline trimmer under it!
+    try {
+      const objUrl = URL.createObjectURL(file);
+      placeholder.style.display = 'none';
+      if (betaSplitOverlay) betaSplitOverlay.style.display = 'none';
+      resultVideo.style.display = 'block';
+      resultVideo.src = objUrl;
+      resultVideo.load();
+      resultVideo.onloadedmetadata = () => {
+        const dur = Math.round(resultVideo.duration || 0);
+        const scrubber = $('#betaScrubberTimeline');
+        if (scrubber) scrubber.style.display = 'block';
+        if (betaTextEnd) betaTextEnd.value = dur.toFixed(1);
+        syncTextOverlayStyles();
+      };
+    } catch (e) {
+      console.warn('Could not preview local file:', e);
+    }
   }
 
   if (clearSource) {
@@ -3444,6 +3582,11 @@ function initBetaTestingSection() {
       dropZone.style.display = 'block';
       sourceInfo.style.display = 'none';
       if (fileInput) fileInput.value = '';
+      placeholder.style.display = 'flex';
+      resultVideo.style.display = 'none';
+      resultVideo.src = '';
+      const scrubber = $('#betaScrubberTimeline');
+      if (scrubber) scrubber.style.display = 'none';
     });
   }
 
@@ -3490,8 +3633,45 @@ function initBetaTestingSection() {
                 sourceMeta.textContent = `Project ${jobId} · Ready to Clip`;
                 if (runBtn) {
                   runBtn.disabled = false;
-                  runBtn.textContent = 'Run Beta AI Pipeline';
+                  runBtn.textContent = '⚡ Run Beta AI Pipeline';
                 }
+
+                // Show YouTube preview in Beta workspace and reveal timeline trimmer
+                const mediaUrl = `/project-media/${encodeURIComponent(jobId)}/input/${encodeURIComponent(sd.filename || 'video.mp4')}`;
+                placeholder.style.display = 'none';
+                if (betaSplitOverlay) betaSplitOverlay.style.display = 'none';
+                resultVideo.style.display = 'block';
+                resultVideo.src = mediaUrl;
+                resultVideo.load();
+                resultVideo.onloadedmetadata = () => {
+                  const dur = Math.round(resultVideo.duration || 0);
+                  const scrubber = $('#betaScrubberTimeline');
+                  if (scrubber) scrubber.style.display = 'block';
+                  if (betaTextEnd) betaTextEnd.value = dur.toFixed(1);
+                  syncTextOverlayStyles();
+                };
+
+                // Sync with main Create tab so switching tabs works seamlessly
+                state.jobId = jobId;
+                state.source = {
+                  name: sd.filename || 'video.mp4',
+                  size: 0,
+                  origin: 'youtube',
+                  jobId: jobId
+                };
+                if (create) create.disabled = false;
+                const mainPrev = $('#sourcePreview');
+                if (mainPrev) {
+                  mainPrev.src = mediaUrl;
+                  mainPrev.load();
+                  mainPrev.hidden = false;
+                }
+                const mainPlace = $('.preview-placeholder');
+                if (mainPlace) mainPlace.style.display = 'none';
+                if (nameEl) nameEl.textContent = sd.filename;
+                if (sizeEl) sizeEl.textContent = 'Downloaded locally';
+                if (chip) chip.hidden = false;
+
                 resolve();
               } else if (sd.status === 'error') {
                 clearInterval(pollTimer);
@@ -3556,9 +3736,32 @@ function initBetaTestingSection() {
         if (!betaState.jobId && betaState.sourceFile) {
           const upForm = new FormData();
           upForm.append('video', betaState.sourceFile);
-          const upRes = await fetch('/api/upload', { method: 'POST', body: upForm });
-          const upData = await upRes.json();
-          if (!upRes.ok || !upData.job_id) throw new Error(upData.error || 'Failed to upload video');
+          stageText.textContent = `Uploading ${betaState.sourceFile.name}… (0%)`;
+          const upData = await new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '/api/upload');
+            xhr.upload.onprogress = (e) => {
+              if (e.lengthComputable && e.total > 0) {
+                const pct = Math.min(99, Math.round((e.loaded / e.total) * 100));
+                progressBar.style.width = pct + '%';
+                progressPct.textContent = pct + '%';
+                stageText.textContent = `Uploading ${betaState.sourceFile.name}… (${pct}%)`;
+              }
+            };
+            xhr.onload = () => {
+              if (xhr.status >= 200 && xhr.status < 300) {
+                try { resolve(JSON.parse(xhr.responseText)); } catch (err) { reject(err); }
+              } else {
+                try {
+                  const res = JSON.parse(xhr.responseText);
+                  reject(new Error(res.error || `Upload failed (${xhr.status})`));
+                } catch { reject(new Error(`Upload failed (${xhr.status})`)); }
+              }
+            };
+            xhr.onerror = () => reject(new Error('Network error uploading video.'));
+            xhr.send(upForm);
+          });
+          if (!upData.job_id) throw new Error(upData.error || 'Failed to upload video');
           betaState.jobId = upData.job_id;
           logBox.textContent += `[Upload] Created project ${betaState.jobId}\n`;
         }
@@ -3589,6 +3792,8 @@ function initBetaTestingSection() {
           clips: $('#betaClipsCount')?.value || 2,
           min_duration: 25,
           max_duration: 60,
+          trim_start: +(betaTextStart?.value || 0),
+          trim_end: +(betaTextEnd?.value || 0),
           split_screen: splitScreen,
           gaming_split: gamingSplit,
           split_ratio: splitRatioVal,
@@ -3778,6 +3983,13 @@ function initBetaTestingSection() {
       if (clipMeta && !clipMeta.dataset.hasMeta) {
         clipMeta.innerHTML = `<span style="color:#ffffff;font-weight:600;">⏱️ Result Time:</span> <b>${dm}:${ds}</b> (${dur}s duration) &nbsp;·&nbsp; <span style="color:var(--accent);">📐 1080×1920</span>`;
       }
+      // Reveal timeline trimmer under video preview
+      const scrubber = $('#betaScrubberTimeline');
+      if (scrubber) scrubber.style.display = 'block';
+      if (betaTextEnd && (!+betaTextEnd.value || +betaTextEnd.value > dur)) {
+        betaTextEnd.value = dur.toFixed(1);
+      }
+      syncTextOverlayStyles();
     };
 
     fetchMetadata(jobId, filename).then((m) => {
@@ -3886,16 +4098,56 @@ function initBetaTestingSection() {
       betaTextDragContent.style.border = '2px dashed rgba(255, 255, 255, 0.4)';
     }
 
+    function fmtMinSec(sec) {
+      if (isNaN(sec) || sec < 0) sec = 0;
+      const m = Math.floor(sec / 60);
+      const s = Math.floor(sec % 60);
+      return `${m}:${String(s).padStart(2, '0')}`;
+    }
+    function fmtDurMinSec(sec) {
+      if (isNaN(sec) || sec < 0) sec = 0;
+      const m = Math.floor(sec / 60);
+      const s = Math.round(sec % 60);
+      if (m > 0) return `${m}m ${s}s`;
+      return `0m ${s}s`;
+    }
+
     const sTime = betaTextStart ? Math.max(0, +betaTextStart.value) : 0;
     const eTime = betaTextEnd ? Math.max(sTime + 0.1, +betaTextEnd.value) : 5.0;
-    if (betaDragTimeBadge) betaDragTimeBadge.textContent = `${sTime.toFixed(1)}s – ${eTime.toFixed(1)}s`;
-    if (betaTimelineActiveLabel) betaTimelineActiveLabel.textContent = `Active: ${sTime.toFixed(1)}s – ${eTime.toFixed(1)}s`;
+    if (betaDragTimeBadge) betaDragTimeBadge.textContent = `${fmtMinSec(sTime)} – ${fmtMinSec(eTime)} (${fmtDurMinSec(eTime - sTime)})`;
+    if (betaTimelineActiveLabel) betaTimelineActiveLabel.textContent = `Active: ${fmtMinSec(sTime)} – ${fmtMinSec(eTime)}`;
 
     const dur = (resultVideo && resultVideo.duration) ? resultVideo.duration : Math.max(10, eTime);
     if (betaTimelineEndLabel && resultVideo && resultVideo.duration) {
-      const dm = Math.floor(dur / 60);
-      const ds = String(Math.round(dur % 60)).padStart(2, '0');
-      betaTimelineEndLabel.textContent = `${dm}:${ds}`;
+      betaTimelineEndLabel.textContent = fmtMinSec(dur);
+    }
+
+    const handleStart = $('#betaHandleStart');
+    const handleEnd = $('#betaHandleEnd');
+    const scrubHighlight = $('#betaScrubHighlight');
+    const tooltipStart = $('#betaTooltipStart');
+    const tooltipEnd = $('#betaTooltipEnd');
+    const trimSpanBadge = $('#betaTrimSpanBadge');
+    const trackMaxLabel = $('#betaTrackMaxLabel');
+
+    if (dur > 0) {
+      const sPct = Math.max(0, Math.min(100, (sTime / dur) * 100));
+      const ePct = Math.max(sPct, Math.min(100, (eTime / dur) * 100));
+      if (handleStart) handleStart.style.left = `${sPct}%`;
+      if (handleEnd) handleEnd.style.left = `${ePct}%`;
+      if (scrubHighlight) {
+        scrubHighlight.style.left = `${sPct}%`;
+        scrubHighlight.style.width = `${Math.max(1, ePct - sPct)}%`;
+      }
+      if (tooltipStart) tooltipStart.textContent = fmtMinSec(sTime);
+      if (tooltipEnd) tooltipEnd.textContent = fmtMinSec(eTime);
+      if (trimSpanBadge) {
+        const diff = Math.max(0.1, eTime - sTime);
+        trimSpanBadge.textContent = `${fmtMinSec(sTime)} – ${fmtMinSec(eTime)} (${fmtDurMinSec(diff)})`;
+      }
+      if (trackMaxLabel) {
+        trackMaxLabel.textContent = fmtMinSec(dur);
+      }
     }
 
     if (betaTimelineSpanBar) {
@@ -4048,6 +4300,81 @@ function initBetaTestingSection() {
       syncTextOverlayStyles();
     });
   }
+
+  // Dual-Handle Scrubber Timeline Dragging
+  const handleStartEl = $('#betaHandleStart');
+  const handleEndEl = $('#betaHandleEnd');
+  const trackContainerEl = $('#betaScrubTrackContainer');
+  const trimResetFullBtn = $('#betaTrimResetFull');
+
+  if (trimResetFullBtn) {
+    trimResetFullBtn.addEventListener('click', () => {
+      const dur = (resultVideo && resultVideo.duration) ? resultVideo.duration : 60;
+      if (betaTextStart) betaTextStart.value = '0.0';
+      if (betaTextEnd) betaTextEnd.value = dur.toFixed(1);
+      syncTextOverlayStyles();
+    });
+  }
+
+  function setupScrubberHandleDrag(handleEl, isStart) {
+    if (!handleEl || !trackContainerEl) return;
+    let dragging = false;
+
+    const onStart = (e) => {
+      dragging = true;
+      e.preventDefault();
+      handleEl.classList.add('active-drag');
+      document.body.style.userSelect = 'none';
+    };
+
+    const onMove = (clientX) => {
+      if (!dragging) return;
+      const rect = trackContainerEl.getBoundingClientRect();
+      if (rect.width <= 0) return;
+      const rawPct = Math.max(0, Math.min(100, ((clientX - rect.left) / rect.width) * 100));
+      const dur = (resultVideo && resultVideo.duration) ? resultVideo.duration : 60;
+
+      if (isStart) {
+        const curEndSec = betaTextEnd ? +betaTextEnd.value : dur;
+        const curEndPct = Math.min(100, (curEndSec / dur) * 100);
+        const clampedPct = Math.min(rawPct, Math.max(0, curEndPct - 1.0));
+        const newSec = Math.max(0, (clampedPct / 100) * dur);
+        if (betaTextStart) betaTextStart.value = newSec.toFixed(1);
+        if (resultVideo) resultVideo.currentTime = newSec;
+      } else {
+        const curStartSec = betaTextStart ? +betaTextStart.value : 0;
+        const curStartPct = Math.max(0, (curStartSec / dur) * 100);
+        const clampedPct = Math.max(rawPct, Math.min(100, curStartPct + 1.0));
+        const newSec = Math.min(dur, (clampedPct / 100) * dur);
+        if (betaTextEnd) betaTextEnd.value = newSec.toFixed(1);
+        if (resultVideo) resultVideo.currentTime = newSec;
+      }
+      syncTextOverlayStyles();
+    };
+
+    const onEnd = () => {
+      if (dragging) {
+        dragging = false;
+        handleEl.classList.remove('active-drag');
+        document.body.style.userSelect = '';
+      }
+    };
+
+    handleEl.addEventListener('mousedown', onStart);
+    window.addEventListener('mousemove', (e) => { if (dragging) onMove(e.clientX); });
+    window.addEventListener('mouseup', onEnd);
+
+    handleEl.addEventListener('touchstart', (e) => {
+      if (e.touches.length > 0) onStart(e);
+    }, { passive: false });
+    window.addEventListener('touchmove', (e) => {
+      if (dragging && e.touches.length > 0) onMove(e.touches[0].clientX);
+    }, { passive: true });
+    window.addEventListener('touchend', onEnd);
+  }
+
+  setupScrubberHandleDrag(handleStartEl, true);
+  setupScrubberHandleDrag(handleEndEl, false);
 
   // Synchronize playback timeline and active overlay display
   if (resultVideo) {

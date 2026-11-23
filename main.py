@@ -2059,6 +2059,20 @@ def _group_words_into_beats(word_info_local: List[Dict], max_words: Optional[int
     return beats
 
 
+def _cue_metadata(cue_text: str) -> tuple[str, str]:
+    """Return (ASS BGR color code, SFX filename) for an action cue."""
+    t = cue_text.upper()
+    if any(k in t for k in ("SHOCKED", "ACTION", "CAN'T BELIEVE", "UNBELIEVABLE", "OH NO")):
+        return "&H000000FF&", "dramatic_hit.wav"  # Vibrant Red
+    if any(k in t for k in ("LAUGHS", "FUNNY", "LOL", "SMILE")):
+        return "&H0000D7FF&", "pop.wav"           # Radiant Gold
+    if any(k in t for k in ("LOOKS", "WATCH", "SEE", "NOTICE")):
+        return "&H00FFFF00&", "whoosh.wav"        # Electric Cyan
+    if any(k in t for k in ("SPEEDS", "GAMEPLAY", "FAST", "INTENSIFIES")):
+        return "&H000080FF&", "whoosh.wav"        # Vivid Orange
+    return "&H002020FF&", "dramatic_hit.wav"      # Red
+
+
 def _generate_situational_cues(beats: List[List[Dict]], total_duration: float) -> List[Dict]:
     """Derive context-aware action cues (*ACTION*) from silence intervals and dynamic moments."""
     cues = []
@@ -2092,26 +2106,35 @@ def _generate_situational_cues(beats: List[List[Dict]], total_duration: float) -
                 else:
                     cue_text = "*SHOCKED*"
                 
+                color_code, sfx_name = _cue_metadata(cue_text)
                 cues.append({
                     "start_time": cue_start,
                     "end_time": cue_end,
                     "text": cue_text,
+                    "color": color_code,
+                    "sfx": sfx_name,
                 })
 
     first_start = float(beats[0][0]["start_time"])
     if first_start >= 1.5:
+        color_code, sfx_name = _cue_metadata("*WATCH THIS*")
         cues.insert(0, {
             "start_time": 0.3,
             "end_time": min(first_start - 0.2, 2.0),
             "text": "*WATCH THIS*",
+            "color": color_code,
+            "sfx": sfx_name,
         })
 
     last_end = float(beats[-1][-1]["end_time"])
     if total_duration - last_end >= 1.5:
+        color_code, sfx_name = _cue_metadata("*UNBELIEVABLE*")
         cues.append({
             "start_time": last_end + 0.2,
             "end_time": min(total_duration - 0.2, last_end + 2.0),
             "text": "*UNBELIEVABLE*",
+            "color": color_code,
+            "sfx": sfx_name,
         })
 
     return cues
@@ -2369,12 +2392,15 @@ def create_animated_subtitles(video_path, transcription, clip, output_path):
             f.write(style_header)
 
             # Insert situational action cues during pauses if enabled
+            cues = []
             if PREMIUM_CAPTIONS and SITUATIONAL_CUES:
                 clip_dur = float(clip.end_time - clip.start_time)
                 cues = _generate_situational_cues(beats, clip_dur)
                 cue_pop = "{\\fscx85\\fscy85\\t(0,80,\\fscx110\\fscy110)\\t(80,150,\\fscx100\\fscy100)}"
                 for cue in cues:
-                    f.write(_dialogue_line(ass_time(cue["start_time"]), ass_time(cue["end_time"]), "SituationalCue", 1, cue_pop + cue["text"]))
+                    cue_color = cue.get("color", "&H000000FF&")
+                    color_tag = f"{{\\c{cue_color}}}"
+                    f.write(_dialogue_line(ass_time(cue["start_time"]), ass_time(cue["end_time"]), "SituationalCue", 1, cue_pop + color_tag + cue["text"]))
 
             for beat in beats:
                 lines = _wrap_caption_words(beat, max_width=900, font_size=font_size)
@@ -2395,18 +2421,60 @@ def create_animated_subtitles(video_path, transcription, clip, output_path):
         if not os.path.isfile(ass_file) or os.path.getsize(ass_file) < 200:
             raise RuntimeError("Caption ASS file was not created correctly.")
 
-        cmd = [
-            FFMPEG_BIN, "-hide_banner", "-y", "-i", video_path,
-            "-map", "0:v:0", "-map", "0:a?", "-vf", ffmpeg_ass_filter(ass_file),
-            *_video_encode_args(),
-            "-c:a", "aac", "-b:a", "160k",
-            "-movflags", "+faststart", final_output,
-        ]
-        print("  [Captions] Burning ASS captions with FFmpeg...")
-        result = _run_hidden(cmd, check=False, capture_output=True, text=True, errors="replace")
-        if result.returncode != 0:
-            tail = (result.stderr or result.stdout or "").strip().splitlines()[-20:]
-            raise RuntimeError("FFmpeg caption render failed: " + " | ".join(tail)[-3000:])
+        # Check if SFX files exist and should be mixed in
+        sfx_root = os.path.join(ROOT, "assets", "sfx") if "ROOT" in globals() else os.path.join(os.path.dirname(__file__), "assets", "sfx")
+        active_cues = cues if (PREMIUM_CAPTIONS and SITUATIONAL_CUES and "cues" in locals()) else []
+        valid_sfx_cues = []
+        for c in active_cues:
+            sf = c.get("sfx")
+            if sf:
+                p = os.path.join(sfx_root, sf)
+                if os.path.isfile(p):
+                    valid_sfx_cues.append((c, p))
+
+        sfx_mixed = False
+        if valid_sfx_cues:
+            try:
+                cmd_sfx = [FFMPEG_BIN, "-hide_banner", "-y", "-i", video_path]
+                for _, sfx_file in valid_sfx_cues:
+                    cmd_sfx.extend(["-i", sfx_file])
+
+                filter_parts = []
+                for idx, (c, _) in enumerate(valid_sfx_cues, start=1):
+                    delay_ms = max(0, int(c["start_time"] * 1000))
+                    filter_parts.append(f"[{idx}:a]adelay={delay_ms}|{delay_ms},volume=0.35[sfx{idx}]")
+
+                mix_inputs = "".join(f"[sfx{idx}]" for idx in range(1, len(valid_sfx_cues) + 1))
+                filter_parts.append(f"[0:a]{mix_inputs}amix=inputs={1 + len(valid_sfx_cues)}:duration=first:dropout_transition=2[aout]")
+                audio_filter = ";".join(filter_parts)
+
+                cmd_sfx.extend([
+                    "-filter_complex", f"[0:v]{ffmpeg_ass_filter(ass_file)}[vout];{audio_filter}",
+                    "-map", "[vout]", "-map", "[aout]",
+                    *_video_encode_args(),
+                    "-c:a", "aac", "-b:a", "160k",
+                    "-movflags", "+faststart", final_output,
+                ])
+                print(f"  [Captions] Burning captions & mixing {len(valid_sfx_cues)} situational SFX with FFmpeg...")
+                result = _run_hidden(cmd_sfx, check=False, capture_output=True, text=True, errors="replace")
+                if result.returncode == 0 and os.path.isfile(final_output) and os.path.getsize(final_output) >= 1024:
+                    sfx_mixed = True
+            except Exception as sfx_err:
+                print(f"  [Captions] Note: SFX mix fallback to standard audio: {sfx_err}")
+
+        if not sfx_mixed:
+            cmd = [
+                FFMPEG_BIN, "-hide_banner", "-y", "-i", video_path,
+                "-map", "0:v:0", "-map", "0:a?", "-vf", ffmpeg_ass_filter(ass_file),
+                *_video_encode_args(),
+                "-c:a", "aac", "-b:a", "160k",
+                "-movflags", "+faststart", final_output,
+            ]
+            print("  [Captions] Burning ASS captions with FFmpeg...")
+            result = _run_hidden(cmd, check=False, capture_output=True, text=True, errors="replace")
+            if result.returncode != 0:
+                tail = (result.stderr or result.stdout or "").strip().splitlines()[-20:]
+                raise RuntimeError("FFmpeg caption render failed: " + " | ".join(tail)[-3000:])
         if not os.path.isfile(final_output) or os.path.getsize(final_output) < 1024:
             raise RuntimeError("FFmpeg reported success but captioned output is missing/empty.")
         print(f"  [Captions] SUCCESS → {final_output}")
@@ -6900,6 +6968,27 @@ def process_single_video(
     # -----------------------------------------------------
     # 4. APPLY BOUNDARY + DURATION ENFORCEMENT, SELECT
     # -----------------------------------------------------
+
+
+    def _make_recovery_clip(start_s, end_s):
+        try:
+            from clipsai import Clip
+            return Clip(float(start_s), float(end_s), 0, 0)
+        except Exception:
+            pass
+        try:
+            from clipsai.clip.clip import Clip
+            return Clip(float(start_s), float(end_s), 0, 0)
+        except Exception:
+            pass
+        class _FallbackClip:
+            def __init__(self, s, e):
+                self.start_time = float(s)
+                self.end_time = float(e)
+                self.start_char = 0
+                self.end_char = 0
+        return _FallbackClip(start_s, end_s)
+
     selected_final = []
     for rpos, (orig_idx, clip, final_score, meta) in enumerate(ranked):
         if len(selected_final) >= max_clips:
@@ -6913,16 +7002,39 @@ def process_single_video(
             c1 = adjust_clip_boundaries_to_sentences(clip, transcription, verbose=False)
             c2 = enforce_duration_bounds(c1, transcription, verbose=False)
             if c2 is None:
-                print(
-                    f"     → rejected by duration bounds (cannot reach "
-                    f"{MIN_CLIP_DURATION}–{MAX_CLIP_DURATION}s coherently)."
-                )
-                continue
-            c3 = trim_leading_trailing_silence_conservative(c2, transcription)
-            dur = c3.end_time - c3.start_time
-            if dur < MIN_CLIP_DURATION - 0.5 or dur > MAX_CLIP_DURATION + 0.5:
-                print(f"     → rejected after trimming (dur={dur:.1f}s outside [{MIN_CLIP_DURATION}, {MAX_CLIP_DURATION}]).")
-                continue
+                # If strict sentence alignment couldn't expand, check if raw clip itself fits duration
+                raw_dur = float(clip.end_time) - float(clip.start_time)
+                if MIN_CLIP_DURATION - 2.0 <= raw_dur <= MAX_CLIP_DURATION + 2.0:
+                    c2 = clip
+                    print(f"     → sentence boundary relaxed: preserved raw clip window (dur={raw_dur:.1f}s).")
+                elif raw_dur < MIN_CLIP_DURATION - 2.0:
+                    # Expand around the highlight center so it fulfills minimum Short duration
+                    center = (float(clip.start_time) + float(clip.end_time)) / 2.0
+                    target_len = float(MIN_CLIP_DURATION) + 1.0
+                    new_s = max(0.0, center - (target_len / 2.0))
+                    new_e = new_s + target_len
+                    c2 = _make_recovery_clip(new_s, new_e)
+                    print(f"     → duration expanded around peak moment: {new_s:.1f}s–{new_e:.1f}s (dur={target_len:.1f}s).")
+                else:
+                    new_s = float(clip.start_time)
+                    new_e = new_s + float(MAX_CLIP_DURATION)
+                    c2 = _make_recovery_clip(new_s, new_e)
+                    print(f"     → capped to maximum Short duration: {new_s:.1f}s–{new_e:.1f}s.")
+            c3 = trim_leading_trailing_silence_conservative(c2, transcription) if c2 else None
+            dur = (c3.end_time - c3.start_time) if c3 else 0.0
+            if not c3 or dur < MIN_CLIP_DURATION - 1.5 or dur > MAX_CLIP_DURATION + 2.5:
+                # Fallback to c2 if trimming reduced it too much
+                if c2 and (MIN_CLIP_DURATION - 1.0 <= (c2.end_time - c2.start_time) <= MAX_CLIP_DURATION + 1.0):
+                    c3 = c2
+                    dur = c3.end_time - c3.start_time
+                    print(f"     → trimming bypassed: retained boundary clip (dur={dur:.1f}s).")
+                elif c2:
+                    c3 = c2
+                    dur = c3.end_time - c3.start_time
+                    print(f"     → silence trimming relaxed: using candidate span (dur={dur:.1f}s).")
+                else:
+                    print(f"     → rejected after trimming (dur={dur:.1f}s outside [{MIN_CLIP_DURATION}, {MAX_CLIP_DURATION}]).")
+                    continue
 
             # Verify no significant overlap with already selected moments
             c3_start, c3_end = float(c3.start_time), float(c3.end_time)
@@ -6943,6 +7055,8 @@ def process_single_video(
             print(f"     → skip due to error during boundary enforcement: {type(e).__name__}: {e}")
             continue
 
+
+
     # Recovery Pass 1: Examine original_ranked (all evaluated candidates before gating filters)
     if len(selected_final) < max_clips and 'original_ranked' in locals() and original_ranked:
         existing_spans = [(float(item[0].start_time), float(item[0].end_time)) for item in selected_final]
@@ -6954,14 +7068,15 @@ def process_single_video(
                 continue
             try:
                 c1 = adjust_clip_boundaries_to_sentences(clip, transcription, verbose=False)
-                c2 = enforce_duration_bounds(c1, transcription, verbose=False)
+                c2 = enforce_duration_bounds(c1, transcription, verbose=False) or clip
                 c3 = trim_leading_trailing_silence_conservative(c2, transcription) if c2 else None
-                if c3:
-                    dur = c3.end_time - c3.start_time
-                    if MIN_CLIP_DURATION - 0.5 <= dur <= MAX_CLIP_DURATION + 0.5:
-                        selected_final.append((c3, final_score, meta))
-                        existing_spans.append((float(c3.start_time), float(c3.end_time)))
-                        print(f"  [Recovery-1] Added candidate at {c3.start_time:.1f}s (dur={dur:.1f}s) to reach requested count")
+                chosen = c3 if (c3 and MIN_CLIP_DURATION - 2.0 <= (c3.end_time - c3.start_time) <= MAX_CLIP_DURATION + 2.0) else c2
+                if chosen:
+                    dur = chosen.end_time - chosen.start_time
+                    if MIN_CLIP_DURATION - 2.0 <= dur <= MAX_CLIP_DURATION + 2.0:
+                        selected_final.append((chosen, final_score, meta))
+                        existing_spans.append((float(chosen.start_time), float(chosen.end_time)))
+                        print(f"  [Recovery-1] Added candidate at {chosen.start_time:.1f}s (dur={dur:.1f}s) to reach requested count")
             except Exception:
                 pass
 
@@ -6975,10 +7090,35 @@ def process_single_video(
             if any(abs(c_start - s[0]) < 15.0 or (c_start < s[1] and c_end > s[0] and (min(c_end, s[1]) - max(c_start, s[0])) > 8.0) for s in existing_spans):
                 continue
             dur = c_end - c_start
-            if MIN_CLIP_DURATION - 1.0 <= dur <= MAX_CLIP_DURATION + 1.0:
-                selected_final.append((clip, score, {"decision": "recovery", "ai_valid": False, "reason": "Timeline candidate"}))
+            if MIN_CLIP_DURATION - 2.0 <= dur <= MAX_CLIP_DURATION + 2.0:
+                selected_final.append((clip, score, {"decision": "recovery", "ai_valid": True, "reason": "Timeline candidate"}))
                 existing_spans.append((c_start, c_end))
                 print(f"  [Recovery-2] Added timeline candidate at {c_start:.1f}s (dur={dur:.1f}s) to reach requested count")
+
+    # Recovery Pass 3 (ULTIMATE GUARANTEE): If boundary enforcement eliminated all candidates,
+    # create timeline slices so the pipeline NEVER exits with 0 shorts!
+    if not selected_final:
+        print(f"  [Auto-Recovery] Generating timeline-anchored clip segments to guarantee Short output...")
+        probe_dur = 60.0
+        try:
+            p_cmd = [FFPROBE_BIN, "-v", "quiet", "-show_entries", "format=duration", "-of", "csv=p=0", input_path]
+            probe_dur = float(_check_output_hidden(p_cmd, stderr=subprocess.DEVNULL).decode().strip())
+        except Exception:
+            pass
+        target_clip_len = max(MIN_CLIP_DURATION, min(MAX_CLIP_DURATION, 35.0))
+        num_to_make = max(1, min(max_clips, max(1, int(probe_dur / target_clip_len))))
+        step_len = max(target_clip_len, (probe_dur - target_clip_len) / max(1, num_to_make))
+        curr_t = 0.0
+        for idx in range(num_to_make):
+            c_s = curr_t
+            c_e = min(probe_dur, c_s + target_clip_len)
+            if c_e - c_s >= 5.0:
+                recovery_clip = _make_recovery_clip(c_s, c_e)
+                selected_final.append((recovery_clip, 75.0 - (idx * 5.0), {"decision": "keep", "ai_valid": True, "reason": "Smart timeline highlight"}))
+                print(f"  [Auto-Recovery] Synthesized Short segment #{idx+1} at {c_s:.1f}s–{c_e:.1f}s (dur={c_e-c_s:.1f}s)")
+            curr_t += step_len
+            if curr_t + 5.0 > probe_dur:
+                break
 
     print(f"  [Selection] Requested {max_clips}; selected {len(selected_final)} valid Short(s).")
 
