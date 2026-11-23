@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity() {
 
         projectManager = ProjectManager(this)
         mediaProcessor = AndroidMediaProcessor(this)
-        val desktopHost = prefs.getString("desktop_ip", "http://192.168.1.100:5000") ?: "http://192.168.1.100:5000"
+        val desktopHost = prefs.getString("desktop_ip", "http://127.0.0.1:5000") ?: "http://127.0.0.1:5000"
         syncClient = DesktopSyncClient(desktopHost)
 
         tts = TextToSpeech(this) { status ->
@@ -73,13 +73,16 @@ class MainActivity : AppCompatActivity() {
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun setupWebView() {
-        binding.webView.setBackgroundColor(android.graphics.Color.parseColor("#090e0c"))
+        binding.webView.setBackgroundColor(android.graphics.Color.parseColor("#09090b"))
         binding.webView.setLayerType(android.view.View.LAYER_TYPE_HARDWARE, null)
         binding.webView.settings.apply {
             javaScriptEnabled = true
             domStorageEnabled = true
             allowFileAccess = true
             allowContentAccess = true
+            allowFileAccessFromFileURLs = true
+            allowUniversalAccessFromFileURLs = true
+            mixedContentMode = android.webkit.WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
             useWideViewPort = false
             loadWithOverviewMode = false
             setSupportZoom(false)
@@ -138,15 +141,23 @@ class MainActivity : AppCompatActivity() {
             openExternalUrl("https://github.com/sherlock-dev-ai/Clipify-AI-Video-Clipper-FREE")
         }
         binding.btnHeaderTour.setOnClickListener {
-            triggerInteractiveTour()
+            binding.webView.evaluateJavascript(
+                "(function(){ if (typeof window.ClipifyToggleClippy === 'function') { window.ClipifyToggleClippy(); } else { var btn = document.getElementById('clippyToggleBtn'); if (btn) btn.click(); } })();",
+                null
+            )
         }
     }
 
     private fun setupNavigation() {
         binding.bottomNavigation.setOnItemSelectedListener { item ->
+            val currentUrl = binding.webView.url ?: ""
             when (item.itemId) {
                 R.id.nav_create -> {
-                    binding.webView.loadUrl("file:///android_asset/www/index.html")
+                    if (currentUrl.contains("index.html")) {
+                        binding.webView.evaluateJavascript("if (typeof navigateTo === 'function') navigateTo('create'); else window.location.hash = '#create';", null)
+                    } else {
+                        binding.webView.loadUrl("file:///android_asset/www/index.html")
+                    }
                     true
                 }
                 R.id.nav_narrate -> {
@@ -158,7 +169,11 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.nav_projects -> {
-                    binding.webView.loadUrl("file:///android_asset/www/index.html#projects")
+                    if (currentUrl.contains("index.html")) {
+                        binding.webView.evaluateJavascript("if (typeof navigateTo === 'function') navigateTo('projects'); else window.location.hash = '#projects';", null)
+                    } else {
+                        binding.webView.loadUrl("file:///android_asset/www/index.html#projects")
+                    }
                     true
                 }
                 else -> false
@@ -216,6 +231,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     inner class ClipifyAndroidBridge {
+        @JavascriptInterface
+        fun callApi(method: String, endpoint: String, body: String?, headers: String?): String {
+            return syncClient.executeApiCall(method, endpoint, body, headers)
+        }
+
         @JavascriptInterface
         fun pickVideo() {
             runOnUiThread {

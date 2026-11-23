@@ -466,7 +466,9 @@
           } else if (!status.active) {
             clearInterval(activePollInterval);
             activePollInterval = null;
-            if (status.status === 'Completed') {
+            const sLower = String(status.status || '').toLowerCase();
+            const isSuccess = sLower.includes('completed') || status.percent === 100 || status.progress === 100 || (status.ok && !status.error);
+            if (isSuccess) {
               if (fillEl) fillEl.style.width = '100%';
               if (centEl) centEl.textContent = '100%';
               if (textEl) textEl.textContent = 'Installed successfully!';
@@ -474,7 +476,15 @@
                 await fetchInstalledModels();
               }, 800);
             } else {
-              alert('Download finished with status: ' + (status.status || 'Unknown'));
+              const errMsg = status.error || status.status || 'Model could not be installed';
+              if (textEl) textEl.textContent = errMsg;
+              if (actionsEl) actionsEl.style.display = 'flex';
+              if (progressEl) progressEl.style.display = 'none';
+              if (window.showToast) {
+                window.showToast('Model download status: ' + errMsg, 'warn');
+              } else {
+                alert('Model download status: ' + errMsg);
+              }
               await fetchInstalledModels();
             }
           }

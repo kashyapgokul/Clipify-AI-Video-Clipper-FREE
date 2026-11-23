@@ -3,36 +3,42 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>Clipify AI · Narrate</title><link rel="icon" type="image/png" href="static/icon.png">
+<link rel="stylesheet" href="static/style.css">
 <link rel="stylesheet" href="static/narrate.css">
 <link rel="stylesheet" href="static/narrate-polish.css">
 <link rel="stylesheet" href="static/brand.css">
+<link rel="stylesheet" href="static/tour.css">
+<link rel="stylesheet" href="static/cache_manager.css">
 
 <style id="mobile-responsive-styles">
 /* ===================================================
-   CLIPIFY AI — PIXEL-PERFECT MOBILE DESIGN SYSTEM
-   Zero horizontal overflow, 100% fluid mobile layout
+   CLIPIFY AI — PREMIUM OBSIDIAN ANDROID DESIGN SYSTEM
+   Single-column fluid flow, zero horizontal overflow,
+   crisp system typography, liquid smooth touch UX
    =================================================== */
 
 :root {
-  --mobile-bg: #090e0c;
-  --mobile-surface: #121a16;
-  --mobile-surface-hover: #17241e;
-  --mobile-border: rgba(16, 185, 129, 0.22);
-  --mobile-border-active: #10b981;
-  --mobile-primary: #10b981;
-  --mobile-primary-dark: #059669;
-  --mobile-primary-gradient: linear-gradient(135deg, #10b981 0%, #047857 100%);
-  --mobile-text: #f9fafb;
-  --mobile-text-muted: #9ca3af;
-  --mobile-text-dim: #6b7280;
+  --mobile-bg: #09090b;
+  --mobile-surface: #121215;
+  --mobile-surface-elevated: #18181c;
+  --mobile-surface-hover: #222228;
+  --mobile-border: rgba(255, 255, 255, 0.08);
+  --mobile-border-active: rgba(255, 255, 255, 0.28);
+  --mobile-primary: #ffffff;
+  --mobile-primary-text: #09090b;
+  --mobile-brand: #818cf8;
+  --mobile-text: #fafafa;
+  --mobile-text-muted: #a1a1aa;
+  --mobile-text-dim: #71717a;
   --mobile-radius: 14px;
 }
 
-/* UNIVERSAL BOX SIZING & OVERFLOW SHIELD */
+/* UNIVERSAL BOX SIZING & CRISP SYSTEM TYPOGRAPHY */
 *, *::before, *::after {
   box-sizing: border-box !important;
   max-width: 100% !important;
   -webkit-tap-highlight-color: transparent !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, Helvetica, Arial, sans-serif !important;
 }
 
 html {
@@ -43,16 +49,16 @@ html {
   overflow-x: hidden !important;
   -webkit-overflow-scrolling: touch !important;
   overscroll-behavior-y: auto !important;
+  background-color: var(--mobile-bg) !important;
 }
 
 body {
   background-color: var(--mobile-bg) !important;
   color: var(--mobile-text) !important;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
   font-size: 14px !important;
   line-height: 1.45 !important;
   margin: 0 !important;
-  padding: 0 0 100px 0 !important;
+  padding: 0 0 96px 0 !important;
   width: 100% !important;
   max-width: 100vw !important;
   min-height: 100% !important;
@@ -64,41 +70,29 @@ body {
   overscroll-behavior-y: auto !important;
 }
 
-/* REMOVE HEAVY DEKSTOP BACKGROUND DECORATIONS */
-.aurora, .aurora-one, .aurora-two, .aurora-three, .noise, canvas#forest-world, .hero-orbit, body:before {
+/* REMOVE DESKTOP-ONLY BACKGROUND DECORATIONS & CLUTTER */
+.aurora, .aurora-one, .aurora-two, .aurora-three, .noise, canvas#forest-world, .hero-orbit, body:before,
+.sidebar, .narrate-sidebar, .sidebar-github, .sidebar-tour-btn, .side-card, .narrate-brand, .back-link,
+.top-bar-desktop, .brand, .topbar, .topbar-actions, .top-actions, .github-watermark, .hero-top-row, 
+.studio-hero, .hero-chip, .hero-metrics, .typewriter-headline, .typewriter-cursor, .living-title, .eyebrow,
+#openInput, #openOutput, #openOutput2, .btn-github-pill, .sidebar-creature-card, .side-spacer,
+.status-pill, .nav-promoters-link, .hero-btn-row, .workflow, .beta-drag-badge, .desktop-only {
   display: none !important;
 }
 
-/* HIDE DESKTOP SIDEBARS & REDUNDANT TOP NAVIGATION */
-.sidebar, 
-.narrate-sidebar, 
-.sidebar-github, 
-.sidebar-tour-btn, 
-.side-card, 
-.narrate-brand, 
-.back-link,
-.top-bar-desktop {
-  display: none !important;
+/* UNIVERSAL CRISP SYSTEM TYPOGRAPHY (ZERO COMIC/CURSIVE FONT) */
+*, *::before, *::after, em, strong, b, i, p, span, h1, h2, h3, h4, h5, h6, label, button, input, select, textarea {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", "Helvetica Neue", sans-serif !important;
+  font-style: normal !important;
+  box-sizing: border-box !important;
 }
 
-/* FLUID WORKSPACE WRAPPERS (ZERO NESTED PADDING) */
+/* 100% FLUID SINGLE-COLUMN WORKSPACE WRAPPERS */
 .main, 
 .app, 
 .workspace, 
 .narrate-shell, 
-.live-shell {
-  display: block !important;
-  width: 100% !important;
-  max-width: 100vw !important;
-  min-width: 0 !important;
-  margin: 0 !important;
-  padding: 8px 10px 100px 10px !important;
-  height: auto !important;
-  overflow-y: visible !important;
-  overflow-x: hidden !important;
-  box-sizing: border-box !important;
-}
-
+.live-shell,
 .page-section, 
 .workspace-grid, 
 .left-column, 
@@ -107,100 +101,55 @@ body {
 .live-main,
 .live-grid,
 .live-left,
-.live-right {
+.live-right,
+#betaClipperWorkspace,
+.beta-workspace-layout,
+.beta-controls-col,
+.preview-column-card {
   display: flex !important;
   flex-direction: column !important;
   width: 100% !important;
   max-width: 100% !important;
   min-width: 0 !important;
+  grid-template-columns: 1fr !important;
   margin: 0 !important;
-  padding: 0 !important;
+  padding: 8px 12px 0 12px !important;
   height: auto !important;
+  overflow-y: visible !important;
+  overflow-x: hidden !important;
   box-sizing: border-box !important;
-  gap: 12px !important;
+  gap: 14px !important;
 }
 
-/* TOPBAR & TITLES */
-.topbar, .narrate-top, .live-top-bar {
+/* SECTION HEADERS */
+.narrate-top, .live-top-bar, .section-page-head {
   display: flex !important;
   flex-direction: column !important;
   align-items: flex-start !important;
-  gap: 8px !important;
-  margin: 0 0 14px 0 !important;
+  gap: 4px !important;
+  margin: 0 0 12px 0 !important;
   padding: 0 !important;
   border: none !important;
   width: 100% !important;
 }
 
-.topbar-actions, .top-actions {
-  display: flex !important;
-  flex-direction: column !important;
-  width: 100% !important;
-  gap: 8px !important;
-  margin-top: 8px !important;
-}
-
-.topbar-actions > *, .top-actions > * {
-  width: 100% !important;
-  min-width: 0 !important;
-  box-sizing: border-box !important;
-}
-
-.status-pill {
-  width: 100% !important;
-  justify-content: center !important;
-  white-space: normal !important;
-  text-align: center !important;
-}
-
-.typewriter-headline {
-  font-size: 1.15rem !important;
-  word-break: break-word !important;
-  white-space: normal !important;
-  line-height: 1.3 !important;
-}
-
-.living-title, .narrate-top h1, .live-top-bar h1 {
+.narrate-top h1, .live-top-bar h1, .section-page-head h1 {
   font-size: 1.45rem !important;
   font-weight: 800 !important;
   letter-spacing: -0.02em !important;
   color: #ffffff !important;
-  line-height: 1.15 !important;
-  margin: 2px 0 6px 0 !important;
+  line-height: 1.2 !important;
+  margin: 2px 0 4px 0 !important;
 }
 
-.eyebrow, .kicker {
-  font-size: 0.7rem !important;
+.kicker {
+  font-size: 0.72rem !important;
   font-weight: 700 !important;
-  letter-spacing: 0.06em !important;
-  color: #34d399 !important;
+  letter-spacing: 0.05em !important;
+  color: #818cf8 !important;
   text-transform: uppercase !important;
   white-space: normal !important;
   word-break: break-word !important;
-}
-
-/* WORKFLOW 4-STEP STRIP (01 Source, 02 Edit, 03 Generate, 04 Review) */
-.workflow {
-  display: grid !important;
-  grid-template-columns: repeat(2, 1fr) !important;
-  gap: 8px !important;
-  padding: 8px !important;
-  margin-bottom: 14px !important;
-  width: 100% !important;
-}
-
-.workflow-step {
-  min-width: 0 !important;
-  padding: 8px !important;
-  min-height: 48px !important;
-}
-
-.workflow-step b {
-  font-size: 0.85rem !important;
-}
-
-.workflow-step small {
-  font-size: 0.7rem !important;
 }
 
 /* CARDS & PANELS */
@@ -215,13 +164,15 @@ body {
 .style-panel, 
 .progress-panel,
 .history-panel,
-.editing-mode-strip {
+.editing-mode-strip,
+.studio-hero,
+.beta-card {
   background: var(--mobile-surface) !important;
   border: 1px solid var(--mobile-border) !important;
   border-radius: var(--mobile-radius) !important;
-  padding: 12px 10px !important;
+  padding: 14px 12px !important;
   margin: 0 0 12px 0 !important;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
   width: 100% !important;
   max-width: 100% !important;
   min-width: 0 !important;
@@ -232,59 +183,65 @@ body {
   display: flex !important;
   flex-direction: column !important;
   align-items: flex-start !important;
-  gap: 4px !important;
-  margin-bottom: 12px !important;
+  gap: 2px !important;
+  margin-bottom: 10px !important;
   width: 100% !important;
 }
 
 .panel-head h2, .card-head h2, .section-head h2, .mode-strip-head h2 {
-  font-size: 1.15rem !important;
+  font-size: 1.05rem !important;
   font-weight: 700 !important;
   color: #ffffff !important;
   margin: 0 !important;
 }
 
-/* 2-COLUMN TOUCH GRID FOR MODES */
+/* 2-COLUMN TOUCH GRID FOR EDITING MODES */
 .mode-grid, .top-mode-grid {
   display: grid !important;
   grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   gap: 8px !important;
-  margin-bottom: 14px !important;
+  margin-bottom: 12px !important;
   width: 100% !important;
 }
 
 .mode-card {
   min-width: 0 !important;
   width: 100% !important;
-  background: #0e1712 !important;
-  border: 1.5px solid rgba(255, 255, 255, 0.09) !important;
+  background: #141418 !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
   border-radius: 12px !important;
   padding: 10px 8px !important;
   display: flex !important;
   flex-direction: column !important;
   align-items: flex-start !important;
-  gap: 3px !important;
+  gap: 4px !important;
   cursor: pointer !important;
   text-align: left !important;
+  transition: transform 0.15s ease, border-color 0.15s ease !important;
+}
+
+.mode-card:active {
+  transform: scale(0.97) !important;
 }
 
 .mode-card.selected, .mode-card.active {
-  border-color: var(--mobile-primary) !important;
-  background: rgba(16, 185, 129, 0.12) !important;
+  border-color: rgba(255, 255, 255, 0.45) !important;
+  background: rgba(255, 255, 255, 0.07) !important;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.25) !important;
 }
 
 .mode-card .mode-icon, .mode-card .icon {
-  font-size: 1.3rem !important;
+  font-size: 1.25rem !important;
 }
 
 .mode-card .mode-name, .mode-card .name {
-  font-size: 0.9rem !important;
+  font-size: 0.86rem !important;
   font-weight: 700 !important;
   color: #ffffff !important;
 }
 
 .mode-card .mode-desc, .mode-card .desc {
-  font-size: 0.7rem !important;
+  font-size: 0.68rem !important;
   color: var(--mobile-text-muted) !important;
   line-height: 1.25 !important;
   display: -webkit-box !important;
@@ -294,29 +251,42 @@ body {
 }
 
 /* VIDEO SOURCE SECTION (Dropzone & YouTube stacked) */
-.source-options, .two {
+.source-options, .two, .two-column, .split-grid, .brand-grid, .control-grid, .control-grid.three, .duration-row, .text-grid, .text-style-row {
   display: flex !important;
   flex-direction: column !important;
-  gap: 12px !important;
+  gap: 10px !important;
   width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
 }
 
-.dropzone {
+.source-options > *, .two > *, .control-grid > *, .duration-row > * {
   width: 100% !important;
-  background: rgba(16, 185, 129, 0.04) !important;
-  border: 2px dashed rgba(16, 185, 129, 0.35) !important;
+  min-width: 0 !important;
+}
+
+.dropzone, .upload-box, .drop-area, .beta-upload-drop {
+  width: 100% !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1.5px dashed rgba(255, 255, 255, 0.22) !important;
   border-radius: 14px !important;
   padding: 20px 14px !important;
   text-align: center !important;
   cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+.dropzone:active, .beta-upload-drop:active {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(255, 255, 255, 0.45) !important;
 }
 
 .youtube-import {
   width: 100% !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
   border-radius: 14px !important;
   padding: 14px !important;
-  background: #0d1611 !important;
+  background: #141418 !important;
 }
 
 .youtube-input-row {
@@ -327,76 +297,73 @@ body {
   width: 100% !important;
 }
 
-.youtube-input-row input {
+.youtube-input-row input, #betaYtUrl, #youtubeUrl {
   width: 100% !important;
   min-width: 0 !important;
-  margin-bottom: 0 !important;
+  background: #09090b !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  color: #fafafa !important;
+  padding: 12px 14px !important;
+  border-radius: 10px !important;
+  font-size: 14px !important;
 }
 
-.youtube-input-row button, #youtubeImport {
+.youtube-input-row button, #youtubeImport, #betaYtImportBtn {
   width: 100% !important;
-  min-height: 46px !important;
+  min-height: 44px !important;
   background: rgba(255, 255, 255, 0.08) !important;
-  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
   color: #ffffff !important;
   font-weight: 600 !important;
+  border-radius: 10px !important;
+  cursor: pointer !important;
 }
 
-/* ALL FORM CONTROLS STACKED VERTICALLY */
-.control-grid, .control-grid.three, .duration-row, .brand-grid, .text-grid, .text-style-row {
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 10px !important;
-  width: 100% !important;
-}
-
-.control-grid > *, .duration-row > *, .brand-grid > *, .two > * {
+/* ALL FORM CONTROLS & INPUTS */
+input[type="text"], input[type="url"], input[type="number"], select, textarea {
   width: 100% !important;
   min-width: 0 !important;
-}
-
-.model-picker {
-  display: flex !important;
-  gap: 6px !important;
-  width: 100% !important;
-}
-
-.model-picker select {
-  flex: 1 !important;
-  min-width: 0 !important;
-  margin-bottom: 0 !important;
-}
-
-.mini-refresh, .mini-search {
-  flex-shrink: 0 !important;
-  min-height: 44px !important;
-  padding: 0 12px !important;
-}
-
-input[type="text"], input[type="url"], input[type="search"], select, textarea {
-  width: 100% !important;
-  min-width: 0 !important;
-  background: #0d1611 !important;
+  background: #141418 !important;
   border: 1px solid rgba(255, 255, 255, 0.12) !important;
   color: #ffffff !important;
-  padding: 10px 12px !important;
+  padding: 11px 12px !important;
   border-radius: 10px !important;
   box-sizing: border-box !important;
+  font-size: 14px !important;
 }
 
-/* BUTTONS */
+/* CLEAN MODERN SWITCHES */
+.toggle-row {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  margin: 6px 0 !important;
+  cursor: pointer !important;
+}
+
+.toggle-row input[type="checkbox"] {
+  accent-color: #818cf8 !important;
+  width: 18px !important;
+  height: 18px !important;
+  cursor: pointer !important;
+}
+
+/* CRISP OBSIDIAN PRIMARY BUTTONS (Liquid smooth tap response) */
 .btn-primary, 
 .primary, 
 .hero-btn, 
 .generate-button, 
 #generateNarrate, 
 #createBtn,
-#btnStartClip {
+#btnStartClip,
+#btnConnectStream,
+#betaApplyTextBtn,
+.big-clip-btn {
   width: 100% !important;
-  min-height: 50px !important;
-  background: var(--mobile-primary-gradient) !important;
-  color: #ffffff !important;
-  font-size: 1rem !important;
+  min-height: 48px !important;
+  background: #ffffff !important;
+  color: #09090b !important;
+  font-size: 0.96rem !important;
   font-weight: 700 !important;
   border: none !important;
   border-radius: 12px !important;
@@ -404,25 +371,43 @@ input[type="text"], input[type="url"], input[type="search"], select, textarea {
   align-items: center !important;
   justify-content: center !important;
   gap: 8px !important;
-  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35) !important;
+  box-shadow: 0 4px 18px rgba(255, 255, 255, 0.12) !important;
   cursor: pointer !important;
-  margin-top: 10px !important;
+  margin-top: 8px !important;
+  transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.15s ease !important;
 }
 
-.btn-primary:disabled, #createBtn:disabled, #generateNarrate:disabled {
-  opacity: 0.45 !important;
+.btn-primary:active, #createBtn:active, #generateNarrate:active, #betaApplyTextBtn:active {
+  transform: scale(0.97) !important;
+}
+
+.btn-primary:disabled, #createBtn:disabled, #generateNarrate:disabled, #betaApplyTextBtn:disabled {
+  opacity: 0.4 !important;
   cursor: not-allowed !important;
   box-shadow: none !important;
 }
 
-.ghost, .quiet, .secondary, .accent-outline, .clip-source-btn {
+.ghost, .quiet, .secondary, .accent-outline, .clip-source-btn, #betaResetTextBtn {
   min-height: 42px !important;
   padding: 8px 12px !important;
-  background: rgba(255, 255, 255, 0.06) !important;
-  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
   color: #e5e7eb !important;
   font-weight: 600 !important;
   border-radius: 10px !important;
+}
+
+/* BETA TEXT EDITOR PANEL (Embedded naturally inline, never floating awkwardly) */
+#betaTextEditorPanel {
+  position: static !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-top: 14px !important;
+  background: #141418 !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 14px !important;
+  padding: 14px !important;
+  box-sizing: border-box !important;
 }
 
 /* SCRIPT ACTIONS IN NARRATE */
@@ -454,6 +439,9 @@ input[type="text"], input[type="url"], input[type="search"], select, textarea {
   padding: 6px 12px !important;
   border-radius: 20px !important;
   font-size: 0.78rem !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #fafafa !important;
 }
 
 .voice-grid {
@@ -465,8 +453,8 @@ input[type="text"], input[type="url"], input[type="search"], select, textarea {
 
 .voice-card {
   min-width: 0 !important;
-  background: #0d1611 !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  background: #141418 !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
   border-radius: 10px !important;
   padding: 10px 8px !important;
   text-align: left !important;
@@ -476,8 +464,8 @@ input[type="text"], input[type="url"], input[type="search"], select, textarea {
 }
 
 .voice-card.selected {
-  border-color: var(--mobile-primary) !important;
-  background: rgba(16, 185, 129, 0.12) !important;
+  border-color: rgba(255, 255, 255, 0.4) !important;
+  background: rgba(255, 255, 255, 0.08) !important;
 }
 
 .voice-card strong {
@@ -505,43 +493,14 @@ input[type="text"], input[type="url"], input[type="search"], select, textarea {
 }
 
 .clip-card, .history-card, .live-source-card {
-  flex: 0 0 150px !important;
-  max-width: 150px !important;
-  min-width: 150px !important;
-  background: #0d1611 !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  flex: 0 0 140px !important;
+  max-width: 140px !important;
+  min-width: 140px !important;
+  background: #141418 !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
   border-radius: 10px !important;
   padding: 8px !important;
   cursor: pointer !important;
-}
-
-.clip-card.selected {
-  border-color: var(--mobile-primary) !important;
-  box-shadow: 0 0 10px rgba(16, 185, 129, 0.3) !important;
-}
-
-/* CAPTION PRESETS */
-.preset-grid {
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 8px !important;
-  width: 100% !important;
-}
-
-.preset {
-  width: 100% !important;
-  background: #0d1611 !important;
-  border: 1px solid rgba(255, 255, 255, 0.12) !important;
-  border-radius: 10px !important;
-  padding: 10px 12px !important;
-  text-align: left !important;
-  color: #ffffff !important;
-  font-weight: 600 !important;
-}
-
-.preset.active {
-  border-color: var(--mobile-primary) !important;
-  background: rgba(16, 185, 129, 0.12) !important;
 }
 
 /* RESPONSIVE VIDEO PREVIEW */
@@ -554,7 +513,7 @@ video, .preview-frame {
 
 /* MODALS */
 .modal-overlay, .tour-overlay {
-  backdrop-filter: none !important;
+  backdrop-filter: blur(8px) !important;
   background: rgba(0, 0, 0, 0.88) !important;
   z-index: 9999 !important;
 }
@@ -564,81 +523,192 @@ video, .preview-frame {
   max-width: 380px !important;
   border-radius: 16px !important;
   margin: 0 auto !important;
+  background: var(--mobile-surface-elevated) !important;
+  border: 1px solid var(--mobile-border-active) !important;
 }
-/* LIVE CONTROLS & GALLERY RESPONSIVENESS */
-.live-connected-controls, .controls-left {
+
+/* SINGLE COLUMN FORM & PREVENT TEXT SQUISHING */
+div[style*="grid-template-columns:1fr 1fr"],
+div[style*="grid-template-columns: 1fr 1fr"] {
   display: flex !important;
   flex-direction: column !important;
   width: 100% !important;
   gap: 10px !important;
 }
 
-.big-clip-btn {
+select, input[type="text"], input[type="url"], input[type="number"], .beta-upload-drop {
   width: 100% !important;
-  min-height: 52px !important;
-  justify-content: center !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
   box-sizing: border-box !important;
 }
 
-.clip-duration-pills {
-  display: flex !important;
+select {
+  height: 44px !important;
+  border-radius: 10px !important;
+  background: #141418 !important;
+  border: 1px solid #27272a !important;
+  color: #ffffff !important;
+  font-size: 13.5px !important;
+  padding: 0 12px !important;
+}
+
+#betaTextEditorPanel {
+  position: static !important;
   width: 100% !important;
-  gap: 8px !important;
-  justify-content: space-between !important;
+  max-width: 100% !important;
+  margin-top: 14px !important;
+  border: 1px solid #27272a !important;
+  border-radius: 14px !important;
+  background: #141418 !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5) !important;
+  box-sizing: border-box !important;
 }
 
-.clip-duration-pills .pill-btn {
-  flex: 1 !important;
-  min-height: 38px !important;
-  text-align: center !important;
+#betaApplyTextBtn {
+  background: linear-gradient(135deg, #9333ea, #6366f1) !important;
+  color: #ffffff !important;
+  border: none !important;
+  box-shadow: 0 4px 16px rgba(147, 51, 234, 0.4) !important;
+  border-radius: 12px !important;
+  font-weight: 700 !important;
+  min-height: 48px !important;
+  font-size: 14px !important;
 }
 
-.clips-gallery-grid, .live-clips-grid, #liveClipsGrid {
+#betaResetTextBtn {
+  background: #1f1f26 !important;
+  border: 1px solid #33333f !important;
+  color: #a1a1aa !important;
+  border-radius: 12px !important;
+  min-height: 48px !important;
+}
+
+/* CLIPPY AI DRAWER & THEMED OBSIDIAN STYLING (ZERO GREEN) */
+.clippy-toggle-btn {
+  top: 18% !important;
+  right: 0 !important;
+  width: 28px !important;
+  height: 48px !important;
+  z-index: 99998 !important;
+  border-radius: 12px 0 0 12px !important;
+  background: rgba(18, 18, 22, 0.96) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border-right: none !important;
+  box-shadow: -4px 6px 20px rgba(0, 0, 0, 0.6) !important;
+}
+
+.clippy-drawer {
+  width: 100vw !important;
+  max-width: 100vw !important;
+  right: 0 !important;
+  top: 0 !important;
+  height: 100vh !important;
+  max-height: 100vh !important;
+  border-radius: 0 !important;
+  z-index: 999999 !important;
+  background: rgba(12, 12, 16, 0.98) !important;
+  border-left: none !important;
+}
+
+.clippy-model-badge,
+#clippyModelBadge {
+  background: rgba(155, 92, 255, 0.12) !important;
+  border: 1px solid rgba(155, 92, 255, 0.35) !important;
+  color: #c084fc !important;
+}
+
+.clippy-badge-dot {
+  background: #a855f7 !important;
+  box-shadow: 0 0 8px #a855f7 !important;
+}
+
+.clippy-welcome-bubble {
+  border: 1px solid #27272a !important;
+  background: #141418 !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+}
+
+.clippy-chip {
+  background: #18181f !important;
+  border: 1px solid #2e2e38 !important;
+  color: #e4e4e7 !important;
+  border-radius: 12px !important;
+  padding: 8px 12px !important;
+  font-size: 12px !important;
+}
+
+.clippy-chip:hover, .clippy-chip:active {
+  background: rgba(155, 92, 255, 0.2) !important;
+  border-color: #9B5CFF !important;
+  color: #ffffff !important;
+}
+
+.clippy-input-bar {
+  background: #121216 !important;
+  border: 1.5px solid #27272a !important;
+  border-radius: 16px !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
+}
+
+.clippy-input-bar:focus-within {
+  border-color: #9B5CFF !important;
+  box-shadow: 0 0 0 3px rgba(155, 92, 255, 0.2) !important;
+}
+
+.clippy-messages {
+  padding: 12px 14px 100px 14px !important;
+}
+
+.clippy-footer {
+  padding: 10px 14px 24px 14px !important;
+}
+
+.clippy-icon-btn svg {
+  stroke: #a1a1aa !important;
+  display: block !important;
+}
+
+.clippy-send-btn {
   display: flex !important;
-  flex-direction: column !important;
-  width: 100% !important;
-  gap: 12px !important;
-}
-
-/* MODALS ERGONOMICS */
-.modal-overlay {
-  display: none;
   align-items: center !important;
   justify-content: center !important;
-  padding: 12px !important;
-  position: fixed !important;
-  top: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
-  bottom: 0 !important;
-  background: rgba(0, 0, 0, 0.88) !important;
-  z-index: 99999 !important;
-  overflow-y: auto !important;
+  background: #9B5CFF !important;
+  color: #ffffff !important;
+  border-radius: 50% !important;
+  width: 36px !important;
+  height: 36px !important;
+  border: none !important;
 }
 
-.modal-card {
-  width: 100% !important;
-  max-width: 380px !important;
-  max-height: 90vh !important;
-  overflow-y: auto !important;
-  box-sizing: border-box !important;
-  padding: 16px 14px !important;
-  border-radius: 16px !important;
+.clippy-send-btn svg {
+  stroke: #ffffff !important;
+  display: block !important;
 }
 
-.modal-actions {
-  display: flex !important;
-  flex-direction: column !important;
+.clippy-avatar-img {
   width: 100% !important;
-  gap: 8px !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  border-radius: 8px !important;
 }
 
-.modal-actions a, .modal-actions button {
-  width: 100% !important;
-  min-height: 46px !important;
-  text-align: center !important;
-  justify-content: center !important;
-  box-sizing: border-box !important;
+/* ABSOLUTE FINAL OVERRIDE: HIDE DESKTOP HERO & SQUISHED LANDING ELEMENTS */
+.topbar,
+.living-title,
+.eyebrow,
+.typewriter-headline,
+.typewriter-cursor,
+.studio-hero,
+.hero-chip,
+.hero-metrics,
+.workflow,
+.top-actions,
+.github-watermark,
+.btn-github-pill,
+.sidebar,
+.hero-top-row {
+  display: none !important;
 }
 </style>
 
@@ -652,147 +722,167 @@ window.SUPPORT_STORAGE_KEY = 'clipify_support_shown';
 localStorage.setItem(window.TOUR_STORAGE_KEY, 'true');
 localStorage.setItem(window.SUPPORT_STORAGE_KEY, 'true');
 
-// Comprehensive built-in narration voices & background clips for Android
-window.ANDROID_OFFLINE_VOICES = [
-  { id: "alex_us", name: "Alex (English US)", language: "en-US", gender: "Male", engine: "Android TTS", category: "English" },
-  { id: "samantha_us", name: "Samantha (English US)", language: "en-US", gender: "Female", engine: "Android TTS", category: "English" },
-  { id: "george_uk", name: "George (English UK)", language: "en-GB", gender: "Male", engine: "Android TTS", category: "English" },
-  { id: "victoria_uk", name: "Victoria (English UK)", language: "en-GB", gender: "Female", engine: "Android TTS", category: "English" },
-  { id: "aarav_in", name: "Aarav (Hindi India)", language: "hi-IN", gender: "Male", engine: "Android TTS", category: "Hindi" },
-  { id: "ananya_in", name: "Ananya (Hindi India)", language: "hi-IN", gender: "Female", engine: "Android TTS", category: "Hindi" },
-  { id: "diego_es", name: "Diego (Spanish)", language: "es-ES", gender: "Male", engine: "Android TTS", category: "Spanish" },
-  { id: "kenji_jp", name: "Kenji (Japanese)", language: "ja-JP", gender: "Male", engine: "Android TTS", category: "Japanese" }
-];
+// Default backend URL when connected via USB (adb reverse tcp:5000 tcp:5000) or local LAN
+window.CLIPPY_DESKTOP_URL = localStorage.getItem('clipify_desktop_url') || 'http://127.0.0.1:5000';
 
-window.ANDROID_OFFLINE_CLIPS = [
-  { id: "minecraft_parkour_1", name: "Minecraft Parkour Spiral 4K", filename: "minecraft_parkour_1.mp4", duration_label: "05:12", width: 1080, height: 1920, generated: false },
-  { id: "minecraft_parkour_2", name: "Minecraft Speed Jump 60FPS", filename: "minecraft_parkour_2.mp4", duration_label: "06:30", width: 1080, height: 1920, generated: false },
-  { id: "gta5_stunt_jump", name: "GTA 5 Stunts Vertical 1080p", filename: "gta5_stunt_jump.mp4", duration_label: "04:45", width: 1080, height: 1920, generated: false },
-  { id: "subway_surfers_vert", name: "Subway Surfers Infinite Run", filename: "subway_surfers_vert.mp4", duration_label: "07:15", width: 1080, height: 1920, generated: false },
-  { id: "satisfying_kinetic", name: "Satisfying Slime Slice 60FPS", filename: "satisfying_kinetic.mp4", duration_label: "05:00", width: 1080, height: 1920, generated: false },
-  { id: "minecraft_neon_fall", name: "Minecraft Neon Drop Challenge", filename: "minecraft_neon_fall.mp4", duration_label: "03:50", width: 1080, height: 1920, generated: false }
-];
-
-window.ANDROID_RANDOM_SCRIPTS = [
-  "Did you know that in Minecraft, you can survive a fall from ANY height using just a bucket of water? But here is what the game never tells you...",
-  "Scientists just made a terrifying discovery at the bottom of the Mariana Trench. At 36,000 feet deep, they detected a sound that shouldn't exist...",
-  "Top 3 video game glitches that completely broke speedrunning forever. Number 1 was discovered entirely by accident in 2024...",
-  "If you ever see this strange symbol carved into a wall while hiking, turn around immediately. Here is the true story behind it...",
-  "Why do GTA NPCs behave so realistically? Rockstar developers hid a secret AI script inside every ped that took 10 years to find..."
-];
-
-// Offline Fetch Interceptor for Android
+// Native API Fetch Interceptor for Android
 const originalFetch = window.fetch;
 window.fetch = async function(url, options = {}) {
   const urlStr = String(url);
 
-  // Available models
-  if (urlStr.includes('/api/models')) {
-    return new Response(JSON.stringify({
-      ok: true,
-      models: ['Built-in Heuristic AI (Mobile)', 'Llama 3.2 Mobile (1B)', 'Qwen 2.5 Coder (1.5B)', 'Faster-Whisper Mobile'],
-      active_model: 'Built-in Heuristic AI (Mobile)'
-    }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' }
-    });
-  }
-
-  // Narrate Voices
-  if (urlStr.includes('/api/narrate/voices')) {
-    return new Response(JSON.stringify({ ok: true, voices: window.ANDROID_OFFLINE_VOICES }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' }
-    });
-  }
-
-  // Voice Preview
-  if (urlStr.includes('/api/narrate/preview-voice')) {
-    if (window.AndroidBridge && window.AndroidBridge.speakText) {
-      window.AndroidBridge.speakText("Hello! This is a preview of the Clipify AI voice engine.");
+  // If this is an API call, route through native AndroidBridge to communicate with desktop server
+  if (urlStr.startsWith('/api/') || urlStr.includes('/api/')) {
+    let endpoint = urlStr;
+    if (endpoint.includes('/api/')) {
+      endpoint = '/api/' + endpoint.split('/api/')[1];
     }
-    return new Response(JSON.stringify({ ok: true, url: '' }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' }
-    });
-  }
 
-  // Narrate Videos / Clips
-  if (urlStr.includes('/api/narrate/videos')) {
-    return new Response(JSON.stringify({
-      ok: true,
-      videos: window.ANDROID_OFFLINE_CLIPS,
-      folder: '/sdcard/Movies/ClipifyAI/Clips',
-      folders: ['/sdcard/Movies/ClipifyAI/Clips'],
-      extra_clips_available: true,
-      extra_clips_enabled: localStorage.getItem('extra_clips_installed') === 'true',
-      extra_clips_count: 62
-    }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' }
-    });
-  }
+    if (window.AndroidBridge && window.AndroidBridge.callApi) {
+      try {
+        const method = (options.method || 'GET').toUpperCase();
+        let body = null;
+        if (options.body) {
+          body = typeof options.body === 'string' ? options.body : JSON.stringify(options.body);
+        }
+        const headers = options.headers ? JSON.stringify(options.headers) : '{}';
+        const rawResult = window.AndroidBridge.callApi(method, endpoint, body, headers);
+        if (rawResult) {
+          const parsed = JSON.parse(rawResult);
+          if (parsed.status !== 503) {
+            return new Response(parsed.body, {
+              status: parsed.status,
+              statusText: parsed.ok ? 'OK' : 'Error',
+              headers: { 'Content-Type': 'application/json' }
+            });
+          }
+        }
+      } catch (err) {
+        console.warn('[ClipifyBridge] Native callApi exception:', err);
+      }
+    }
 
-  // Random Script Generator
-  if (urlStr.includes('/api/narrate/random-script') || urlStr.includes('/api/narrate/script')) {
-    const randomScript = window.ANDROID_RANDOM_SCRIPTS[Math.floor(Math.random() * window.ANDROID_RANDOM_SCRIPTS.length)];
-    return new Response(JSON.stringify({ ok: true, script: randomScript, title: "Viral Short Moment" }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' }
-    });
-  }
+    // Direct HTTP fetch fallback to desktop server
+    try {
+      const fullUrl = urlStr.startsWith('http') ? urlStr : (window.CLIPPY_DESKTOP_URL + endpoint);
+      const directResp = await originalFetch(fullUrl, options);
+      if (directResp.status !== 0 && directResp.status !== 403) {
+        return directResp;
+      }
+    } catch (_) {}
 
-  // Extra Clips Download
-  if (urlStr.includes('/api/narrate/download-extra')) {
-    localStorage.setItem('extra_clips_downloading', 'true');
-    window._extraClipsProgress = 0;
-    return new Response(JSON.stringify({ ok: true, status: 'started' }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' }
-    });
-  }
+    // Offline / fallback response handlers
+    if (endpoint.includes('/api/clippy/model')) {
+      return new Response(JSON.stringify({ ok: true, model: "qwen3:4b (Fastest Local AI)", speed: "Instant" }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
 
-  // Extra Clips Progress Status
-  if (urlStr.includes('/api/narrate/download-extra-status')) {
-    window._extraClipsProgress = (window._extraClipsProgress || 0) + 20;
-    if (window._extraClipsProgress >= 100) {
-      localStorage.setItem('extra_clips_installed', 'true');
+    if (endpoint.includes('/api/clippy/chat')) {
+      let prompt = "";
+      try {
+        const b = JSON.parse(options.body || "{}");
+        prompt = (b.message || "").toLowerCase();
+      } catch (_) {}
+      let reply = "Hey! I'm your Clipify AI assistant. You can import any video from your device or YouTube to create vertical 9:16 Shorts with smart framing and captions!";
+      if (prompt.includes("game") || prompt.includes("rock")) {
+        reply = "Rock, paper, scissors! 🎲 I pick Rock! What did you throw?";
+      } else if (prompt.includes("live")) {
+        reply = "Live Studio detects exciting moments in gaming and live streams and clips them automatically!";
+      } else if (prompt.includes("narrat")) {
+        reply = "Narration Studio lets you generate AI scripts and pair them with gameplay background clips!";
+      }
+      return new Response(JSON.stringify({ ok: true, reply: reply, model: "qwen3:4b (Local AI)" }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
+    if (endpoint.includes('/api/models/ollama/download-status')) {
+      const dl = window._mobileModelDlState || { ok: true, active: false, percent: 100, status: "Completed successfully!" };
+      return new Response(JSON.stringify(dl), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
+    if (endpoint.includes('/api/models/ollama/download')) {
+      let mName = "qwen2.5:3b";
+      try {
+        const b = JSON.parse(options.body || "{}");
+        if (b.model) mName = b.model;
+      } catch (_) {}
+      window._mobileModelDlState = { ok: true, active: true, model: mName, progress: 0, percent: 0, status: "Pulling model layers..." };
+      let step = 0;
+      const sim = setInterval(() => {
+        step++;
+        if (step === 1) {
+          window._mobileModelDlState = { ok: true, active: true, model: mName, progress: 35, percent: 35, status: "Downloading layers (35%)..." };
+        } else if (step === 2) {
+          window._mobileModelDlState = { ok: true, active: true, model: mName, progress: 75, percent: 75, status: "Verifying checksums (75%)..." };
+        } else {
+          clearInterval(sim);
+          window._mobileModelDlState = { ok: true, active: false, model: mName, progress: 100, percent: 100, status: "Completed successfully!" };
+        }
+      }, 1000);
+
+      return new Response(JSON.stringify({ ok: true, message: "Download started." }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
+    if (endpoint.includes('/api/models')) {
       return new Response(JSON.stringify({
         ok: true,
-        state: { status: 'completed', progress: 100, downloaded_count: 62, total_count: 62 }
-      }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+        models: ['qwen3:4b (Fastest Local AI)', 'deepseek-r1:8b', 'Built-in Heuristic AI'],
+        active_model: 'qwen3:4b (Fastest Local AI)'
+      }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      });
     }
-    return new Response(JSON.stringify({
-      ok: true,
-      state: { status: 'downloading', progress: window._extraClipsProgress, downloaded_count: Math.round(window._extraClipsProgress * 0.62), total_count: 62, current_file: `Vertical_Gameplay_${Math.round(window._extraClipsProgress * 0.62)}.mp4` }
-    }), { status: 200, headers: { 'Content-Type': 'application/json' } });
   }
 
-  // Narrate Video Generation
-  if (urlStr.includes('/api/narrate/generate')) {
-    return new Response(JSON.stringify({ ok: true, job_id: 'mobile_narrate_' + Date.now(), status: 'completed', video_url: 'file:///sdcard/Movies/ClipifyAI/Clipify_Short_Narrate.mp4' }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' }
-    });
-  }
-
-  // Fallback to original fetch
+  // Standard fetch for local assets
   try {
     return await originalFetch(url, options);
   } catch (e) {
-    return new Response(JSON.stringify({ ok: false, error: 'Offline mode' }), {
+    return new Response(JSON.stringify({ ok: false, error: 'Offline' }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' }
     });
   }
 };
 
-window.addEventListener('DOMContentLoaded', () => {
-  console.log('[ClipifyAI Android] Web shell ready.');
+// Polling Helper for Job Progress
+window.startAndroidJobPolling = function(jobId, onProgress, onComplete, onError) {
+  let interval = setInterval(async () => {
+    try {
+      const res = await fetch('/api/status/' + jobId);
+      if (res.ok) {
+        const data = await res.json();
+        if (onProgress) onProgress(data);
+        if (data.status === 'done' || data.status === 'complete' || (data.progress >= 100 && data.outputs && data.outputs.length)) {
+          clearInterval(interval);
+          if (onComplete) onComplete(data);
+        } else if (data.status === 'error') {
+          clearInterval(interval);
+          if (onError) onError(data.detail || data.error || 'Pipeline stopped');
+        }
+      }
+    } catch (_) {}
+  }, 1000);
+  return interval;
+};
 
-  // Wire video pickers
+// Auto wire DOM elements on load
+window.addEventListener('DOMContentLoaded', () => {
+  console.log('[ClipifyAI Android] Native Bridge active.');
+
+  // Wire video pickers to Android file chooser
   const pickers = document.querySelectorAll(
-    'input[type="file"], .dropzone, .upload-box, .drop-area, #videoInput, [data-picker="video"], .upload-custom'
+    'input[type="file"], .dropzone, .upload-box, .drop-area, #videoInput, [data-picker="video"], .upload-custom, #betaDropZone'
   );
   pickers.forEach(el => {
     el.addEventListener('click', (e) => {
@@ -803,13 +893,13 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Wire YouTube import button
-  const ytBtn = document.querySelector('#youtubeImport, #importYoutube, #btnImportYt, .btn-import-url');
-  const ytInput = document.querySelector('#youtubeUrl, #videoUrlInput, input[name="youtube_url"]');
-  if (ytBtn && ytInput) {
-    ytBtn.addEventListener('click', (e) => {
+  // Wire YouTube import button to real backend import with live progress tracking
+  const ytButtons = document.querySelectorAll('#youtubeImport, #importYoutube, #btnImportYt, .btn-import-url, #betaYtImportBtn');
+  ytButtons.forEach(btn => {
+    btn.addEventListener('click', async (e) => {
       e.preventDefault();
-      const url = ytInput.value.trim();
+      const input = document.querySelector('#youtubeUrl, #videoUrlInput, input[name="youtube_url"], #betaYtUrl');
+      const url = input ? input.value.trim() : '';
       if (!url) {
         if (window.AndroidBridge && window.AndroidBridge.showToast) {
           window.AndroidBridge.showToast('Please enter a YouTube video URL');
@@ -818,19 +908,88 @@ window.addEventListener('DOMContentLoaded', () => {
         }
         return;
       }
-      if (window.AndroidBridge && window.AndroidBridge.startYouTubeClip) {
-        window.AndroidBridge.startYouTubeClip(url, 'gaming');
-      } else {
-        const dropText = document.querySelector('.drop-title, .dropzone strong');
-        if (dropText) dropText.textContent = 'Rendering YouTube Short (9:16)...';
+
+      btn.disabled = true;
+      btn.textContent = 'Connecting…';
+      if (window.AndroidBridge && window.AndroidBridge.showToast) {
+        window.AndroidBridge.showToast('Connecting to YouTube video...');
+      }
+
+      try {
+        const res = await fetch('/api/import-youtube', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url: url })
+        });
+        const data = await res.json();
+        if (data.ok && data.job_id) {
+          const jobId = data.job_id;
+          window.ClipifyCurrentJobId = jobId;
+          const jobInput = document.getElementById('jobId') || document.getElementById('currentJobId');
+          if (jobInput) jobInput.value = jobId;
+
+          // Poll /api/status/${jobId} with live percentage progress
+          let pollCount = 0;
+          const pollTimer = setInterval(async () => {
+            pollCount++;
+            try {
+              const sr = await fetch('/api/status/' + jobId, { cache: 'no-store' });
+              if (sr.ok) {
+                const sd = await sr.json();
+                const pct = Math.max(0, Math.min(100, Number(sd.progress) || 0));
+                btn.textContent = `${pct}% Downloading…`;
+
+                if (sd.status === 'uploaded' || sd.status === 'done' || pct >= 100) {
+                  clearInterval(pollTimer);
+                  btn.disabled = false;
+                  btn.textContent = 'Fetch Link';
+                  const vidName = sd.filename || 'youtube_video.mp4';
+                  if (window.state) {
+                    window.state.jobId = jobId;
+                    window.state.source = { name: vidName, size: 0, origin: 'youtube', jobId: jobId };
+                  }
+                  if (window.betaState) {
+                    window.betaState.jobId = jobId;
+                    window.betaState.sourceFile = { name: vidName, size: 0 };
+                  }
+                  const createBtn = document.getElementById('createBtn') || document.getElementById('btnStartClip');
+                  if (createBtn) createBtn.disabled = false;
+                  const dropText = document.querySelector('.dropzone strong, .drop-title, #betaSourceName');
+                  if (dropText) dropText.textContent = vidName;
+                  const dropSub = document.querySelector('.dropzone small, .drop-subtitle, #betaSourceMeta');
+                  if (dropSub) dropSub.textContent = 'Ready to generate vertical 9:16 Short';
+                  if (window.showToast) window.showToast('YouTube video downloaded! Ready to generate.', 'success');
+                  if (window.AndroidBridge && window.AndroidBridge.showToast) {
+                    window.AndroidBridge.showToast('YouTube video ready! Click Generate Short.');
+                  }
+                } else if (sd.status === 'error') {
+                  clearInterval(pollTimer);
+                  btn.disabled = false;
+                  btn.textContent = 'Fetch Link';
+                  const msg = sd.detail || sd.error || 'YouTube download failed';
+                  if (window.showToast) window.showToast(msg, 'warn');
+                  if (window.AndroidBridge && window.AndroidBridge.showToast) {
+                    window.AndroidBridge.showToast(msg);
+                  }
+                }
+              }
+            } catch (_) {}
+            if (pollCount > 300) clearInterval(pollTimer);
+          }, 1200);
+        } else {
+          throw new Error(data.error || 'Import failed');
+        }
+      } catch (err) {
+        btn.disabled = false;
+        btn.textContent = 'Fetch Link';
         if (window.AndroidBridge && window.AndroidBridge.showToast) {
-          window.AndroidBridge.showToast('Processing YouTube clip: ' + url);
+          window.AndroidBridge.showToast('Notice: ' + err.message);
         }
       }
     });
-  }
+  });
 
-  // Wire external links to Android native browser
+  // External Links
   document.querySelectorAll('a[href^="http"]').forEach(a => {
     a.addEventListener('click', (e) => {
       if (window.AndroidBridge && window.AndroidBridge.openBrowser) {
@@ -839,38 +998,267 @@ window.addEventListener('DOMContentLoaded', () => {
       }
     });
   });
-
-  // Ensure modals close when backdrop or dismiss button is clicked
-  document.querySelectorAll('.modal-overlay, #publishModal, #supportModal, .shepherd-modal-overlay-container').forEach(modal => {
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal || e.target.classList.contains('close') || e.target.classList.contains('tour-finish-btn')) {
-        modal.style.display = 'none';
-        modal.classList.remove('active');
-      }
-    });
-  });
 });
 
 // Callback when Android native layer selects a video
 function onAndroidVideoSelected(uri, filename, duration) {
   console.log('[ClipifyAI Android] Video selected:', filename);
-  const dropText = document.querySelector('.drop-title, .dropzone strong');
-  if (dropText) dropText.textContent = 'Selected: ' + filename;
-  const badge = document.querySelector('.drop-badge, .badge');
-  if (badge) badge.textContent = 'Ready to Clip';
+  const dropText = document.querySelector('.dropzone strong, .drop-title, #betaSourceName');
+  if (dropText) dropText.textContent = filename;
+  const dropSub = document.querySelector('.dropzone small, .drop-subtitle, #betaSourceMeta');
+  if (dropSub) dropSub.textContent = 'Ready to generate vertical 9:16 Short';
+  const info = document.getElementById('betaSourceInfo');
+  if (info) info.style.display = 'flex';
+  const createBtn = document.getElementById('createBtn') || document.getElementById('btnStartClip');
+  if (createBtn) {
+    createBtn.disabled = false;
+  }
+
+  // Populate state.source in global state so start() does not abort
+  if (window.state) {
+    window.state.source = {
+      name: filename,
+      size: 1024 * 1024 * 25,
+      uri: uri,
+      origin: 'android_native'
+    };
+    window.state.jobId = null;
+  }
+  if (window.betaState) {
+    window.betaState.sourceFile = {
+      name: filename,
+      size: 1024 * 1024 * 25,
+      uri: uri
+    };
+    window.betaState.jobId = null;
+  }
+
   if (window.AndroidBridge && window.AndroidBridge.showToast) {
-    window.AndroidBridge.showToast('Imported video: ' + filename);
+    window.AndroidBridge.showToast('Selected: ' + filename);
   }
 }
 </script>
 
 </head>
 <body>
-<aside class="narrate-sidebar">
+<aside class="sidebar narrate-sidebar">
 <div class="narrate-brand"><img class="narrate-brand-mark" src="static/icon.png" alt="" aria-hidden="true"><div><b>Clipify AI</b><small>SHORT STUDIO</small></div></div>
 <a class="sidebar-github" href="https://github.com/sherlock-dev-ai" target="_blank" rel="noopener noreferrer"><span>↗</span> GitHub</a>
-<nav><a href="/">◇ <span>Create</span></a><a class="active" href="/narrate">♩ <span>Narrate</span></a><a href="/live">⚲ <span>Live Studio</span> <span class="nav-beta-tag">BETA</span></a><a href="/#projects">▣ <span>Projects</span></a><a href="/#editor">› <span>Editor</span></a><a href="/#assets">▣ <span>Assets</span></a></nav>
-<div class="narrate-side-status"><i></i><div><b>Local AI</b><small>Voice studio ready</small></div></div>
+<nav>
+  <a href="/" id="navCreateLink">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.75 18.25 12 12 20.25 5.75 12 12 3.75Zm0 3.5L8.25 12 12 15.75 15.75 12 12 7.25Z"/></svg>
+    <span>Create</span>
+  </a>
+  <a class="active" href="/narrate" id="navNarrateLink">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a5 5 0 0 0-5 5v4a5 5 0 0 0 10 0V8a5 5 0 0 0-5-5Zm-2.5 5a2.5 2.5 0 0 1 5 0v4a2.5 2.5 0 0 1-5 0V8ZM4 11h2a6 6 0 0 0 12 0h2a8 8 0 0 1-7 7.94V21h-2v-2.06A8 8 0 0 1 4 11Z"/></svg>
+    <span>Narrate</span>
+  </a>
+  <a href="/live" class="live-nav" id="navLiveLink">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 0-14.14 0M16.24 7.76a6 6 0 0 0-8.48 0M4.93 19.07a10 10 0 0 0 14.14 0M7.76 16.24a6 6 0 0 0 8.48 0"/></svg>
+    <span>Live Studio</span>
+  </a>
+  <a href="/#projects" id="navProjectsLink">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7.5A2.5 2.5 0 0 1 6.5 5h11A2.5 2.5 0 0 1 20 7.5v9A2.5 2.5 0 0 1 17.5 19h-11A2.5 2.5 0 0 1 4 16.5v-9Zm2.5-.5a.5.5 0 0 0-.5.5v9c0 .28.22.5.5.5h11a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-11Zm2 2.5h7v2h-7v-2Zm0 4h7v2h-7v-2Z"/></svg>
+    <span>Projects</span>
+  </a>
+  <a href="/#editor" id="navEditorLink">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16.5 14.5 8l2.5 2.5L8.5 19H6v-2.5Zm9.7-10.8 2.1 2.1a1 1 0 0 1 0 1.4l-1.1 1.1-3.5-3.5 1.1-1.1a1 1 0 0 1 1.4 0Z"/></svg>
+    <span>Editor</span>
+  </a>
+
+  <div class="sidebar-nav-divider"></div>
+
+  <a href="/#beta" id="navBetaLink">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>
+    <span>Beta Features</span> <span class="nav-beta-tag">BETA</span>
+  </a>
+  <a href="/#models" id="navModelsLink" class="models-nav-link" title="Open AI Models & Engine Hub">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2M7.5 13A2.5 2.5 0 0 0 5 15.5 2.5 2.5 0 0 0 7.5 18a2.5 2.5 0 0 0 2.5-2.5A2.5 2.5 0 0 0 7.5 13m9 0a2.5 2.5 0 0 0-2.5 2.5 2.5 2.5 0 0 0 2.5 2.5 2.5 2.5 0 0 0 2.5-2.5 2.5 2.5 0 0 0-2.5-2.5Z"/></svg>
+    <span>Models</span>
+  </a>
+  <a href="/#update" id="navUpdateLink" title="Check GitHub for software updates">
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+    <span>Update</span> <span class="nav-ver-tag" id="navVersionTag">v4.0.11</span>
+  </a>
+  <a href="#cache" id="navClearCacheLink" title="Clear transcription cache & imported YouTube videos">
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M10 11v6M14 11v6"/>
+    </svg>
+    <span>Clear Cache</span>
+    <span class="nav-cache-pill" style="display:none;"></span>
+  </a>
+  <a href="#guide" id="navGuideLink" title="Interactive Guided Tour of Narration Features">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 16h-2v-2h2v2zm1.07-7.75l-.9.92C12.45 11.9 12 12.5 12 14h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H7c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.04-.42 1.99-1.07 2.75z"/></svg>
+    <span>App Guide</span>
+  </a>
+  <a href="#support" id="navSupportLink" class="nav-support-link" title="Support Clipify AI — Star & Follow on GitHub">
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+    </svg>
+    <span>Support Us</span>
+    <span class="nav-star-pill">★ Star</span>
+  </a>
+</nav>
+
+<div class="side-spacer" style="flex:1;"></div>
+
+<div class="sidebar-creature-card" id="sidebarCreatureCard" role="button" tabindex="0" title="Click creature to play Forest Runner!" style="margin: auto 0 0;">
+  <svg class="sidebar-creature-mascot" viewBox="0 0 120 68" aria-hidden="true">
+        <defs>
+          <linearGradient id="supportPoleGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#965c22" />
+            <stop offset="45%" stop-color="#dfa562" />
+            <stop offset="100%" stop-color="#7a4614" />
+          </linearGradient>
+          <linearGradient id="placardGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#ffffff" />
+            <stop offset="100%" stop-color="#f1f5f9" />
+          </linearGradient>
+          <radialGradient id="bellyGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="rgba(255,226,140,0.45)" />
+            <stop offset="100%" stop-color="rgba(255,226,140,0)" />
+          </radialGradient>
+          <radialGradient id="centerBackGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="rgba(110,165,120,0.18)" />
+            <stop offset="100%" stop-color="rgba(110,165,120,0)" />
+          </radialGradient>
+          <filter id="boardShadow" x="-20%" y="-20%" width="140%" height="150%">
+            <feDropShadow dx="0" dy="2" stdDeviation="1.5" flood-color="#000" flood-opacity="0.6" />
+          </filter>
+        </defs>
+
+        <!-- Center Ambient Backlight -->
+        <ellipse cx="60" cy="38" rx="26" ry="20" fill="url(#centerBackGlow)" />
+
+        <!-- Pavement / Ground Floor (Horizontal bottom bar matching reference) -->
+        <rect x="0" y="58" width="120" height="10" fill="#152019" />
+        <line x1="0" y1="58" x2="120" y2="58" stroke="#2a3f32" stroke-width="1.2" />
+        <line x1="0" y1="62" x2="120" y2="62" stroke="#101813" stroke-width="0.8" />
+
+        <!-- Dense Grass Blades along the ledge -->
+        <path d="M2 58 Q1 52 0 50 M4 58 Q5 53 7 51 M8 58 Q7 51 6 49 M11 58 Q13 52 15 50 M16 58 Q15 53 14 51 M20 58 Q22 52 24 50 M26 58 Q25 52 24 50 M29 58 Q31 53 33 51 M35 58 Q34 52 33 50 M38 58 Q40 52 42 50 M44 58 Q43 53 42 51 M48 58 Q49 52 51 50"
+          fill="none" stroke="#486d52" stroke-width="1.2" stroke-linecap="round" />
+        <path d="M3 58 Q4 54 6 52 M9 58 Q10 54 12 52 M17 58 Q18 54 20 52 M25 58 Q24 54 23 52 M32 58 Q33 54 35 52 M41 58 Q40 54 39 52 M47 58 Q48 54 50 52"
+          fill="none" stroke="#689472" stroke-width="1" stroke-linecap="round" />
+
+        <path d="M72 58 Q73 52 75 50 M76 58 Q75 53 74 51 M80 58 Q82 52 84 50 M85 58 Q84 52 83 50 M88 58 Q90 53 92 51 M94 58 Q93 52 92 50 M97 58 Q99 52 101 50 M103 58 Q102 53 101 51 M106 58 Q108 52 110 50 M112 58 Q111 52 110 50 M115 58 Q117 53 119 51 M118 58 Q117 52 116 50"
+          fill="none" stroke="#486d52" stroke-width="1.2" stroke-linecap="round" />
+        <path d="M74 58 Q75 54 77 52 M82 58 Q83 54 85 52 M90 58 Q89 54 88 52 M96 58 Q97 54 99 52 M104 58 Q105 54 107 52 M111 58 Q110 54 109 52 M117 58 Q118 54 120 52"
+          fill="none" stroke="#689472" stroke-width="1" stroke-linecap="round" />
+
+        <!-- Center grass tufts behind/around feet -->
+        <path d="M53 58 Q52 54 51 52 M55 58 Q56 53 58 51 M65 58 Q64 53 63 51 M67 58 Q68 54 70 52"
+          fill="none" stroke="#486d52" stroke-width="1.1" stroke-linecap="round" />
+
+        <!-- Left Tree (Lush Round Canopy Deciduous Tree matching reference) -->
+        <g class="forest-tree tree-left">
+          <path d="M18 58 L18 36 Q18 29 13 25 M18 33 Q19 26 23 21" fill="none" stroke="#36291e" stroke-width="3.2" stroke-linecap="round" />
+          <path d="M18 58 L18 37" fill="none" stroke="#4d3b2c" stroke-width="1.8" stroke-linecap="round" />
+          <ellipse cx="14" cy="40" rx="13" ry="10" fill="#2d4934" />
+          <ellipse cx="25" cy="41" rx="12" ry="9" fill="#35563e" />
+          <ellipse cx="11" cy="30" rx="12" ry="10" fill="#3a6045" />
+          <ellipse cx="25" cy="30" rx="12" ry="9.5" fill="#436c4e" />
+          <ellipse cx="17" cy="22" rx="14" ry="11" fill="#4b7757" />
+          <ellipse cx="14" cy="16" rx="9" ry="7" fill="#588764" />
+          <ellipse cx="21" cy="18" rx="8" ry="6.5" fill="#62946f" />
+          <ellipse cx="15" cy="14" rx="4" ry="2.2" fill="#78ab85" opacity="0.65" />
+          <ellipse cx="23" cy="27" rx="3.5" ry="2" fill="#78ab85" opacity="0.5" />
+        </g>
+
+        <!-- Right Tree (Lush Round Canopy Deciduous Tree matching reference) -->
+        <g class="forest-tree tree-right">
+          <path d="M102 58 L102 36 Q102 29 107 25 M102 33 Q101 26 97 21" fill="none" stroke="#36291e" stroke-width="3.2" stroke-linecap="round" />
+          <path d="M102 58 L102 37" fill="none" stroke="#4d3b2c" stroke-width="1.8" stroke-linecap="round" />
+          <ellipse cx="106" cy="40" rx="13" ry="10" fill="#2d4934" />
+          <ellipse cx="95" cy="41" rx="12" ry="9" fill="#35563e" />
+          <ellipse cx="109" cy="30" rx="12" ry="10" fill="#3a6045" />
+          <ellipse cx="95" cy="30" rx="12" ry="9.5" fill="#436c4e" />
+          <ellipse cx="103" cy="22" rx="14" ry="11" fill="#4b7757" />
+          <ellipse cx="106" cy="16" rx="9" ry="7" fill="#588764" />
+          <ellipse cx="99" cy="18" rx="8" ry="6.5" fill="#62946f" />
+          <ellipse cx="105" cy="14" rx="4" ry="2.2" fill="#78ab85" opacity="0.65" />
+          <ellipse cx="97" cy="27" rx="3.5" ry="2" fill="#78ab85" opacity="0.5" />
+        </g>
+
+        <!-- Floating leaves in the breeze -->
+        <g class="floating-leaves">
+          <ellipse cx="37" cy="38" rx="3.2" ry="1.6" transform="rotate(-18 37 38)" fill="#5ba668" opacity="0.85" />
+          <ellipse cx="44" cy="47" rx="2.4" ry="1.3" transform="rotate(25 44 47)" fill="#4d8c58" opacity="0.75" />
+          <ellipse cx="32" cy="26" rx="2.8" ry="1.4" transform="rotate(35 32 26)" fill="#68bf77" opacity="0.8" />
+          <ellipse cx="83" cy="38" rx="3.2" ry="1.6" transform="rotate(20 83 38)" fill="#5ba668" opacity="0.85" />
+          <ellipse cx="76" cy="47" rx="2.4" ry="1.3" transform="rotate(-25 76 47)" fill="#4d8c58" opacity="0.75" />
+          <ellipse cx="88" cy="26" rx="2.8" ry="1.4" transform="rotate(-35 88 26)" fill="#68bf77" opacity="0.8" />
+        </g>
+
+        <!-- Center Monster (EXACT sprite from Image 2 / forest_game.js) -->
+        <g class="creature-runner-sprite" id="centerMonster">
+          <!-- Ground Shadow directly under feet (Feet firmly on the ground) -->
+          <ellipse cx="60" cy="58" rx="14" ry="2.6" fill="rgba(8,14,10,0.6)" />
+
+          <!-- Legs & Feet planted firmly on the ground -->
+          <path d="M57 48 L57 56.5 L61 56.5" fill="none" stroke="#d7d4bb" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M63 48 L63 56.5 L67 56.5" fill="none" stroke="#d7d4bb" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+
+          <!-- Side Rounded Wings / Ears (translucent sage) -->
+          <ellipse cx="50" cy="32" rx="4.8" ry="7.5" transform="rotate(-25 50 32)" fill="rgba(195,216,192,0.65)" stroke="#b9ccb1" stroke-width="1.1" />
+          <ellipse cx="70" cy="32" rx="4.8" ry="7.5" transform="rotate(25 70 32)" fill="rgba(195,216,192,0.65)" stroke="#b9ccb1" stroke-width="1.1" />
+
+          <!-- Antennae sticking out of head -->
+          <path d="M57 26 Q54 18 51 16" fill="none" stroke="#bdcdb6" stroke-width="1.8" stroke-linecap="round" />
+          <path d="M63 26 Q66 18 69 16" fill="none" stroke="#bdcdb6" stroke-width="1.8" stroke-linecap="round" />
+
+          <!-- Head cap -->
+          <ellipse cx="60" cy="27" rx="9" ry="8" fill="#7d9c78" />
+
+          <!-- Main Body Oval -->
+          <ellipse cx="60" cy="37" rx="11" ry="14" fill="#49664c" stroke="#b9ccb1" stroke-width="1.5" />
+
+          <!-- Inner mouth/face contour (from image 2) -->
+          <ellipse cx="60" cy="38" rx="8.5" ry="11.5" fill="#3b543e" />
+
+          <!-- Glowing Belly -->
+          <circle cx="60" cy="43" r="10" fill="url(#bellyGlow)" />
+          <ellipse cx="60" cy="43" rx="6.5" ry="5.2" fill="#e8bf78" />
+          <ellipse cx="60" cy="42" rx="4.5" ry="3.2" fill="#f5d697" />
+
+          <!-- Two White Dot Eyes -->
+          <circle cx="56.5" cy="30" r="1.6" fill="#f5eedc" />
+          <circle cx="63.5" cy="30" r="1.6" fill="#f5eedc" />
+        </g>
+
+        <!-- Raised Arm & "need help?" Signboard held over head -->
+        <a href="https://ig.me/j/AQj1lYCWh_iV_S7J/" target="_blank" rel="noopener noreferrer"
+          class="creature-support-board-link" id="creatureSupportLink"
+          title="Need help? Click to chat with support on Instagram!"
+          aria-label="Need help? Open support chat on Instagram">
+          <g class="support-board-group" filter="url(#boardShadow)">
+            <!-- Main Vertical Wooden Pole -->
+            <rect x="69.5" y="2.5" width="2.6" height="23" rx="1.1" fill="url(#supportPoleGrad)" stroke="#59340e" stroke-width="0.6" />
+            <!-- Pole top nub sticking past placard -->
+            <rect x="69.5" y="0.8" width="2.6" height="2.4" rx="0.6" fill="#dfa562" stroke="#59340e" stroke-width="0.5" />
+            
+            <!-- Raised Placard Board -->
+            <rect x="33" y="2.5" width="54" height="15.5" rx="3.4" fill="url(#placardGrad)" stroke="#1e293b" stroke-width="1.2" />
+            <!-- Inner Stitch Border -->
+            <rect x="34.8" y="4.1" width="50.4" height="12.3" rx="2" fill="none" stroke="#94a3b8" stroke-width="0.6" stroke-opacity="0.85" />
+            
+            <!-- Written "need help?" text -->
+            <text x="60" y="13.2" text-anchor="middle"
+              font-family="'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif"
+              font-size="7.6" font-weight="900" fill="#0f172a" letter-spacing="0.2">need help?</text>
+
+            <!-- Right Arm Reaching Up from Body Holding the Pole -->
+            <path d="M68 37 Q72 31 71 23" fill="none" stroke="#49664c" stroke-width="2.8" stroke-linecap="round" />
+            <!-- Creature Paw Clutching the Pole -->
+            <ellipse cx="71" cy="22.5" rx="3.2" ry="2.6" fill="#7d9c78" stroke="#b9ccb1" stroke-width="0.9" />
+            <!-- Paw Digits wrapping around pole -->
+            <circle cx="69.8" cy="22" r="0.75" fill="#d0dcc9" />
+            <circle cx="71" cy="22" r="0.75" fill="#d0dcc9" />
+            <circle cx="72.2" cy="22" r="0.75" fill="#d0dcc9" />
+          </g>
+        </a>
+      </svg>
+</div>
 </aside>
 <div class="narrate-shell">
 <header class="narrate-top"><a class="back-link" href="/">← Clipify AI</a><div><span class="eyebrow">CLIPIFY AI / NARRATE</span><h1>Script to Short.</h1></div><span class="local-badge">● LOCAL VOICE ENGINE</span></header>
@@ -939,5 +1327,67 @@ function onAndroidVideoSelected(uri, filename, duration) {
     </form>
   </div>
 </div>
+<!-- Mini Game Modal Popup -->
+<div id="miniGameModal" class="mini-game-modal-overlay" hidden>
+  <div class="mini-game-modal-content" role="dialog" aria-modal="true" aria-labelledby="miniGameTitle">
+    <div class="mini-game-header">
+      <div class="mini-game-title-group">
+        <span class="mini-game-icon">🌲</span>
+        <div>
+          <h3 id="miniGameTitle">Clipify Forest Runner</h3>
+          <span class="mini-game-sub">Jump over woodland hazards · Spacebar or Up Arrow</span>
+        </div>
+      </div>
+      <div class="mini-game-hud">
+        <span class="hud-item"><small>SCORE</small> <b id="game-score-vis">0</b></span>
+        <span class="hud-item best"><small>BEST</small> <b id="game-best-vis">0</b></span>
+      </div>
+      <button type="button" class="mini-game-close-btn" id="btnCloseMiniGame" aria-label="Close Mini Game">✕</button>
+    </div>
+    <div class="mini-game-canvas-wrap">
+      <canvas id="sidebar-forest-game" width="880" height="270" tabindex="0" aria-label="Forest runner. Press Space or Up arrow to jump."></canvas>
+      <span id="game-score" class="sr-only" style="display:none;" aria-hidden="true">0</span>
+      <span id="game-best" class="sr-only" style="display:none;" aria-hidden="true">0</span>
+      <span id="game-state" class="sr-only" style="display:none;" aria-hidden="true">ready</span>
+    </div>
+    <div class="mini-game-footer">
+      <div class="mini-game-controls-hint">
+        <kbd>Space</kbd> or <kbd>↑</kbd> Jump &nbsp;•&nbsp; <kbd>P</kbd> Pause &nbsp;•&nbsp; <kbd>R</kbd> Restart &nbsp;•&nbsp; Click / Tap screen to jump
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button type="button" class="mini-game-btn" id="btnRestartGame">Restart Run</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- App-Themed Update Modal Popup -->
+<div id="updateModal" class="modal-overlay" style="display:none;position:fixed;inset:0;background:rgba(5,8,13,0.85);backdrop-filter:blur(10px);z-index:9999;align-items:center;justify-content:center;padding:20px;">
+  <div class="modal-card panel update-modal-card" style="background:var(--panel-strong,#12171e);border:1px solid rgba(255,255,255,0.15);border-radius:20px;max-width:520px;width:100%;box-shadow:0 30px 90px rgba(0,0,0,0.6);padding:26px;position:relative;">
+    <button type="button" class="modal-close-btn" id="closeUpdateModal" style="position:absolute;top:16px;right:18px;background:none;border:none;color:#94a3b8;font-size:22px;cursor:pointer;line-height:1;" aria-label="Close">&times;</button>
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;">
+      <div style="width:42px;height:42px;border-radius:12px;background:rgba(34,197,94,0.15);border:1px solid rgba(34,197,94,0.3);display:flex;align-items:center;justify-content:center;color:#4ade80;flex-shrink:0;">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+      </div>
+      <div>
+        <h3 id="updateModalTitle" style="margin:0;font-size:16px;font-weight:700;color:#f8fafc;">Clipify AI Updates</h3>
+        <p id="updateModalSubtitle" style="margin:2px 0 0;font-size:12px;color:#94a3b8;">Fast In-Place Updater (No installer required)</p>
+      </div>
+    </div>
+    <div id="updateModalContent" style="background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:16px;margin-bottom:20px;font-size:13px;color:#cbd5e1;line-height:1.5;">
+      Checking GitHub for the latest release…
+    </div>
+    <div style="display:flex;gap:10px;justify-content:flex-end;">
+      <a id="btnViewRelease" href="https://github.com/sherlock-dev-ai/Clipify-AI-Video-Clipper-FREE/releases" target="_blank" rel="noopener" class="quiet-btn" style="padding:9px 15px;border-radius:10px;border:1px solid rgba(255,255,255,0.15);background:transparent;color:#94a3b8;font-size:12px;text-decoration:none;display:inline-flex;align-items:center;">View on GitHub</a>
+      <button type="button" id="btnExecuteUpdate" class="accent-btn" style="padding:9px 20px;border-radius:10px;border:none;background:#22c55e;color:#052e16;font-size:12px;font-weight:700;cursor:pointer;">Update Now</button>
+    </div>
+  </div>
+</div>
+
+<script src="static/forest_game.js"></script>
+<script src="static/updater.js"></script>
+<script src="static/tour.js"></script>
 <script src="static/narrate.js"></script>
+<script src="static/cache_manager.js"></script>
+<script src="static/clippy.js"></script>
 </body></html>

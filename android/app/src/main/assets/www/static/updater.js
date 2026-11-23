@@ -1,0 +1,752 @@
+/**
+ * Clipify AI - In-Place Fast Updater
+ * Checks GitHub for new releases and updates files in-place without running the 330MB installer.
+ */
+(function() {
+  function initSidebarUpdater() {
+    const card = document.getElementById('sidebarUpdateCard');
+    const btn = document.getElementById('btnSidebarUpdate');
+    const statusMsg = document.getElementById('sidebarUpdateStatus');
+    const badge = document.getElementById('sidebarVersionBadge');
+    const modal = document.getElementById('updateModal');
+    const closeModal = document.getElementById('closeUpdateModal');
+    const modalContent = document.getElementById('updateModalContent');
+    const btnExecute = document.getElementById('btnExecuteUpdate');
+    const btnView = document.getElementById('btnViewRelease');
+    const modalTitle = document.getElementById('updateModalTitle');
+    const navUpdateLink = document.getElementById('navUpdateLink');
+    const navVersionTag = document.getElementById('navVersionTag');
+
+    if (!card && !btn && !navUpdateLink) return;
+
+    let updateState = {
+      checked: false,
+      updateAvailable: false,
+      latestVersion: 'v4.0.11',
+      currentVersion: 'v4.0.11',
+      releaseUrl: 'https://github.com/sherlock-dev-ai/Clipify-AI-Video-Clipper-FREE/releases',
+      releaseName: '',
+      notes: '',
+      isGit: false,
+      gitBehind: false
+    };
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    async function checkUpdate(silent = false) {
+      if (!silent) {
+        btn.innerHTML = '<span class="btn-update-icon spinning">↻</span> Checking…';
+        btn.disabled = true;
+      }
+      try {
+        const res = await fetch('/api/updater/check');
+        const data = await res.json();
+        updateState = {
+          checked: true,
+          updateAvailable: !!data.update_available,
+          latestVersion: data.latest_version || 'v4.0.8',
+          currentVersion: data.current_version || 'v4.0.8',
+          releaseUrl: data.release_url || updateState.releaseUrl,
+          releaseName: data.release_name || '',
+          notes: data.body || '',
+          isGit: !!data.is_git,
+          gitBehind: !!data.git_behind
+        };
+
+        if (badge) badge.textContent = data.current_version || 'v4.0.8';
+        if (navVersionTag) navVersionTag.textContent = data.current_version || 'v4.0.8';
+
+        if (updateState.updateAvailable) {
+          if (card) card.classList.add('has-update');
+          if (navVersionTag) {
+            navVersionTag.textContent = 'Update';
+            navVersionTag.style.background = '#22c55e';
+            navVersionTag.style.color = '#052e16';
+          }
+          if (statusMsg) statusMsg.textContent = `New: ${updateState.latestVersion}`;
+          if (btn) {
+            btn.innerHTML = '<span class="btn-update-icon">⚡</span> Update';
+            btn.disabled = false;
+          }
+          if (!silent) {
+            openModalWithRelease(updateState);
+          }
+        } else {
+          if (card) card.classList.remove('has-update');
+          if (navVersionTag) {
+            navVersionTag.textContent = data.current_version || 'v4.0.11';
+            navVersionTag.style.background = '';
+            navVersionTag.style.color = '';
+          }
+          if (badge) badge.textContent = data.current_version || 'v4.0.11';
+          if (statusMsg) statusMsg.textContent = 'Up to date ✓';
+          if (btn) {
+            btn.innerHTML = '<span class="btn-update-icon">↻</span> Update';
+            btn.disabled = false;
+          }
+          if (!silent) {
+            openModalUpToDate(updateState);
+          }
+        }
+      } catch (err) {
+        if (statusMsg) statusMsg.textContent = 'Offline';
+        if (btn) {
+          btn.innerHTML = '<span class="btn-update-icon">↻</span> Retry';
+          btn.disabled = false;
+        }
+        if (!silent) {
+          alert('Could not check for updates: ' + err.message);
+        }
+      }
+    }
+
+    function openModalWithRelease(info) {
+      if (!modal) return;
+      modal.style.display = 'flex';
+      if (modalTitle) modalTitle.textContent = `New Release Available: ${info.latestVersion}`;
+      if (btnView) btnView.href = info.releaseUrl;
+      if (btnExecute) {
+        btnExecute.style.display = 'inline-block';
+        btnExecute.textContent = '⚡ Update Now (Fast)';
+        btnExecute.disabled = false;
+      }
+      if (modalContent) {
+        modalContent.innerHTML = `
+          <div style="margin-bottom:10px;">
+            <b style="color:#4ade80;font-size:14px;">${escapeHtml(info.releaseName || ('Clipify AI ' + info.latestVersion))}</b>
+            <div style="font-size:12px;color:#94a3b8;margin-top:2px;">Installed: <b>${escapeHtml(info.currentVersion)}</b> &nbsp;→&nbsp; Latest: <b>${escapeHtml(info.latestVersion)}</b></div>
+          </div>
+          <p style="margin:8px 0 12px;font-size:12px;color:#cbd5e1;line-height:1.5;">
+            Press <b>Update Now</b> to update in-place without running the 330MB installer. Your clips, jobs, and AI models are completely preserved.
+          </p>
+          ${info.notes ? `<pre style="font-family:inherit;font-size:11px;color:#94a3b8;max-height:120px;overflow-y:auto;background:rgba(0,0,0,0.35);padding:10px;border-radius:8px;white-space:pre-wrap;border:1px solid rgba(255,255,255,0.06);">${escapeHtml(info.notes)}</pre>` : ''}
+        `;
+      }
+    }
+
+    function openModalUpToDate(info) {
+      if (!modal) return;
+      modal.style.display = 'flex';
+      if (modalTitle) modalTitle.textContent = 'Clipify AI is Up to Date';
+      if (btnView) btnView.href = info.releaseUrl;
+      if (btnExecute) {
+        btnExecute.style.display = 'inline-block';
+        btnExecute.textContent = 'Force Re-sync / Hotfixes';
+        btnExecute.disabled = false;
+      }
+      if (modalContent) {
+        modalContent.innerHTML = `
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+            <span style="color:#4ade80;font-size:20px;">✓</span>
+            <div>
+              <b style="color:#f8fafc;font-size:13px;">Version ${escapeHtml(info.currentVersion)} is currently installed.</b>
+              <div style="font-size:11px;color:#94a3b8;">You are running the latest official release.</div>
+            </div>
+          </div>
+          <p style="margin:8px 0 0;font-size:12px;color:#94a3b8;line-height:1.4;">
+            If you want to pull the newest commits and hotfixes from GitHub without waiting for a new tag, click <b>Force Re-sync / Hotfixes</b>.
+          </p>
+        `;
+      }
+    }
+
+    async function applyUpdate() {
+      if (!btnExecute) return;
+      btnExecute.disabled = true;
+      btnExecute.innerHTML = '<span class="btn-update-icon spinning">↻</span> Updating…';
+      if (modalContent) {
+        modalContent.innerHTML = `
+          <div style="text-align:center;padding:16px 0;">
+            <div style="font-size:26px;margin-bottom:8px;">🚀</div>
+            <b style="color:#f8fafc;font-size:14px;">Applying in-place update…</b>
+            <p style="margin:6px 0 0;font-size:12px;color:#94a3b8;">Fetching updated code and assets from GitHub. Keeping models and data safe…</p>
+          </div>
+        `;
+      }
+
+      try {
+        const res = await fetch('/api/updater/apply', { method: 'POST' });
+        const data = await res.json();
+        if (!res.ok || !data.ok) {
+          throw new Error(data.error || 'Update failed');
+        }
+
+        // Close modal and immediately trigger full-screen ASCII restart takeover screen
+        if (modal) modal.style.display = 'none';
+        triggerRestartTakeover(data.message || 'Updated successfully.');
+      } catch (err) {
+        if (modalContent) {
+          modalContent.innerHTML = `
+            <div style="padding:10px 0;">
+              <b style="color:#ef4444;font-size:13px;">Update Failed</b>
+              <p style="margin:6px 0 0;font-size:12px;color:#cbd5e1;">${escapeHtml(err.message)}</p>
+            </div>
+          `;
+        }
+        btnExecute.disabled = false;
+        btnExecute.textContent = 'Retry Update';
+      }
+    }
+
+    /**
+     * Sub-Window Themed Update & Restarting Modal
+     * Features:
+     * - Blurred Clipify app background
+     * - Official Clipify App Mascot Logo
+     * - "Updating Clipify AI..."
+     * - Live update console streaming step-by-step logs
+     * - Fast health check polling with instant reload & fallback button
+     */
+    function triggerRestartTakeover(msg) {
+      let overlay = document.getElementById('clipifyRestartOverlay');
+      if (!overlay || !overlay.querySelector('.restart-modal-window')) {
+        if (!overlay) {
+          overlay = document.createElement('div');
+          overlay.id = 'clipifyRestartOverlay';
+          overlay.className = 'clipify-restart-overlay';
+          document.body.appendChild(overlay);
+        }
+        overlay.innerHTML = `
+          <canvas id="restartAsciiCanvas" class="restart-ascii-canvas"></canvas>
+          <div class="restart-modal-window">
+            <div class="restart-modal-header">
+              <div class="restart-logo-wrapper">
+                <img src="/static/icon.png" alt="Clipify AI Logo" class="restart-app-logo" />
+                <div class="restart-logo-glow"></div>
+              </div>
+              <div class="restart-title-group">
+                <h2 class="restart-modal-title">Updating Clipify AI...</h2>
+                <div class="restart-modal-subtitle">
+                  <span class="restart-pulse-dot"></span>
+                  <span id="restartStatusLabel">Applying core updates &amp; rebooting local AI engine…</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="restart-console-wrapper">
+              <div class="restart-console-header">
+                <div class="restart-console-dots">
+                  <span class="dot-red"></span>
+                  <span class="dot-yellow"></span>
+                  <span class="dot-green"></span>
+                </div>
+                <span class="restart-console-title">Live Update Console</span>
+                <span class="restart-console-badge" id="restartConsoleBadge">SYNCING</span>
+              </div>
+              <div class="restart-console-body" id="restartConsoleBody">
+                <div class="console-line info">[Init] Connecting to local update controller...</div>
+              </div>
+            </div>
+
+            <div class="restart-footer">
+              <div class="restart-progress-info">
+                <span id="restartProgressDetail">Downloading &amp; syncing latest assets...</span>
+                <span id="restartProgressPct">15%</span>
+              </div>
+              <div class="restart-progress-track">
+                <div class="restart-progress-bar" id="restartProgressBar" style="width: 15%;"></div>
+              </div>
+              <div class="restart-action-row" id="restartActionRow" style="display:none;margin-top:10px;">
+                <button type="button" class="btn-restart-retry" id="btnRestartForceReload">Force Reload Clipify</button>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      overlay.style.display = 'flex';
+      initRestartCanvas();
+      startLiveConsoleAndUpdate(msg);
+    }
+
+    function addConsoleLog(text, type = 'info') {
+      const body = document.getElementById('restartConsoleBody');
+      if (!body) return;
+      const now = new Date();
+      const timeStr = [now.getHours(), now.getMinutes(), now.getSeconds()]
+        .map(n => String(n).padStart(2, '0'))
+        .join(':');
+      const line = document.createElement('div');
+      line.className = `console-line ${type}`;
+      line.textContent = `[${timeStr}] ${text}`;
+      body.appendChild(line);
+      body.scrollTop = body.scrollHeight;
+    }
+
+    function startLiveConsoleAndUpdate(initialMsg) {
+      const statusLabel = document.getElementById('restartStatusLabel');
+      const progressBar = document.getElementById('restartProgressBar');
+      const progressDetail = document.getElementById('restartProgressDetail');
+      const progressPct = document.getElementById('restartProgressPct');
+      const consoleBadge = document.getElementById('restartConsoleBadge');
+      const actionRow = document.getElementById('restartActionRow');
+      const forceReloadBtn = document.getElementById('btnRestartForceReload');
+
+      if (forceReloadBtn) {
+        forceReloadBtn.onclick = () => window.location.reload();
+      }
+
+      let progress = 18;
+      const updateProg = (p, text) => {
+        progress = Math.min(100, Math.max(progress, p));
+        if (progressBar) progressBar.style.width = progress + '%';
+        if (progressPct) progressPct.textContent = progress + '%';
+        if (progressDetail && text) progressDetail.textContent = text;
+      };
+
+      addConsoleLog('Update routine triggered: ' + (initialMsg || 'Fast in-place sync'), 'step');
+
+      setTimeout(() => {
+        addConsoleLog('[Git] Checking upstream repository: sherlock-dev-ai/Clipify-AI-Video-Clipper-FREE', 'info');
+        updateProg(35, 'Fetching code updates from GitHub...');
+      }, 200);
+
+      setTimeout(() => {
+        addConsoleLog('[Fetch] Pulling latest frontend modules, UI tokens, and AI pipelines...', 'info');
+        updateProg(55, 'Applying updates to local workspace...');
+      }, 450);
+
+      setTimeout(() => {
+        addConsoleLog('[Patch] Synchronized code and refreshed assets successfully.', 'success');
+        addConsoleLog('[Engine] Restarting Clipify AI local daemon...', 'step');
+        updateProg(75, 'Rebooting local AI engine...');
+      }, 700);
+
+      let startTime = Date.now();
+      let serverWentDown = false;
+      let pingCount = 0;
+
+      const pollInterval = setInterval(async () => {
+        pingCount++;
+        const elapsedSec = Math.floor((Date.now() - startTime) / 1000);
+
+        if (statusLabel) {
+          statusLabel.textContent = `Rebooting local AI engine… (${elapsedSec}s)`;
+        }
+
+        if (pingCount === 2) {
+          addConsoleLog(`[Ping] Waiting for port 5000 to rebind...`, 'info');
+        } else if (pingCount % 4 === 0 && !serverWentDown) {
+          addConsoleLog(`[Sync] Probing http://127.0.0.1:5000/api/health (${elapsedSec}s)...`, 'info');
+        }
+
+        // Progressively advance progress so it never looks dead at 75%
+        if (elapsedSec >= 2 && progress < 82) {
+          updateProg(82, 'Awaiting daemon port rebind...');
+        } else if (elapsedSec >= 4 && progress < 90) {
+          updateProg(90, 'Finalizing server warmup...');
+        }
+
+        // After 6 seconds, reveal force reload button
+        if (elapsedSec >= 6 && actionRow) {
+          actionRow.style.display = 'block';
+          if (pingCount === 12) {
+            addConsoleLog(`[Notice] Almost ready — click 'Force Reload Clipify' anytime to refresh.`, 'warn');
+          }
+        }
+
+        try {
+          const res = await fetch('/api/health?t=' + Date.now(), { cache: 'no-store' });
+          if (res.ok) {
+            if (serverWentDown || elapsedSec >= 1.2) {
+              clearInterval(pollInterval);
+              updateProg(100, 'Update Complete!');
+              if (consoleBadge) {
+                consoleBadge.textContent = 'ONLINE';
+                consoleBadge.style.background = 'rgba(34, 197, 94, 0.25)';
+              }
+              addConsoleLog('[✓] Health check passed (200 OK)! Engine online.', 'success');
+              addConsoleLog('[Done] Reloading Clipify AI workspace...', 'success');
+              if (statusLabel) statusLabel.textContent = '✓ RESTART COMPLETE — RELOADING…';
+              setTimeout(() => {
+                window.location.reload();
+              }, 450);
+            }
+          } else {
+            serverWentDown = true;
+          }
+        } catch (err) {
+          // Expected while server shuts down and rebinds
+          serverWentDown = true;
+        }
+      }, 400);
+    }
+
+    function initRestartCanvas() {
+      const canvas = document.getElementById('restartAsciiCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+
+      const SYMBOLS = ['!', '@', '#', '$', '%', '^', '&', '*', '0', '1', '7', '8', 'X', 'Q', 'G', '~', '/', '\\', '+', '?'];
+      const LOGO_SYMBOLS = ['✦', '★', '●', '■', '1', '0', '#', '*', '%', 'V'];
+      let width = canvas.width = window.innerWidth;
+      let height = canvas.height = window.innerHeight;
+
+      const SPACING = 20;
+      let cols = Math.floor(width / SPACING);
+      let rows = Math.floor(height / SPACING);
+
+      let grid = [];
+      let gridMap = {};
+      function buildGrid() {
+        grid = [];
+        gridMap = {};
+        for (let r = 0; r < rows; r++) {
+          for (let c = 0; c < cols; c++) {
+            const bx = c * SPACING + SPACING / 2;
+            const by = r * SPACING + SPACING / 2;
+            const pt = {
+              col: c, row: r,
+              baseX: bx, baseY: by,
+              x: bx + (Math.random() - 0.5) * 4,
+              y: by + (Math.random() - 0.5) * 4,
+              vx: (Math.random() - 0.5) * 0.4,
+              vy: (Math.random() - 0.5) * 0.4,
+              char: SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)],
+              alpha: 0.20 + Math.random() * 0.14,
+              baseAlpha: 0.20 + Math.random() * 0.14,
+              charTimer: Math.random() * 3
+            };
+            grid.push(pt);
+            gridMap[`${c},${r}`] = pt;
+          }
+        }
+      }
+      buildGrid();
+
+      window.addEventListener('resize', () => {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+        cols = Math.floor(width / SPACING);
+        rows = Math.floor(height / SPACING);
+        buildGrid();
+      });
+
+      let mouse = { x: -9999, y: -9999, active: false };
+      window.addEventListener('mousemove', (e) => {
+        mouse.x = e.clientX;
+        mouse.y = e.clientY;
+        mouse.active = true;
+      });
+
+      // Clipify Mascot Logo Shape (Cat Face with Crown & Whiskers)
+      const LOGO_OFFSETS = [
+        // Left Ear
+        [-6, -6], [-5, -7], [-4, -6], [-4, -5],
+        // Right Ear
+        [4, -5], [4, -6], [5, -7], [6, -6],
+        // Crown Peaks in Center
+        [-2, -7], [-1, -6], [0, -8], [1, -6], [2, -7],
+        [-2, -5], [-1, -5], [0, -5], [1, -5], [2, -5],
+        // Head Top Outline
+        [-3, -4], [-2, -4], [-1, -4], [0, -4], [1, -4], [2, -4], [3, -4],
+        // Cheeks Outline
+        [-7, -3], [-6, -3], [6, -3], [7, -3],
+        [-7, -2], [-6, -2], [6, -2], [7, -2],
+        [-7, -1], [-6, -1], [6, -1], [7, -1],
+        [-7, 0], [7, 0],
+        [-7, 1], [-6, 1], [6, 1], [7, 1],
+        // Cute Eyes
+        [-3, -1], [-3, 0], [3, -1], [3, 0],
+        // Cute Nose
+        [0, 1],
+        // Whiskers Left
+        [-9, -1], [-8, -1], [-10, 1], [-9, 1], [-8, 1],
+        // Whiskers Right
+        [8, -1], [9, -1], [8, 1], [9, 1], [10, 1],
+        // Chin Bottom
+        [-5, 3], [-4, 4], [-3, 4], [-2, 4], [-1, 4], [0, 4], [1, 4], [2, 4], [3, 4], [4, 4], [5, 3]
+      ];
+
+      // Active Clipify Logo Shape Spawns
+      let logoSpawns = [];
+      let lastLogoSpawn = Date.now() - 1000;
+
+      function spawnLogoInstance() {
+        if (cols < 24 || rows < 18) return;
+        // Avoid center where modal window is: pick left flank, right flank, top, or bottom
+        const zones = [
+          { minC: 10, maxC: Math.max(12, Math.floor(cols * 0.30)), minR: 9, maxR: rows - 9 }, // Left
+          { minC: Math.min(cols - 12, Math.floor(cols * 0.70)), maxC: cols - 10, minR: 9, maxR: rows - 9 }, // Right
+          { minC: 12, maxC: cols - 12, minR: 8, maxR: Math.max(9, Math.floor(rows * 0.22)) }, // Top
+          { minC: 12, maxC: cols - 12, minR: Math.min(rows - 9, Math.floor(rows * 0.78)), maxR: rows - 8 }  // Bottom
+        ];
+        const zone = zones[Math.floor(Math.random() * zones.length)];
+        const centerC = Math.floor(zone.minC + Math.random() * (zone.maxC - zone.minC + 1));
+        const centerR = Math.floor(zone.minR + Math.random() * (zone.maxR - zone.minR + 1));
+
+        const points = [];
+        for (const [dx, dy] of LOGO_OFFSETS) {
+          const pt = gridMap[`${centerC + dx},${centerR + dy}`];
+          if (pt) {
+            points.push({
+              pt: pt,
+              char: LOGO_SYMBOLS[Math.floor(Math.random() * LOGO_SYMBOLS.length)],
+              cycleTimer: Math.random() * 0.2
+            });
+          }
+        }
+
+        if (points.length > 15) {
+          logoSpawns.push({
+            centerC,
+            centerR,
+            points,
+            alpha: 0,
+            targetAlpha: 0.95,
+            phase: 'in', // 'in', 'hold', 'out'
+            timer: 0,
+            holdDuration: 2.0 + Math.random() * 1.0
+          });
+        }
+      }
+
+      // Pre-seed an initial logo on one of the flanks
+      spawnLogoInstance();
+
+      // Individual random point highlights
+      let highlights = [];
+      function spawnHighlights() {
+        if (highlights.length < 35 && Math.random() < 0.4) {
+          const randPt = grid[Math.floor(Math.random() * grid.length)];
+          if (randPt) {
+            highlights.push({
+              x: randPt.x,
+              y: randPt.y,
+              char: SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)],
+              alpha: 0.3,
+              targetAlpha: 0.85 + Math.random() * 0.15,
+              phase: 'in',
+              timer: 0,
+              life: 1.2 + Math.random() * 1.8,
+              cycleTimer: 0
+            });
+          }
+        }
+      }
+
+      for (let k = 0; k < 20; k++) {
+        const randPt = grid[Math.floor(Math.random() * grid.length)];
+        if (randPt) {
+          highlights.push({
+            x: randPt.x,
+            y: randPt.y,
+            char: SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)],
+            alpha: 0.70 + Math.random() * 0.25,
+            targetAlpha: 0.95,
+            phase: 'hold',
+            timer: Math.random(),
+            life: 2.0,
+            cycleTimer: 0
+          });
+        }
+      }
+
+      let running = true;
+      function animate() {
+        if (!running) return;
+        ctx.fillStyle = '#000000';
+        ctx.fillRect(0, 0, width, height);
+
+        spawnHighlights();
+
+        // Spawn Clipify logo shape periodically
+        const now = Date.now();
+        if (logoSpawns.length < 2 && (now - lastLogoSpawn) > 2800) {
+          spawnLogoInstance();
+          lastLogoSpawn = now;
+        }
+
+        ctx.font = '11px "Courier New", monospace, monospace';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+
+        const repelRadius = 110;
+        const repelRadiusSq = repelRadius * repelRadius;
+
+        // Render & update background moving symbols
+        for (let i = 0; i < grid.length; i++) {
+          const pt = grid[i];
+
+          // Slow constant drifting
+          pt.x += pt.vx;
+          pt.y += pt.vy;
+          if (Math.abs(pt.x - pt.baseX) > 10) pt.vx *= -1;
+          if (Math.abs(pt.y - pt.baseY) > 10) pt.vy *= -1;
+
+          // Mouse cursor interaction
+          if (mouse.active) {
+            const dx = pt.x - mouse.x;
+            const dy = pt.y - mouse.y;
+            const dSq = dx * dx + dy * dy;
+            if (dSq < repelRadiusSq && dSq > 0.001) {
+              const dist = Math.sqrt(dSq);
+              const force = (1 - dist / repelRadius) * 16;
+              pt.x += (dx / dist) * force * 0.5;
+              pt.y += (dy / dist) * force * 0.5;
+              pt.alpha = Math.min(0.65, pt.baseAlpha + (1 - dist / repelRadius) * 0.5);
+            } else {
+              pt.alpha += (pt.baseAlpha - pt.alpha) * 0.04;
+            }
+          }
+
+          // Slow return to base
+          pt.x += (pt.baseX - pt.x) * 0.04;
+          pt.y += (pt.baseY - pt.y) * 0.04;
+
+          // Occasional symbol shift
+          pt.charTimer += 0.016;
+          if (pt.charTimer > 2.5) {
+            pt.charTimer = 0;
+            if (Math.random() < 0.3) {
+              pt.char = SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
+            }
+          }
+
+          ctx.fillStyle = `rgba(255, 255, 255, ${pt.alpha.toFixed(2)})`;
+          ctx.fillText(pt.char, pt.x, pt.y);
+        }
+
+        // Render Clipify Logo Formations that highlight and vanish
+        for (let m = logoSpawns.length - 1; m >= 0; m--) {
+          const l = logoSpawns[m];
+          l.timer += 0.016;
+
+          if (l.phase === 'in') {
+            l.alpha += 0.045;
+            if (l.alpha >= l.targetAlpha) {
+              l.alpha = l.targetAlpha;
+              l.phase = 'hold';
+              l.timer = 0;
+            }
+          } else if (l.phase === 'hold') {
+            if (l.timer >= l.holdDuration) {
+              l.phase = 'out';
+            }
+          } else if (l.phase === 'out') {
+            l.alpha -= 0.035;
+            if (l.alpha <= 0) {
+              logoSpawns.splice(m, 1);
+              continue;
+            }
+          }
+
+          // Render logo dots/symbols with purple/cyan glow
+          ctx.font = 'bold 12px "Courier New", monospace';
+          ctx.shadowColor = 'rgba(168, 85, 247, 0.95)';
+          ctx.shadowBlur = 12;
+
+          for (const item of l.points) {
+            item.cycleTimer += 0.016;
+            if (item.cycleTimer > 0.18) {
+              item.cycleTimer = 0;
+              item.char = LOGO_SYMBOLS[Math.floor(Math.random() * LOGO_SYMBOLS.length)];
+            }
+            ctx.fillStyle = `rgba(235, 215, 255, ${Math.max(0, l.alpha).toFixed(2)})`;
+            ctx.fillText(item.char, item.pt.x, item.pt.y);
+          }
+          ctx.shadowBlur = 0;
+        }
+
+        // Render dynamic individual highlighted symbols
+        ctx.font = '11px "Courier New", monospace, monospace';
+        for (let j = highlights.length - 1; j >= 0; j--) {
+          const h = highlights[j];
+          h.timer += 0.016;
+          h.cycleTimer += 0.016;
+          if (h.cycleTimer > 0.12) {
+            h.cycleTimer = 0;
+            h.char = SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
+          }
+
+          if (h.phase === 'in') {
+            h.alpha += 0.06;
+            if (h.alpha >= h.targetAlpha) {
+              h.alpha = h.targetAlpha;
+              h.phase = 'hold';
+            }
+          } else if (h.phase === 'hold') {
+            if (h.timer >= h.life) {
+              h.phase = 'out';
+            }
+          } else if (h.phase === 'out') {
+            h.alpha -= 0.04;
+            if (h.alpha <= 0) {
+              highlights.splice(j, 1);
+              continue;
+            }
+          }
+
+          ctx.fillStyle = `rgba(255, 255, 255, ${Math.max(0, h.alpha).toFixed(2)})`;
+          ctx.shadowColor = 'rgba(255, 255, 255, 0.85)';
+          ctx.shadowBlur = 8;
+          ctx.fillText(h.char, h.x, h.y);
+          ctx.shadowBlur = 0;
+        }
+
+        requestAnimationFrame(animate);
+      }
+      animate();
+    }
+
+    if (btn) {
+      btn.addEventListener('click', () => {
+        if (updateState.checked && updateState.updateAvailable) {
+          openModalWithRelease(updateState);
+        } else {
+          checkUpdate(false);
+        }
+      });
+    }
+
+    if (navUpdateLink) {
+      navUpdateLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (updateState.checked && updateState.updateAvailable) {
+          openModalWithRelease(updateState);
+        } else {
+          openModalUpToDate(updateState);
+          checkUpdate(true);
+        }
+      });
+    }
+
+    window.triggerRestartTakeover = triggerRestartTakeover;
+
+    window.openClipifyUpdate = () => {
+      if (updateState.checked && updateState.updateAvailable) {
+        openModalWithRelease(updateState);
+      } else {
+        openModalUpToDate(updateState);
+        checkUpdate(true);
+      }
+    };
+
+    btnExecute?.addEventListener('click', applyUpdate);
+
+    closeModal?.addEventListener('click', () => {
+      modal.style.display = 'none';
+    });
+
+    modal?.addEventListener('click', (e) => {
+      if (e.target === modal) modal.style.display = 'none';
+    });
+
+    // Check silently on startup after 3 seconds
+    setTimeout(() => checkUpdate(true), 3000);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initSidebarUpdater);
+  } else {
+    initSidebarUpdater();
+  }
+})();

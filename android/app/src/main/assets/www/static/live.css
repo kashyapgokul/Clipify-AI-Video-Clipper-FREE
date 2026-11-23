@@ -139,9 +139,35 @@
 
 .source-tabs {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 12px;
   margin-bottom: 16px;
+}
+
+@media (max-width: 1080px) {
+  .source-tabs {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 520px) {
+  .source-tabs {
+    grid-template-columns: 1fr;
+  }
+}
+
+.kick-tab-icon {
+  background: rgba(83, 252, 24, 0.08) !important;
+  border-color: rgba(83, 252, 24, 0.25) !important;
+}
+
+.source-tab[data-source="kick"]:hover {
+  border-color: rgba(83, 252, 24, 0.4);
+}
+
+.source-tab[data-source="kick"].active {
+  border-color: #53fc18;
+  box-shadow: 0 0 0 1px #53fc18, 0 4px 16px rgba(83, 252, 24, 0.2);
 }
 
 .source-tab {
@@ -865,8 +891,14 @@
 .pref-row {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
+  gap: 12px;
   padding-top: 10px;
+}
+
+.pref-row .tweak-toggle {
+  flex-shrink: 0;
+  margin-top: 2px;
 }
 
 .pref-row b {
@@ -997,6 +1029,7 @@ input[type="range"] {
   font-size: 0.75rem;
   color: #a1a1aa;
   margin-bottom: 6px;
+  white-space: nowrap;
 }
 
 .pref-grid-two select {
@@ -1004,10 +1037,11 @@ input[type="range"] {
   background: #09090b;
   border: 1px solid #27272a;
   border-radius: 8px;
-  padding: 8px 10px;
+  padding: 7px 8px;
   color: #fafafa;
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   outline: none;
+  text-overflow: ellipsis;
 }
 
 .pref-grid-two select:focus {
@@ -1630,22 +1664,31 @@ input[type="range"] {
 .target-input-group {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   background: #121216;
   border: 1px solid #27272a;
   border-radius: 6px;
-  padding: 3px 8px;
+  padding: 4px 10px;
+  min-width: 90px;
+  justify-content: center;
 }
 
 .compact-number-input {
-  width: 54px;
+  width: 48px;
   background: transparent;
   border: none;
   color: #fff;
   font-weight: 700;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   text-align: center;
   outline: none;
+  -moz-appearance: textfield;
+}
+
+.compact-number-input::-webkit-inner-spin-button,
+.compact-number-input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 .compact-number-input:focus {
@@ -1653,8 +1696,8 @@ input[type="range"] {
 }
 
 .target-unit-tag {
-  font-size: 0.75rem;
-  color: #71717a;
+  font-size: 0.8rem;
+  color: #a1a1aa;
   font-weight: 500;
 }
 

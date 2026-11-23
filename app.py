@@ -386,11 +386,15 @@ def _pipeline_failure_detail(return_code: int, outputs: list[str], recent_lines:
     """Prefer the worker's concrete failure over the old generic no-output text."""
     if return_code == 0 and outputs:
         return f"Created {len(outputs)} Short(s)."
-    failure_line = next(
-        (line for line in reversed(recent_lines)
-         if any(k in line.lower() for k in ("[fatal]", "[error]", "exception:", "traceback", "failed:", "error:", "[skip]", "too short", "no clips"))),
-        "",
-    )
+    
+    error_keywords = ("[fatal]", "[error]", "exception:", "traceback", "failed:", "error:", "[skip]", "too short", "no clips")
+    failure_line = ""
+    for line in reversed(recent_lines):
+        line_lower = line.lower()
+        if any(k in line_lower for k in error_keywords):
+            failure_line = line
+            break
+
     if failure_line:
         clean = failure_line.strip()
         for prefix in ("[FATAL]", "[ERROR]", "[fatal]", "[error]", "[SKIP]", "[skip]"):
@@ -2705,8 +2709,9 @@ def import_youtube():
             command = [*yt_dlp_cmd, "--no-playlist", "--no-warnings", "--newline", "--progress",
                        "--progress-template", "download:[clip-prog] %(progress._percent_str)s|%(progress.downloaded_bytes)s|%(progress.total_bytes|progress.total_bytes_estimate)s|%(progress.speed)s|%(progress.eta)s",
                        "--restrict-filenames", "--merge-output-format", "mp4",
-                       "--socket-timeout", "20", "--retries", "3", "--fragment-retries", "3",
-                       "-f", "bestvideo[height<=720]+bestaudio/best[height<=720]/bestvideo[height<=1080]+bestaudio/best[height<=1080]/bestvideo+bestaudio/best",
+                       "--socket-timeout", "25", "--retries", "5", "--fragment-retries", "5",
+                       "--concurrent-fragments", "4", "--buffer-size", "16M", "--http-chunk-size", "10M",
+                       "-f", "bestvideo[height<=720][ext=mp4]+bestaudio[ext=m4a]/best[height<=720][ext=mp4]/bestvideo[height<=720]+bestaudio/best[height<=720]/bestvideo[height<=1080]+bestaudio/best",
                        "--ffmpeg-location", str(Path(ffmpeg_path).parent)]
             node_binary = shutil.which("node") or shutil.which("node.exe")
             if node_binary:
@@ -2823,6 +2828,8 @@ def import_youtube():
             
             for candidate in input_dir.iterdir():
                 if not candidate.is_file() or candidate.stat().st_size < 1024:
+                    continue
+                if candidate.suffix.lower() in {".part", ".ytdl"}:
                     continue
                 cname = candidate.name.lower()
                 probe = _run_hidden(

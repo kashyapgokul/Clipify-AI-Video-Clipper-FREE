@@ -1,54 +1,59 @@
 /**
- * Clipify AI — Universal Design System Tokens
- * Shared across Windows, Linux, macOS, and Android
+ * Clipify AI — Professional Monochrome Design System Tokens
+ * Engineered Black & White Precision Desktop Identity
  */
 
 :root {
-  /* Colors - Background */
-  --clipify-bg: #09090b;
-  --clipify-bg-2: #121215;
-  --clipify-panel: rgba(18, 18, 21, 0.94);
-  --clipify-panel-strong: rgba(24, 24, 27, 0.98);
-  --clipify-elevated: rgba(30, 30, 36, 0.95);
-  --clipify-card: #18181b;
-  --clipify-card-hover: #222226;
+  /* Colors - Pure Obsidian & Charcoal Backgrounds */
+  --clipify-bg: #000000;
+  --clipify-bg-2: #08080a;
+  --clipify-panel: rgba(12, 12, 14, 0.94);
+  --clipify-panel-strong: rgba(18, 18, 20, 0.98);
+  --clipify-elevated: rgba(24, 24, 28, 0.96);
+  --clipify-card: #0d0d10;
+  --clipify-card-hover: #151518;
+  --clipify-surface-light: rgba(255, 255, 255, 0.03);
+  --clipify-surface-hover: rgba(255, 255, 255, 0.06);
 
-  /* Colors - Borders */
-  --clipify-line: #27272a;
-  --clipify-line-strong: #3f3f46;
-  --clipify-line-focus: rgba(255, 255, 255, 0.35);
-  --clipify-line-accent: #6366f1;
+  /* Colors - Minimalist Graphite & Hairline Borders */
+  --clipify-line: rgba(255, 255, 255, 0.08);
+  --clipify-line-strong: rgba(255, 255, 255, 0.16);
+  --clipify-line-subtle: rgba(255, 255, 255, 0.04);
+  --clipify-line-focus: #ffffff;
+  --clipify-line-accent: #ffffff;
 
-  /* Colors - Typography */
-  --clipify-text: #fafafa;
-  --clipify-muted: #a1a1aa;
-  --clipify-muted-2: #71717a;
-  --clipify-text-inverted: #09090b;
+  /* Colors - High-Legibility Typography */
+  --clipify-text: #ffffff;
+  --clipify-text-soft: #ededed;
+  --clipify-muted: #8e8e93;
+  --clipify-muted-2: #545458;
+  --clipify-text-inverted: #000000;
   --clipify-warm: #ffffff;
-  --clipify-warm-2: #e4e4e7;
+  --clipify-warm-2: #e5e5e7;
 
-  /* Colors - Accents */
+  /* Colors - Pure White Accents */
   --clipify-accent: #ffffff;
-  --clipify-brand: #6366f1;
-  --clipify-brand-hover: #4f46e5;
-  --clipify-brand-glow: rgba(99, 102, 241, 0.35);
-  --clipify-cyan: #06b6d4;
-  --clipify-purple: #a855f7;
+  --clipify-brand: #ffffff;
+  --clipify-brand-hover: #e5e5e5;
+  --clipify-brand-glow: rgba(255, 255, 255, 0.16);
+  --clipify-cyan: #e5e5e5;
+  --clipify-purple: #ffffff;
 
-  /* Colors - Status Feedback */
-  --clipify-success: #10b981;
-  --clipify-success-bg: rgba(16, 185, 129, 0.12);
-  --clipify-warning: #f59e0b;
-  --clipify-warning-bg: rgba(245, 158, 11, 0.12);
+  /* Colors - Clean Status Indicators (Desaturated, High-Contrast) */
+  --clipify-success: #ffffff;
+  --clipify-success-dot: #10b981;
+  --clipify-success-bg: rgba(255, 255, 255, 0.08);
+  --clipify-warning: #d4d4d8;
+  --clipify-warning-bg: rgba(255, 255, 255, 0.06);
   --clipify-error: #ef4444;
-  --clipify-error-bg: rgba(239, 68, 68, 0.15);
-  --clipify-info: #3b82f6;
-  --clipify-info-bg: rgba(59, 130, 246, 0.12);
+  --clipify-error-bg: rgba(239, 68, 68, 0.12);
+  --clipify-info: #ffffff;
+  --clipify-info-bg: rgba(255, 255, 255, 0.08);
 
   /* Typography */
   --clipify-font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --clipify-font-display: "Montserrat", -apple-system, BlinkMacSystemFont, sans-serif;
-  --clipify-font-mono: "JetBrains Mono", "Fira Code", "Cascadia Code", monospace;
+  --clipify-font-mono: "JetBrains Mono", "Cascadia Code", "Fira Code", monospace;
 
   /* Spacing */
   --clipify-space-1: 4px;
@@ -60,24 +65,25 @@
   --clipify-space-8: 32px;
   --clipify-space-10: 40px;
 
-  /* Radii */
-  --clipify-radius-sm: 6px;
+  /* Radii - Subtle & Architectural, Avoiding Excessively Bloated Bubbles */
+  --clipify-radius-sm: 4px;
   --clipify-radius-md: 8px;
   --clipify-radius-lg: 12px;
-  --clipify-radius-xl: 16px;
-  --clipify-radius-2xl: 24px;
+  --clipify-radius-xl: 14px;
+  --clipify-radius-2xl: 18px;
   --clipify-radius-pill: 9999px;
 
-  /* Shadows */
-  --clipify-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
-  --clipify-shadow-md: 0 4px 14px rgba(0, 0, 0, 0.5);
-  --clipify-shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.65);
-  --clipify-shadow-xl: 0 20px 60px rgba(0, 0, 0, 0.75);
-  --clipify-glow-brand: 0 0 20px rgba(99, 102, 241, 0.35);
+  /* Shadows - Deep Obsidian Lighting */
+  --clipify-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.6);
+  --clipify-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.7);
+  --clipify-shadow-lg: 0 12px 36px rgba(0, 0, 0, 0.85);
+  --clipify-shadow-xl: 0 24px 64px rgba(0, 0, 0, 0.95);
+  --clipify-glow-brand: 0 0 24px rgba(255, 255, 255, 0.12);
+  --clipify-shimmer: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
 
-  /* Animations */
-  --clipify-trans-fast: 150ms cubic-bezier(0.16, 1, 0.3, 1);
+  /* Animations - Easing Curves for Responsive Desktop Feel */
+  --clipify-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --clipify-trans-fast: 140ms cubic-bezier(0.16, 1, 0.3, 1);
   --clipify-trans-normal: 220ms cubic-bezier(0.16, 1, 0.3, 1);
-  --clipify-trans-slow: 350ms cubic-bezier(0.16, 1, 0.3, 1);
+  --clipify-trans-slow: 380ms cubic-bezier(0.16, 1, 0.3, 1);
 }
-

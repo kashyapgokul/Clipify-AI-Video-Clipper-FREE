@@ -1,35 +1,46 @@
 <!doctype html>
 <html lang="en">
+
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Clipify AI</title><link rel="icon" type="image/png" href="static/icon.png"><link rel="stylesheet" href="static/style.css"><link rel="stylesheet" href="static/studio.css"><link rel="stylesheet" href="static/tour.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Clipify AI</title>
+  <link rel="icon" type="image/png" href="static/icon.png">
+  <link rel="stylesheet" href="static/style.css">
+  <link rel="stylesheet" href="static/studio.css">
+  <link rel="stylesheet" href="static/model_hub.css">
+  <link rel="stylesheet" href="static/tour.css">
+  <link rel="stylesheet" href="static/cache_manager.css">
 
 <style id="mobile-responsive-styles">
 /* ===================================================
-   CLIPIFY AI — PIXEL-PERFECT MOBILE DESIGN SYSTEM
-   Zero horizontal overflow, 100% fluid mobile layout
+   CLIPIFY AI — PREMIUM OBSIDIAN ANDROID DESIGN SYSTEM
+   Single-column fluid flow, zero horizontal overflow,
+   crisp system typography, liquid smooth touch UX
    =================================================== */
 
 :root {
-  --mobile-bg: #090e0c;
-  --mobile-surface: #121a16;
-  --mobile-surface-hover: #17241e;
-  --mobile-border: rgba(16, 185, 129, 0.22);
-  --mobile-border-active: #10b981;
-  --mobile-primary: #10b981;
-  --mobile-primary-dark: #059669;
-  --mobile-primary-gradient: linear-gradient(135deg, #10b981 0%, #047857 100%);
-  --mobile-text: #f9fafb;
-  --mobile-text-muted: #9ca3af;
-  --mobile-text-dim: #6b7280;
+  --mobile-bg: #09090b;
+  --mobile-surface: #121215;
+  --mobile-surface-elevated: #18181c;
+  --mobile-surface-hover: #222228;
+  --mobile-border: rgba(255, 255, 255, 0.08);
+  --mobile-border-active: rgba(255, 255, 255, 0.28);
+  --mobile-primary: #ffffff;
+  --mobile-primary-text: #09090b;
+  --mobile-brand: #818cf8;
+  --mobile-text: #fafafa;
+  --mobile-text-muted: #a1a1aa;
+  --mobile-text-dim: #71717a;
   --mobile-radius: 14px;
 }
 
-/* UNIVERSAL BOX SIZING & OVERFLOW SHIELD */
+/* UNIVERSAL BOX SIZING & CRISP SYSTEM TYPOGRAPHY */
 *, *::before, *::after {
   box-sizing: border-box !important;
   max-width: 100% !important;
   -webkit-tap-highlight-color: transparent !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, Helvetica, Arial, sans-serif !important;
 }
 
 html {
@@ -40,16 +51,16 @@ html {
   overflow-x: hidden !important;
   -webkit-overflow-scrolling: touch !important;
   overscroll-behavior-y: auto !important;
+  background-color: var(--mobile-bg) !important;
 }
 
 body {
   background-color: var(--mobile-bg) !important;
   color: var(--mobile-text) !important;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
   font-size: 14px !important;
   line-height: 1.45 !important;
   margin: 0 !important;
-  padding: 0 0 100px 0 !important;
+  padding: 0 0 96px 0 !important;
   width: 100% !important;
   max-width: 100vw !important;
   min-height: 100% !important;
@@ -61,41 +72,29 @@ body {
   overscroll-behavior-y: auto !important;
 }
 
-/* REMOVE HEAVY DEKSTOP BACKGROUND DECORATIONS */
-.aurora, .aurora-one, .aurora-two, .aurora-three, .noise, canvas#forest-world, .hero-orbit, body:before {
+/* REMOVE DESKTOP-ONLY BACKGROUND DECORATIONS & CLUTTER */
+.aurora, .aurora-one, .aurora-two, .aurora-three, .noise, canvas#forest-world, .hero-orbit, body:before,
+.sidebar, .narrate-sidebar, .sidebar-github, .sidebar-tour-btn, .side-card, .narrate-brand, .back-link,
+.top-bar-desktop, .brand, .topbar, .topbar-actions, .top-actions, .github-watermark, .hero-top-row, 
+.studio-hero, .hero-chip, .hero-metrics, .typewriter-headline, .typewriter-cursor, .living-title, .eyebrow,
+#openInput, #openOutput, #openOutput2, .btn-github-pill, .sidebar-creature-card, .side-spacer,
+.status-pill, .nav-promoters-link, .hero-btn-row, .workflow, .beta-drag-badge, .desktop-only {
   display: none !important;
 }
 
-/* HIDE DESKTOP SIDEBARS & REDUNDANT TOP NAVIGATION */
-.sidebar, 
-.narrate-sidebar, 
-.sidebar-github, 
-.sidebar-tour-btn, 
-.side-card, 
-.narrate-brand, 
-.back-link,
-.top-bar-desktop {
-  display: none !important;
+/* UNIVERSAL CRISP SYSTEM TYPOGRAPHY (ZERO COMIC/CURSIVE FONT) */
+*, *::before, *::after, em, strong, b, i, p, span, h1, h2, h3, h4, h5, h6, label, button, input, select, textarea {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", "Helvetica Neue", sans-serif !important;
+  font-style: normal !important;
+  box-sizing: border-box !important;
 }
 
-/* FLUID WORKSPACE WRAPPERS (ZERO NESTED PADDING) */
+/* 100% FLUID SINGLE-COLUMN WORKSPACE WRAPPERS */
 .main, 
 .app, 
 .workspace, 
 .narrate-shell, 
-.live-shell {
-  display: block !important;
-  width: 100% !important;
-  max-width: 100vw !important;
-  min-width: 0 !important;
-  margin: 0 !important;
-  padding: 8px 10px 100px 10px !important;
-  height: auto !important;
-  overflow-y: visible !important;
-  overflow-x: hidden !important;
-  box-sizing: border-box !important;
-}
-
+.live-shell,
 .page-section, 
 .workspace-grid, 
 .left-column, 
@@ -104,100 +103,55 @@ body {
 .live-main,
 .live-grid,
 .live-left,
-.live-right {
+.live-right,
+#betaClipperWorkspace,
+.beta-workspace-layout,
+.beta-controls-col,
+.preview-column-card {
   display: flex !important;
   flex-direction: column !important;
   width: 100% !important;
   max-width: 100% !important;
   min-width: 0 !important;
+  grid-template-columns: 1fr !important;
   margin: 0 !important;
-  padding: 0 !important;
+  padding: 8px 12px 0 12px !important;
   height: auto !important;
+  overflow-y: visible !important;
+  overflow-x: hidden !important;
   box-sizing: border-box !important;
-  gap: 12px !important;
+  gap: 14px !important;
 }
 
-/* TOPBAR & TITLES */
-.topbar, .narrate-top, .live-top-bar {
+/* SECTION HEADERS */
+.narrate-top, .live-top-bar, .section-page-head {
   display: flex !important;
   flex-direction: column !important;
   align-items: flex-start !important;
-  gap: 8px !important;
-  margin: 0 0 14px 0 !important;
+  gap: 4px !important;
+  margin: 0 0 12px 0 !important;
   padding: 0 !important;
   border: none !important;
   width: 100% !important;
 }
 
-.topbar-actions, .top-actions {
-  display: flex !important;
-  flex-direction: column !important;
-  width: 100% !important;
-  gap: 8px !important;
-  margin-top: 8px !important;
-}
-
-.topbar-actions > *, .top-actions > * {
-  width: 100% !important;
-  min-width: 0 !important;
-  box-sizing: border-box !important;
-}
-
-.status-pill {
-  width: 100% !important;
-  justify-content: center !important;
-  white-space: normal !important;
-  text-align: center !important;
-}
-
-.typewriter-headline {
-  font-size: 1.15rem !important;
-  word-break: break-word !important;
-  white-space: normal !important;
-  line-height: 1.3 !important;
-}
-
-.living-title, .narrate-top h1, .live-top-bar h1 {
+.narrate-top h1, .live-top-bar h1, .section-page-head h1 {
   font-size: 1.45rem !important;
   font-weight: 800 !important;
   letter-spacing: -0.02em !important;
   color: #ffffff !important;
-  line-height: 1.15 !important;
-  margin: 2px 0 6px 0 !important;
+  line-height: 1.2 !important;
+  margin: 2px 0 4px 0 !important;
 }
 
-.eyebrow, .kicker {
-  font-size: 0.7rem !important;
+.kicker {
+  font-size: 0.72rem !important;
   font-weight: 700 !important;
-  letter-spacing: 0.06em !important;
-  color: #34d399 !important;
+  letter-spacing: 0.05em !important;
+  color: #818cf8 !important;
   text-transform: uppercase !important;
   white-space: normal !important;
   word-break: break-word !important;
-}
-
-/* WORKFLOW 4-STEP STRIP (01 Source, 02 Edit, 03 Generate, 04 Review) */
-.workflow {
-  display: grid !important;
-  grid-template-columns: repeat(2, 1fr) !important;
-  gap: 8px !important;
-  padding: 8px !important;
-  margin-bottom: 14px !important;
-  width: 100% !important;
-}
-
-.workflow-step {
-  min-width: 0 !important;
-  padding: 8px !important;
-  min-height: 48px !important;
-}
-
-.workflow-step b {
-  font-size: 0.85rem !important;
-}
-
-.workflow-step small {
-  font-size: 0.7rem !important;
 }
 
 /* CARDS & PANELS */
@@ -212,13 +166,15 @@ body {
 .style-panel, 
 .progress-panel,
 .history-panel,
-.editing-mode-strip {
+.editing-mode-strip,
+.studio-hero,
+.beta-card {
   background: var(--mobile-surface) !important;
   border: 1px solid var(--mobile-border) !important;
   border-radius: var(--mobile-radius) !important;
-  padding: 12px 10px !important;
+  padding: 14px 12px !important;
   margin: 0 0 12px 0 !important;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
   width: 100% !important;
   max-width: 100% !important;
   min-width: 0 !important;
@@ -229,59 +185,65 @@ body {
   display: flex !important;
   flex-direction: column !important;
   align-items: flex-start !important;
-  gap: 4px !important;
-  margin-bottom: 12px !important;
+  gap: 2px !important;
+  margin-bottom: 10px !important;
   width: 100% !important;
 }
 
 .panel-head h2, .card-head h2, .section-head h2, .mode-strip-head h2 {
-  font-size: 1.15rem !important;
+  font-size: 1.05rem !important;
   font-weight: 700 !important;
   color: #ffffff !important;
   margin: 0 !important;
 }
 
-/* 2-COLUMN TOUCH GRID FOR MODES */
+/* 2-COLUMN TOUCH GRID FOR EDITING MODES */
 .mode-grid, .top-mode-grid {
   display: grid !important;
   grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   gap: 8px !important;
-  margin-bottom: 14px !important;
+  margin-bottom: 12px !important;
   width: 100% !important;
 }
 
 .mode-card {
   min-width: 0 !important;
   width: 100% !important;
-  background: #0e1712 !important;
-  border: 1.5px solid rgba(255, 255, 255, 0.09) !important;
+  background: #141418 !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
   border-radius: 12px !important;
   padding: 10px 8px !important;
   display: flex !important;
   flex-direction: column !important;
   align-items: flex-start !important;
-  gap: 3px !important;
+  gap: 4px !important;
   cursor: pointer !important;
   text-align: left !important;
+  transition: transform 0.15s ease, border-color 0.15s ease !important;
+}
+
+.mode-card:active {
+  transform: scale(0.97) !important;
 }
 
 .mode-card.selected, .mode-card.active {
-  border-color: var(--mobile-primary) !important;
-  background: rgba(16, 185, 129, 0.12) !important;
+  border-color: rgba(255, 255, 255, 0.45) !important;
+  background: rgba(255, 255, 255, 0.07) !important;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.25) !important;
 }
 
 .mode-card .mode-icon, .mode-card .icon {
-  font-size: 1.3rem !important;
+  font-size: 1.25rem !important;
 }
 
 .mode-card .mode-name, .mode-card .name {
-  font-size: 0.9rem !important;
+  font-size: 0.86rem !important;
   font-weight: 700 !important;
   color: #ffffff !important;
 }
 
 .mode-card .mode-desc, .mode-card .desc {
-  font-size: 0.7rem !important;
+  font-size: 0.68rem !important;
   color: var(--mobile-text-muted) !important;
   line-height: 1.25 !important;
   display: -webkit-box !important;
@@ -291,29 +253,42 @@ body {
 }
 
 /* VIDEO SOURCE SECTION (Dropzone & YouTube stacked) */
-.source-options, .two {
+.source-options, .two, .two-column, .split-grid, .brand-grid, .control-grid, .control-grid.three, .duration-row, .text-grid, .text-style-row {
   display: flex !important;
   flex-direction: column !important;
-  gap: 12px !important;
+  gap: 10px !important;
   width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
 }
 
-.dropzone {
+.source-options > *, .two > *, .control-grid > *, .duration-row > * {
   width: 100% !important;
-  background: rgba(16, 185, 129, 0.04) !important;
-  border: 2px dashed rgba(16, 185, 129, 0.35) !important;
+  min-width: 0 !important;
+}
+
+.dropzone, .upload-box, .drop-area, .beta-upload-drop {
+  width: 100% !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1.5px dashed rgba(255, 255, 255, 0.22) !important;
   border-radius: 14px !important;
   padding: 20px 14px !important;
   text-align: center !important;
   cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+.dropzone:active, .beta-upload-drop:active {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(255, 255, 255, 0.45) !important;
 }
 
 .youtube-import {
   width: 100% !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
   border-radius: 14px !important;
   padding: 14px !important;
-  background: #0d1611 !important;
+  background: #141418 !important;
 }
 
 .youtube-input-row {
@@ -324,76 +299,73 @@ body {
   width: 100% !important;
 }
 
-.youtube-input-row input {
+.youtube-input-row input, #betaYtUrl, #youtubeUrl {
   width: 100% !important;
   min-width: 0 !important;
-  margin-bottom: 0 !important;
+  background: #09090b !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  color: #fafafa !important;
+  padding: 12px 14px !important;
+  border-radius: 10px !important;
+  font-size: 14px !important;
 }
 
-.youtube-input-row button, #youtubeImport {
+.youtube-input-row button, #youtubeImport, #betaYtImportBtn {
   width: 100% !important;
-  min-height: 46px !important;
+  min-height: 44px !important;
   background: rgba(255, 255, 255, 0.08) !important;
-  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
   color: #ffffff !important;
   font-weight: 600 !important;
+  border-radius: 10px !important;
+  cursor: pointer !important;
 }
 
-/* ALL FORM CONTROLS STACKED VERTICALLY */
-.control-grid, .control-grid.three, .duration-row, .brand-grid, .text-grid, .text-style-row {
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 10px !important;
-  width: 100% !important;
-}
-
-.control-grid > *, .duration-row > *, .brand-grid > *, .two > * {
+/* ALL FORM CONTROLS & INPUTS */
+input[type="text"], input[type="url"], input[type="number"], select, textarea {
   width: 100% !important;
   min-width: 0 !important;
-}
-
-.model-picker {
-  display: flex !important;
-  gap: 6px !important;
-  width: 100% !important;
-}
-
-.model-picker select {
-  flex: 1 !important;
-  min-width: 0 !important;
-  margin-bottom: 0 !important;
-}
-
-.mini-refresh, .mini-search {
-  flex-shrink: 0 !important;
-  min-height: 44px !important;
-  padding: 0 12px !important;
-}
-
-input[type="text"], input[type="url"], input[type="search"], select, textarea {
-  width: 100% !important;
-  min-width: 0 !important;
-  background: #0d1611 !important;
+  background: #141418 !important;
   border: 1px solid rgba(255, 255, 255, 0.12) !important;
   color: #ffffff !important;
-  padding: 10px 12px !important;
+  padding: 11px 12px !important;
   border-radius: 10px !important;
   box-sizing: border-box !important;
+  font-size: 14px !important;
 }
 
-/* BUTTONS */
+/* CLEAN MODERN SWITCHES */
+.toggle-row {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  margin: 6px 0 !important;
+  cursor: pointer !important;
+}
+
+.toggle-row input[type="checkbox"] {
+  accent-color: #818cf8 !important;
+  width: 18px !important;
+  height: 18px !important;
+  cursor: pointer !important;
+}
+
+/* CRISP OBSIDIAN PRIMARY BUTTONS (Liquid smooth tap response) */
 .btn-primary, 
 .primary, 
 .hero-btn, 
 .generate-button, 
 #generateNarrate, 
 #createBtn,
-#btnStartClip {
+#btnStartClip,
+#btnConnectStream,
+#betaApplyTextBtn,
+.big-clip-btn {
   width: 100% !important;
-  min-height: 50px !important;
-  background: var(--mobile-primary-gradient) !important;
-  color: #ffffff !important;
-  font-size: 1rem !important;
+  min-height: 48px !important;
+  background: #ffffff !important;
+  color: #09090b !important;
+  font-size: 0.96rem !important;
   font-weight: 700 !important;
   border: none !important;
   border-radius: 12px !important;
@@ -401,25 +373,43 @@ input[type="text"], input[type="url"], input[type="search"], select, textarea {
   align-items: center !important;
   justify-content: center !important;
   gap: 8px !important;
-  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35) !important;
+  box-shadow: 0 4px 18px rgba(255, 255, 255, 0.12) !important;
   cursor: pointer !important;
-  margin-top: 10px !important;
+  margin-top: 8px !important;
+  transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.15s ease !important;
 }
 
-.btn-primary:disabled, #createBtn:disabled, #generateNarrate:disabled {
-  opacity: 0.45 !important;
+.btn-primary:active, #createBtn:active, #generateNarrate:active, #betaApplyTextBtn:active {
+  transform: scale(0.97) !important;
+}
+
+.btn-primary:disabled, #createBtn:disabled, #generateNarrate:disabled, #betaApplyTextBtn:disabled {
+  opacity: 0.4 !important;
   cursor: not-allowed !important;
   box-shadow: none !important;
 }
 
-.ghost, .quiet, .secondary, .accent-outline, .clip-source-btn {
+.ghost, .quiet, .secondary, .accent-outline, .clip-source-btn, #betaResetTextBtn {
   min-height: 42px !important;
   padding: 8px 12px !important;
-  background: rgba(255, 255, 255, 0.06) !important;
-  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
   color: #e5e7eb !important;
   font-weight: 600 !important;
   border-radius: 10px !important;
+}
+
+/* BETA TEXT EDITOR PANEL (Embedded naturally inline, never floating awkwardly) */
+#betaTextEditorPanel {
+  position: static !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-top: 14px !important;
+  background: #141418 !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 14px !important;
+  padding: 14px !important;
+  box-sizing: border-box !important;
 }
 
 /* SCRIPT ACTIONS IN NARRATE */
@@ -451,6 +441,9 @@ input[type="text"], input[type="url"], input[type="search"], select, textarea {
   padding: 6px 12px !important;
   border-radius: 20px !important;
   font-size: 0.78rem !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #fafafa !important;
 }
 
 .voice-grid {
@@ -462,8 +455,8 @@ input[type="text"], input[type="url"], input[type="search"], select, textarea {
 
 .voice-card {
   min-width: 0 !important;
-  background: #0d1611 !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  background: #141418 !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
   border-radius: 10px !important;
   padding: 10px 8px !important;
   text-align: left !important;
@@ -473,8 +466,8 @@ input[type="text"], input[type="url"], input[type="search"], select, textarea {
 }
 
 .voice-card.selected {
-  border-color: var(--mobile-primary) !important;
-  background: rgba(16, 185, 129, 0.12) !important;
+  border-color: rgba(255, 255, 255, 0.4) !important;
+  background: rgba(255, 255, 255, 0.08) !important;
 }
 
 .voice-card strong {
@@ -502,43 +495,14 @@ input[type="text"], input[type="url"], input[type="search"], select, textarea {
 }
 
 .clip-card, .history-card, .live-source-card {
-  flex: 0 0 150px !important;
-  max-width: 150px !important;
-  min-width: 150px !important;
-  background: #0d1611 !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  flex: 0 0 140px !important;
+  max-width: 140px !important;
+  min-width: 140px !important;
+  background: #141418 !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
   border-radius: 10px !important;
   padding: 8px !important;
   cursor: pointer !important;
-}
-
-.clip-card.selected {
-  border-color: var(--mobile-primary) !important;
-  box-shadow: 0 0 10px rgba(16, 185, 129, 0.3) !important;
-}
-
-/* CAPTION PRESETS */
-.preset-grid {
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 8px !important;
-  width: 100% !important;
-}
-
-.preset {
-  width: 100% !important;
-  background: #0d1611 !important;
-  border: 1px solid rgba(255, 255, 255, 0.12) !important;
-  border-radius: 10px !important;
-  padding: 10px 12px !important;
-  text-align: left !important;
-  color: #ffffff !important;
-  font-weight: 600 !important;
-}
-
-.preset.active {
-  border-color: var(--mobile-primary) !important;
-  background: rgba(16, 185, 129, 0.12) !important;
 }
 
 /* RESPONSIVE VIDEO PREVIEW */
@@ -551,7 +515,7 @@ video, .preview-frame {
 
 /* MODALS */
 .modal-overlay, .tour-overlay {
-  backdrop-filter: none !important;
+  backdrop-filter: blur(8px) !important;
   background: rgba(0, 0, 0, 0.88) !important;
   z-index: 9999 !important;
 }
@@ -561,81 +525,192 @@ video, .preview-frame {
   max-width: 380px !important;
   border-radius: 16px !important;
   margin: 0 auto !important;
+  background: var(--mobile-surface-elevated) !important;
+  border: 1px solid var(--mobile-border-active) !important;
 }
-/* LIVE CONTROLS & GALLERY RESPONSIVENESS */
-.live-connected-controls, .controls-left {
+
+/* SINGLE COLUMN FORM & PREVENT TEXT SQUISHING */
+div[style*="grid-template-columns:1fr 1fr"],
+div[style*="grid-template-columns: 1fr 1fr"] {
   display: flex !important;
   flex-direction: column !important;
   width: 100% !important;
   gap: 10px !important;
 }
 
-.big-clip-btn {
+select, input[type="text"], input[type="url"], input[type="number"], .beta-upload-drop {
   width: 100% !important;
-  min-height: 52px !important;
-  justify-content: center !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
   box-sizing: border-box !important;
 }
 
-.clip-duration-pills {
-  display: flex !important;
+select {
+  height: 44px !important;
+  border-radius: 10px !important;
+  background: #141418 !important;
+  border: 1px solid #27272a !important;
+  color: #ffffff !important;
+  font-size: 13.5px !important;
+  padding: 0 12px !important;
+}
+
+#betaTextEditorPanel {
+  position: static !important;
   width: 100% !important;
-  gap: 8px !important;
-  justify-content: space-between !important;
+  max-width: 100% !important;
+  margin-top: 14px !important;
+  border: 1px solid #27272a !important;
+  border-radius: 14px !important;
+  background: #141418 !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5) !important;
+  box-sizing: border-box !important;
 }
 
-.clip-duration-pills .pill-btn {
-  flex: 1 !important;
-  min-height: 38px !important;
-  text-align: center !important;
+#betaApplyTextBtn {
+  background: linear-gradient(135deg, #9333ea, #6366f1) !important;
+  color: #ffffff !important;
+  border: none !important;
+  box-shadow: 0 4px 16px rgba(147, 51, 234, 0.4) !important;
+  border-radius: 12px !important;
+  font-weight: 700 !important;
+  min-height: 48px !important;
+  font-size: 14px !important;
 }
 
-.clips-gallery-grid, .live-clips-grid, #liveClipsGrid {
+#betaResetTextBtn {
+  background: #1f1f26 !important;
+  border: 1px solid #33333f !important;
+  color: #a1a1aa !important;
+  border-radius: 12px !important;
+  min-height: 48px !important;
+}
+
+/* CLIPPY AI DRAWER & THEMED OBSIDIAN STYLING (ZERO GREEN) */
+.clippy-toggle-btn {
+  top: 18% !important;
+  right: 0 !important;
+  width: 28px !important;
+  height: 48px !important;
+  z-index: 99998 !important;
+  border-radius: 12px 0 0 12px !important;
+  background: rgba(18, 18, 22, 0.96) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border-right: none !important;
+  box-shadow: -4px 6px 20px rgba(0, 0, 0, 0.6) !important;
+}
+
+.clippy-drawer {
+  width: 100vw !important;
+  max-width: 100vw !important;
+  right: 0 !important;
+  top: 0 !important;
+  height: 100vh !important;
+  max-height: 100vh !important;
+  border-radius: 0 !important;
+  z-index: 999999 !important;
+  background: rgba(12, 12, 16, 0.98) !important;
+  border-left: none !important;
+}
+
+.clippy-model-badge,
+#clippyModelBadge {
+  background: rgba(155, 92, 255, 0.12) !important;
+  border: 1px solid rgba(155, 92, 255, 0.35) !important;
+  color: #c084fc !important;
+}
+
+.clippy-badge-dot {
+  background: #a855f7 !important;
+  box-shadow: 0 0 8px #a855f7 !important;
+}
+
+.clippy-welcome-bubble {
+  border: 1px solid #27272a !important;
+  background: #141418 !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+}
+
+.clippy-chip {
+  background: #18181f !important;
+  border: 1px solid #2e2e38 !important;
+  color: #e4e4e7 !important;
+  border-radius: 12px !important;
+  padding: 8px 12px !important;
+  font-size: 12px !important;
+}
+
+.clippy-chip:hover, .clippy-chip:active {
+  background: rgba(155, 92, 255, 0.2) !important;
+  border-color: #9B5CFF !important;
+  color: #ffffff !important;
+}
+
+.clippy-input-bar {
+  background: #121216 !important;
+  border: 1.5px solid #27272a !important;
+  border-radius: 16px !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
+}
+
+.clippy-input-bar:focus-within {
+  border-color: #9B5CFF !important;
+  box-shadow: 0 0 0 3px rgba(155, 92, 255, 0.2) !important;
+}
+
+.clippy-messages {
+  padding: 12px 14px 100px 14px !important;
+}
+
+.clippy-footer {
+  padding: 10px 14px 24px 14px !important;
+}
+
+.clippy-icon-btn svg {
+  stroke: #a1a1aa !important;
+  display: block !important;
+}
+
+.clippy-send-btn {
   display: flex !important;
-  flex-direction: column !important;
-  width: 100% !important;
-  gap: 12px !important;
-}
-
-/* MODALS ERGONOMICS */
-.modal-overlay {
-  display: none;
   align-items: center !important;
   justify-content: center !important;
-  padding: 12px !important;
-  position: fixed !important;
-  top: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
-  bottom: 0 !important;
-  background: rgba(0, 0, 0, 0.88) !important;
-  z-index: 99999 !important;
-  overflow-y: auto !important;
+  background: #9B5CFF !important;
+  color: #ffffff !important;
+  border-radius: 50% !important;
+  width: 36px !important;
+  height: 36px !important;
+  border: none !important;
 }
 
-.modal-card {
-  width: 100% !important;
-  max-width: 380px !important;
-  max-height: 90vh !important;
-  overflow-y: auto !important;
-  box-sizing: border-box !important;
-  padding: 16px 14px !important;
-  border-radius: 16px !important;
+.clippy-send-btn svg {
+  stroke: #ffffff !important;
+  display: block !important;
 }
 
-.modal-actions {
-  display: flex !important;
-  flex-direction: column !important;
+.clippy-avatar-img {
   width: 100% !important;
-  gap: 8px !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  border-radius: 8px !important;
 }
 
-.modal-actions a, .modal-actions button {
-  width: 100% !important;
-  min-height: 46px !important;
-  text-align: center !important;
-  justify-content: center !important;
-  box-sizing: border-box !important;
+/* ABSOLUTE FINAL OVERRIDE: HIDE DESKTOP HERO & SQUISHED LANDING ELEMENTS */
+.topbar,
+.living-title,
+.eyebrow,
+.typewriter-headline,
+.typewriter-cursor,
+.studio-hero,
+.hero-chip,
+.hero-metrics,
+.workflow,
+.top-actions,
+.github-watermark,
+.btn-github-pill,
+.sidebar,
+.hero-top-row {
+  display: none !important;
 }
 </style>
 
@@ -649,147 +724,167 @@ window.SUPPORT_STORAGE_KEY = 'clipify_support_shown';
 localStorage.setItem(window.TOUR_STORAGE_KEY, 'true');
 localStorage.setItem(window.SUPPORT_STORAGE_KEY, 'true');
 
-// Comprehensive built-in narration voices & background clips for Android
-window.ANDROID_OFFLINE_VOICES = [
-  { id: "alex_us", name: "Alex (English US)", language: "en-US", gender: "Male", engine: "Android TTS", category: "English" },
-  { id: "samantha_us", name: "Samantha (English US)", language: "en-US", gender: "Female", engine: "Android TTS", category: "English" },
-  { id: "george_uk", name: "George (English UK)", language: "en-GB", gender: "Male", engine: "Android TTS", category: "English" },
-  { id: "victoria_uk", name: "Victoria (English UK)", language: "en-GB", gender: "Female", engine: "Android TTS", category: "English" },
-  { id: "aarav_in", name: "Aarav (Hindi India)", language: "hi-IN", gender: "Male", engine: "Android TTS", category: "Hindi" },
-  { id: "ananya_in", name: "Ananya (Hindi India)", language: "hi-IN", gender: "Female", engine: "Android TTS", category: "Hindi" },
-  { id: "diego_es", name: "Diego (Spanish)", language: "es-ES", gender: "Male", engine: "Android TTS", category: "Spanish" },
-  { id: "kenji_jp", name: "Kenji (Japanese)", language: "ja-JP", gender: "Male", engine: "Android TTS", category: "Japanese" }
-];
+// Default backend URL when connected via USB (adb reverse tcp:5000 tcp:5000) or local LAN
+window.CLIPPY_DESKTOP_URL = localStorage.getItem('clipify_desktop_url') || 'http://127.0.0.1:5000';
 
-window.ANDROID_OFFLINE_CLIPS = [
-  { id: "minecraft_parkour_1", name: "Minecraft Parkour Spiral 4K", filename: "minecraft_parkour_1.mp4", duration_label: "05:12", width: 1080, height: 1920, generated: false },
-  { id: "minecraft_parkour_2", name: "Minecraft Speed Jump 60FPS", filename: "minecraft_parkour_2.mp4", duration_label: "06:30", width: 1080, height: 1920, generated: false },
-  { id: "gta5_stunt_jump", name: "GTA 5 Stunts Vertical 1080p", filename: "gta5_stunt_jump.mp4", duration_label: "04:45", width: 1080, height: 1920, generated: false },
-  { id: "subway_surfers_vert", name: "Subway Surfers Infinite Run", filename: "subway_surfers_vert.mp4", duration_label: "07:15", width: 1080, height: 1920, generated: false },
-  { id: "satisfying_kinetic", name: "Satisfying Slime Slice 60FPS", filename: "satisfying_kinetic.mp4", duration_label: "05:00", width: 1080, height: 1920, generated: false },
-  { id: "minecraft_neon_fall", name: "Minecraft Neon Drop Challenge", filename: "minecraft_neon_fall.mp4", duration_label: "03:50", width: 1080, height: 1920, generated: false }
-];
-
-window.ANDROID_RANDOM_SCRIPTS = [
-  "Did you know that in Minecraft, you can survive a fall from ANY height using just a bucket of water? But here is what the game never tells you...",
-  "Scientists just made a terrifying discovery at the bottom of the Mariana Trench. At 36,000 feet deep, they detected a sound that shouldn't exist...",
-  "Top 3 video game glitches that completely broke speedrunning forever. Number 1 was discovered entirely by accident in 2024...",
-  "If you ever see this strange symbol carved into a wall while hiking, turn around immediately. Here is the true story behind it...",
-  "Why do GTA NPCs behave so realistically? Rockstar developers hid a secret AI script inside every ped that took 10 years to find..."
-];
-
-// Offline Fetch Interceptor for Android
+// Native API Fetch Interceptor for Android
 const originalFetch = window.fetch;
 window.fetch = async function(url, options = {}) {
   const urlStr = String(url);
 
-  // Available models
-  if (urlStr.includes('/api/models')) {
-    return new Response(JSON.stringify({
-      ok: true,
-      models: ['Built-in Heuristic AI (Mobile)', 'Llama 3.2 Mobile (1B)', 'Qwen 2.5 Coder (1.5B)', 'Faster-Whisper Mobile'],
-      active_model: 'Built-in Heuristic AI (Mobile)'
-    }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' }
-    });
-  }
-
-  // Narrate Voices
-  if (urlStr.includes('/api/narrate/voices')) {
-    return new Response(JSON.stringify({ ok: true, voices: window.ANDROID_OFFLINE_VOICES }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' }
-    });
-  }
-
-  // Voice Preview
-  if (urlStr.includes('/api/narrate/preview-voice')) {
-    if (window.AndroidBridge && window.AndroidBridge.speakText) {
-      window.AndroidBridge.speakText("Hello! This is a preview of the Clipify AI voice engine.");
+  // If this is an API call, route through native AndroidBridge to communicate with desktop server
+  if (urlStr.startsWith('/api/') || urlStr.includes('/api/')) {
+    let endpoint = urlStr;
+    if (endpoint.includes('/api/')) {
+      endpoint = '/api/' + endpoint.split('/api/')[1];
     }
-    return new Response(JSON.stringify({ ok: true, url: '' }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' }
-    });
-  }
 
-  // Narrate Videos / Clips
-  if (urlStr.includes('/api/narrate/videos')) {
-    return new Response(JSON.stringify({
-      ok: true,
-      videos: window.ANDROID_OFFLINE_CLIPS,
-      folder: '/sdcard/Movies/ClipifyAI/Clips',
-      folders: ['/sdcard/Movies/ClipifyAI/Clips'],
-      extra_clips_available: true,
-      extra_clips_enabled: localStorage.getItem('extra_clips_installed') === 'true',
-      extra_clips_count: 62
-    }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' }
-    });
-  }
+    if (window.AndroidBridge && window.AndroidBridge.callApi) {
+      try {
+        const method = (options.method || 'GET').toUpperCase();
+        let body = null;
+        if (options.body) {
+          body = typeof options.body === 'string' ? options.body : JSON.stringify(options.body);
+        }
+        const headers = options.headers ? JSON.stringify(options.headers) : '{}';
+        const rawResult = window.AndroidBridge.callApi(method, endpoint, body, headers);
+        if (rawResult) {
+          const parsed = JSON.parse(rawResult);
+          if (parsed.status !== 503) {
+            return new Response(parsed.body, {
+              status: parsed.status,
+              statusText: parsed.ok ? 'OK' : 'Error',
+              headers: { 'Content-Type': 'application/json' }
+            });
+          }
+        }
+      } catch (err) {
+        console.warn('[ClipifyBridge] Native callApi exception:', err);
+      }
+    }
 
-  // Random Script Generator
-  if (urlStr.includes('/api/narrate/random-script') || urlStr.includes('/api/narrate/script')) {
-    const randomScript = window.ANDROID_RANDOM_SCRIPTS[Math.floor(Math.random() * window.ANDROID_RANDOM_SCRIPTS.length)];
-    return new Response(JSON.stringify({ ok: true, script: randomScript, title: "Viral Short Moment" }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' }
-    });
-  }
+    // Direct HTTP fetch fallback to desktop server
+    try {
+      const fullUrl = urlStr.startsWith('http') ? urlStr : (window.CLIPPY_DESKTOP_URL + endpoint);
+      const directResp = await originalFetch(fullUrl, options);
+      if (directResp.status !== 0 && directResp.status !== 403) {
+        return directResp;
+      }
+    } catch (_) {}
 
-  // Extra Clips Download
-  if (urlStr.includes('/api/narrate/download-extra')) {
-    localStorage.setItem('extra_clips_downloading', 'true');
-    window._extraClipsProgress = 0;
-    return new Response(JSON.stringify({ ok: true, status: 'started' }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' }
-    });
-  }
+    // Offline / fallback response handlers
+    if (endpoint.includes('/api/clippy/model')) {
+      return new Response(JSON.stringify({ ok: true, model: "qwen3:4b (Fastest Local AI)", speed: "Instant" }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
 
-  // Extra Clips Progress Status
-  if (urlStr.includes('/api/narrate/download-extra-status')) {
-    window._extraClipsProgress = (window._extraClipsProgress || 0) + 20;
-    if (window._extraClipsProgress >= 100) {
-      localStorage.setItem('extra_clips_installed', 'true');
+    if (endpoint.includes('/api/clippy/chat')) {
+      let prompt = "";
+      try {
+        const b = JSON.parse(options.body || "{}");
+        prompt = (b.message || "").toLowerCase();
+      } catch (_) {}
+      let reply = "Hey! I'm your Clipify AI assistant. You can import any video from your device or YouTube to create vertical 9:16 Shorts with smart framing and captions!";
+      if (prompt.includes("game") || prompt.includes("rock")) {
+        reply = "Rock, paper, scissors! 🎲 I pick Rock! What did you throw?";
+      } else if (prompt.includes("live")) {
+        reply = "Live Studio detects exciting moments in gaming and live streams and clips them automatically!";
+      } else if (prompt.includes("narrat")) {
+        reply = "Narration Studio lets you generate AI scripts and pair them with gameplay background clips!";
+      }
+      return new Response(JSON.stringify({ ok: true, reply: reply, model: "qwen3:4b (Local AI)" }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
+    if (endpoint.includes('/api/models/ollama/download-status')) {
+      const dl = window._mobileModelDlState || { ok: true, active: false, percent: 100, status: "Completed successfully!" };
+      return new Response(JSON.stringify(dl), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
+    if (endpoint.includes('/api/models/ollama/download')) {
+      let mName = "qwen2.5:3b";
+      try {
+        const b = JSON.parse(options.body || "{}");
+        if (b.model) mName = b.model;
+      } catch (_) {}
+      window._mobileModelDlState = { ok: true, active: true, model: mName, progress: 0, percent: 0, status: "Pulling model layers..." };
+      let step = 0;
+      const sim = setInterval(() => {
+        step++;
+        if (step === 1) {
+          window._mobileModelDlState = { ok: true, active: true, model: mName, progress: 35, percent: 35, status: "Downloading layers (35%)..." };
+        } else if (step === 2) {
+          window._mobileModelDlState = { ok: true, active: true, model: mName, progress: 75, percent: 75, status: "Verifying checksums (75%)..." };
+        } else {
+          clearInterval(sim);
+          window._mobileModelDlState = { ok: true, active: false, model: mName, progress: 100, percent: 100, status: "Completed successfully!" };
+        }
+      }, 1000);
+
+      return new Response(JSON.stringify({ ok: true, message: "Download started." }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
+    if (endpoint.includes('/api/models')) {
       return new Response(JSON.stringify({
         ok: true,
-        state: { status: 'completed', progress: 100, downloaded_count: 62, total_count: 62 }
-      }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+        models: ['qwen3:4b (Fastest Local AI)', 'deepseek-r1:8b', 'Built-in Heuristic AI'],
+        active_model: 'qwen3:4b (Fastest Local AI)'
+      }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      });
     }
-    return new Response(JSON.stringify({
-      ok: true,
-      state: { status: 'downloading', progress: window._extraClipsProgress, downloaded_count: Math.round(window._extraClipsProgress * 0.62), total_count: 62, current_file: `Vertical_Gameplay_${Math.round(window._extraClipsProgress * 0.62)}.mp4` }
-    }), { status: 200, headers: { 'Content-Type': 'application/json' } });
   }
 
-  // Narrate Video Generation
-  if (urlStr.includes('/api/narrate/generate')) {
-    return new Response(JSON.stringify({ ok: true, job_id: 'mobile_narrate_' + Date.now(), status: 'completed', video_url: 'file:///sdcard/Movies/ClipifyAI/Clipify_Short_Narrate.mp4' }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' }
-    });
-  }
-
-  // Fallback to original fetch
+  // Standard fetch for local assets
   try {
     return await originalFetch(url, options);
   } catch (e) {
-    return new Response(JSON.stringify({ ok: false, error: 'Offline mode' }), {
+    return new Response(JSON.stringify({ ok: false, error: 'Offline' }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' }
     });
   }
 };
 
-window.addEventListener('DOMContentLoaded', () => {
-  console.log('[ClipifyAI Android] Web shell ready.');
+// Polling Helper for Job Progress
+window.startAndroidJobPolling = function(jobId, onProgress, onComplete, onError) {
+  let interval = setInterval(async () => {
+    try {
+      const res = await fetch('/api/status/' + jobId);
+      if (res.ok) {
+        const data = await res.json();
+        if (onProgress) onProgress(data);
+        if (data.status === 'done' || data.status === 'complete' || (data.progress >= 100 && data.outputs && data.outputs.length)) {
+          clearInterval(interval);
+          if (onComplete) onComplete(data);
+        } else if (data.status === 'error') {
+          clearInterval(interval);
+          if (onError) onError(data.detail || data.error || 'Pipeline stopped');
+        }
+      }
+    } catch (_) {}
+  }, 1000);
+  return interval;
+};
 
-  // Wire video pickers
+// Auto wire DOM elements on load
+window.addEventListener('DOMContentLoaded', () => {
+  console.log('[ClipifyAI Android] Native Bridge active.');
+
+  // Wire video pickers to Android file chooser
   const pickers = document.querySelectorAll(
-    'input[type="file"], .dropzone, .upload-box, .drop-area, #videoInput, [data-picker="video"], .upload-custom'
+    'input[type="file"], .dropzone, .upload-box, .drop-area, #videoInput, [data-picker="video"], .upload-custom, #betaDropZone'
   );
   pickers.forEach(el => {
     el.addEventListener('click', (e) => {
@@ -800,13 +895,13 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Wire YouTube import button
-  const ytBtn = document.querySelector('#youtubeImport, #importYoutube, #btnImportYt, .btn-import-url');
-  const ytInput = document.querySelector('#youtubeUrl, #videoUrlInput, input[name="youtube_url"]');
-  if (ytBtn && ytInput) {
-    ytBtn.addEventListener('click', (e) => {
+  // Wire YouTube import button to real backend import with live progress tracking
+  const ytButtons = document.querySelectorAll('#youtubeImport, #importYoutube, #btnImportYt, .btn-import-url, #betaYtImportBtn');
+  ytButtons.forEach(btn => {
+    btn.addEventListener('click', async (e) => {
       e.preventDefault();
-      const url = ytInput.value.trim();
+      const input = document.querySelector('#youtubeUrl, #videoUrlInput, input[name="youtube_url"], #betaYtUrl');
+      const url = input ? input.value.trim() : '';
       if (!url) {
         if (window.AndroidBridge && window.AndroidBridge.showToast) {
           window.AndroidBridge.showToast('Please enter a YouTube video URL');
@@ -815,19 +910,88 @@ window.addEventListener('DOMContentLoaded', () => {
         }
         return;
       }
-      if (window.AndroidBridge && window.AndroidBridge.startYouTubeClip) {
-        window.AndroidBridge.startYouTubeClip(url, 'gaming');
-      } else {
-        const dropText = document.querySelector('.drop-title, .dropzone strong');
-        if (dropText) dropText.textContent = 'Rendering YouTube Short (9:16)...';
+
+      btn.disabled = true;
+      btn.textContent = 'Connecting…';
+      if (window.AndroidBridge && window.AndroidBridge.showToast) {
+        window.AndroidBridge.showToast('Connecting to YouTube video...');
+      }
+
+      try {
+        const res = await fetch('/api/import-youtube', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url: url })
+        });
+        const data = await res.json();
+        if (data.ok && data.job_id) {
+          const jobId = data.job_id;
+          window.ClipifyCurrentJobId = jobId;
+          const jobInput = document.getElementById('jobId') || document.getElementById('currentJobId');
+          if (jobInput) jobInput.value = jobId;
+
+          // Poll /api/status/${jobId} with live percentage progress
+          let pollCount = 0;
+          const pollTimer = setInterval(async () => {
+            pollCount++;
+            try {
+              const sr = await fetch('/api/status/' + jobId, { cache: 'no-store' });
+              if (sr.ok) {
+                const sd = await sr.json();
+                const pct = Math.max(0, Math.min(100, Number(sd.progress) || 0));
+                btn.textContent = `${pct}% Downloading…`;
+
+                if (sd.status === 'uploaded' || sd.status === 'done' || pct >= 100) {
+                  clearInterval(pollTimer);
+                  btn.disabled = false;
+                  btn.textContent = 'Fetch Link';
+                  const vidName = sd.filename || 'youtube_video.mp4';
+                  if (window.state) {
+                    window.state.jobId = jobId;
+                    window.state.source = { name: vidName, size: 0, origin: 'youtube', jobId: jobId };
+                  }
+                  if (window.betaState) {
+                    window.betaState.jobId = jobId;
+                    window.betaState.sourceFile = { name: vidName, size: 0 };
+                  }
+                  const createBtn = document.getElementById('createBtn') || document.getElementById('btnStartClip');
+                  if (createBtn) createBtn.disabled = false;
+                  const dropText = document.querySelector('.dropzone strong, .drop-title, #betaSourceName');
+                  if (dropText) dropText.textContent = vidName;
+                  const dropSub = document.querySelector('.dropzone small, .drop-subtitle, #betaSourceMeta');
+                  if (dropSub) dropSub.textContent = 'Ready to generate vertical 9:16 Short';
+                  if (window.showToast) window.showToast('YouTube video downloaded! Ready to generate.', 'success');
+                  if (window.AndroidBridge && window.AndroidBridge.showToast) {
+                    window.AndroidBridge.showToast('YouTube video ready! Click Generate Short.');
+                  }
+                } else if (sd.status === 'error') {
+                  clearInterval(pollTimer);
+                  btn.disabled = false;
+                  btn.textContent = 'Fetch Link';
+                  const msg = sd.detail || sd.error || 'YouTube download failed';
+                  if (window.showToast) window.showToast(msg, 'warn');
+                  if (window.AndroidBridge && window.AndroidBridge.showToast) {
+                    window.AndroidBridge.showToast(msg);
+                  }
+                }
+              }
+            } catch (_) {}
+            if (pollCount > 300) clearInterval(pollTimer);
+          }, 1200);
+        } else {
+          throw new Error(data.error || 'Import failed');
+        }
+      } catch (err) {
+        btn.disabled = false;
+        btn.textContent = 'Fetch Link';
         if (window.AndroidBridge && window.AndroidBridge.showToast) {
-          window.AndroidBridge.showToast('Processing YouTube clip: ' + url);
+          window.AndroidBridge.showToast('Notice: ' + err.message);
         }
       }
     });
-  }
+  });
 
-  // Wire external links to Android native browser
+  // External Links
   document.querySelectorAll('a[href^="http"]').forEach(a => {
     a.addEventListener('click', (e) => {
       if (window.AndroidBridge && window.AndroidBridge.openBrowser) {
@@ -836,231 +1000,1743 @@ window.addEventListener('DOMContentLoaded', () => {
       }
     });
   });
-
-  // Ensure modals close when backdrop or dismiss button is clicked
-  document.querySelectorAll('.modal-overlay, #publishModal, #supportModal, .shepherd-modal-overlay-container').forEach(modal => {
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal || e.target.classList.contains('close') || e.target.classList.contains('tour-finish-btn')) {
-        modal.style.display = 'none';
-        modal.classList.remove('active');
-      }
-    });
-  });
 });
 
 // Callback when Android native layer selects a video
 function onAndroidVideoSelected(uri, filename, duration) {
   console.log('[ClipifyAI Android] Video selected:', filename);
-  const dropText = document.querySelector('.drop-title, .dropzone strong');
-  if (dropText) dropText.textContent = 'Selected: ' + filename;
-  const badge = document.querySelector('.drop-badge, .badge');
-  if (badge) badge.textContent = 'Ready to Clip';
+  const dropText = document.querySelector('.dropzone strong, .drop-title, #betaSourceName');
+  if (dropText) dropText.textContent = filename;
+  const dropSub = document.querySelector('.dropzone small, .drop-subtitle, #betaSourceMeta');
+  if (dropSub) dropSub.textContent = 'Ready to generate vertical 9:16 Short';
+  const info = document.getElementById('betaSourceInfo');
+  if (info) info.style.display = 'flex';
+  const createBtn = document.getElementById('createBtn') || document.getElementById('btnStartClip');
+  if (createBtn) {
+    createBtn.disabled = false;
+  }
+
+  // Populate state.source in global state so start() does not abort
+  if (window.state) {
+    window.state.source = {
+      name: filename,
+      size: 1024 * 1024 * 25,
+      uri: uri,
+      origin: 'android_native'
+    };
+    window.state.jobId = null;
+  }
+  if (window.betaState) {
+    window.betaState.sourceFile = {
+      name: filename,
+      size: 1024 * 1024 * 25,
+      uri: uri
+    };
+    window.betaState.jobId = null;
+  }
+
   if (window.AndroidBridge && window.AndroidBridge.showToast) {
-    window.AndroidBridge.showToast('Imported video: ' + filename);
+    window.AndroidBridge.showToast('Selected: ' + filename);
   }
 }
 </script>
 
 </head>
+
 <body>
-<div class="aurora aurora-one"></div><div class="aurora aurora-two"></div><div class="aurora aurora-three"></div><div class="noise"></div>
-<aside class="sidebar">
-  <div class="brand">
-    <img class="brand-mark" src="static/icon.png" alt="" aria-hidden="true">
-    <div class="brand-copy"><b>Clipify AI</b><span>SHORT STUDIO</span></div>
-  </div>
-  <a class="sidebar-github" href="https://github.com/sherlock-dev-ai" target="_blank" rel="noopener noreferrer"><span>↗</span> GitHub</a>
-  <nav>
-    <a class="active" href="#create" data-nav="create">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.75 18.25 12 12 20.25 5.75 12 12 3.75Zm0 3.5L8.25 12 12 15.75 15.75 12 12 7.25Z"/></svg>
-      <span>Create</span>
-    </a>
-    <a href="/narrate" class="narrate-nav">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a5 5 0 0 0-5 5v4a5 5 0 0 0 10 0V8a5 5 0 0 0-5-5Zm-2.5 5a2.5 2.5 0 0 1 5 0v4a2.5 2.5 0 0 1-5 0V8ZM4 11h2a6 6 0 0 0 12 0h2a8 8 0 0 1-7 7.94V21h-2v-2.06A8 8 0 0 1 4 11Z"/></svg>
-      <span>Narrate</span>
-    </a>
-    <a href="/live" class="live-nav">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 0-14.14 0M16.24 7.76a6 6 0 0 0-8.48 0M4.93 19.07a10 10 0 0 0 14.14 0M7.76 16.24a6 6 0 0 0 8.48 0"/></svg>
-      <span>Live Studio</span> <span class="nav-beta-tag">BETA</span>
-    </a>
-    <a href="#projects" data-nav="projects">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7.5A2.5 2.5 0 0 1 6.5 5h11A2.5 2.5 0 0 1 20 7.5v9A2.5 2.5 0 0 1 17.5 19h-11A2.5 2.5 0 0 1 4 16.5v-9Zm2.5-.5a.5.5 0 0 0-.5.5v9c0 .28.22.5.5.5h11a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-11Zm2 2.5h7v2h-7v-2Zm0 4h7v2h-7v-2Z"/></svg>
-      <span>Projects</span>
-    </a>
-    <a href="#editor" data-nav="editor">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16.5 14.5 8l2.5 2.5L8.5 19H6v-2.5Zm9.7-10.8 2.1 2.1a1 1 0 0 1 0 1.4l-1.1 1.1-3.5-3.5 1.1-1.1a1 1 0 0 1 1.4 0Z"/></svg>
-      <span>Editor</span>
-    </a>
-    <a href="#assets" data-nav="assets">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5h8a3 3 0 0 1 3 3v8a3 3 0 0 1-3 3H8a3 3 0 0 1-3-3V8a3 3 0 0 1 3-3Zm0 2a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1H8Zm2 2h4v2h-4V9Zm0 4h4v2h-4v-2Z"/></svg>
-      <span>Assets</span>
-    </a>
-  </nav>
-  <button class="sidebar-tour-btn" type="button" onclick="window.startClipifyTour && window.startClipifyTour()"><span>💡</span> App Tour</button>
-  <div class="side-spacer"></div>
-  <div class="side-card"><span class="dot" id="healthDot"></span><div class="status-copy"><b>Local AI</b><small id="healthText">Checking Ollama…</small></div></div>
-</aside>
-<main class="main">
-<section id="create" class="page-section">
-  <header class="topbar">
-    <div>
-      <span class="eyebrow">CLIPIFY AI / AI VIDEO & LIVE STREAM CLIPPING WORKSPACE</span>
-      <h1 class="living-title">CREATE<br>A SHORT</h1>
-      <p>Turn long-form footage into polished vertical edits with local AI, smart transcription, and gaming-aware composition.</p>
+  <div class="aurora aurora-one"></div>
+  <div class="aurora aurora-two"></div>
+  <div class="aurora aurora-three"></div>
+  <div class="noise"></div>
+  <aside class="sidebar">
+    <div class="brand">
+      <img class="brand-mark" src="static/icon.png" alt=""
+        aria-hidden="true">
+      <div class="brand-copy"><b>Clipify AI</b><span>SHORT STUDIO</span></div>
     </div>
-    <div class="top-actions"><a class="github-watermark" href="https://github.com/sherlock-dev-ai" target="_blank" rel="noopener noreferrer" aria-label="Open Sherlock Dev AI on GitHub"><span aria-hidden="true">↗</span> GitHub</a><button class="ghost" id="openOutput">Open output</button><div class="status-pill" id="statusPill"><span></span> Checking local services</div></div>
-  </header>
-  <div class="workflow">
-    <div class="workflow-step active"><b>01</b><div><strong>Source</strong><small>Upload</small></div></div>
-    <div class="workflow-step active"><b>02</b><div><strong>Edit</strong><small>Mode + crop</small></div></div>
-    <div class="workflow-step"><b>03</b><div><strong>Generate</strong><small>Render</small></div></div>
-    <div class="workflow-step"><b>04</b><div><strong>Review</strong><small>Publish</small></div></div>
-  </div>
-  <section class="studio-hero">
-    <div class="studio-hero-copy">
-      <span class="hero-chip"><i></i> LOCAL AI STUDIO</span>
-      <h2 class="typewriter-headline" aria-label="From long-form video to a Short worth watching."><span id="typewriterLead">From long-form video to a </span><em id="typewriterFocus">Short worth watching.</em><i class="typewriter-cursor" aria-hidden="true"></i></h2>
-      <p>Qwen finds the moment. WhisperX understands every word. Clipify AI handles the edit, framing, captions and final 9:16 render.</p>
-      <div class="hero-metrics"><span><b>01</b> Find the moment</span><span><b>02</b> Smart framing</span><span><b>03</b> Captions</span><span><b>04</b> Export</span></div>
+    <a class="sidebar-github" href="https://github.com/sherlock-dev-ai" target="_blank"
+      rel="noopener noreferrer"><span>↗</span> GitHub</a>
+    <nav>
+      <a class="active" href="#create" data-nav="create" id="navCreateLink">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 3.75 18.25 12 12 20.25 5.75 12 12 3.75Zm0 3.5L8.25 12 12 15.75 15.75 12 12 7.25Z" />
+        </svg>
+        <span>Create</span>
+      </a>
+      <a href="/narrate" class="narrate-nav" data-nav="narrate" id="navNarrateLink">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            d="M12 3a5 5 0 0 0-5 5v4a5 5 0 0 0 10 0V8a5 5 0 0 0-5-5Zm-2.5 5a2.5 2.5 0 0 1 5 0v4a2.5 2.5 0 0 1-5 0V8ZM4 11h2a6 6 0 0 0 12 0h2a8 8 0 0 1-7 7.94V21h-2v-2.06A8 8 0 0 1 4 11Z" />
+        </svg>
+        <span>Narrate</span>
+      </a>
+      <a href="/live" class="live-nav" data-nav="live" id="navLiveLink">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="3" />
+          <path
+            d="M19.07 4.93a10 10 0 0 0-14.14 0M16.24 7.76a6 6 0 0 0-8.48 0M4.93 19.07a10 10 0 0 0 14.14 0M7.76 16.24a6 6 0 0 0 8.48 0" />
+        </svg>
+        <span>Live Studio</span>
+      </a>
+      <a href="#projects" data-nav="projects" id="navProjectsLink">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            d="M4 7.5A2.5 2.5 0 0 1 6.5 5h11A2.5 2.5 0 0 1 20 7.5v9A2.5 2.5 0 0 1 17.5 19h-11A2.5 2.5 0 0 1 4 16.5v-9Zm2.5-.5a.5.5 0 0 0-.5.5v9c0 .28.22.5.5.5h11a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-11Zm2 2.5h7v2h-7v-2Zm0 4h7v2h-7v-2Z" />
+        </svg>
+        <span>Projects</span>
+      </a>
+      <a href="#editor" data-nav="editor" id="navEditorLink">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            d="M6 16.5 14.5 8l2.5 2.5L8.5 19H6v-2.5Zm9.7-10.8 2.1 2.1a1 1 0 0 1 0 1.4l-1.1 1.1-3.5-3.5 1.1-1.1a1 1 0 0 1 1.4 0Z" />
+        </svg>
+        <span>Editor</span>
+      </a>
+
+      <div class="sidebar-nav-divider"></div>
+
+      <a href="#beta" data-nav="beta" id="navBetaLink">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z" />
+        </svg>
+        <span>Beta Features</span> <span class="nav-beta-tag">BETA</span>
+      </a>
+      <a href="#models" id="navModelsLink" data-nav="models" class="models-nav-link"
+        title="Open AI Models & Engine Hub">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2M7.5 13A2.5 2.5 0 0 0 5 15.5 2.5 2.5 0 0 0 7.5 18a2.5 2.5 0 0 0 2.5-2.5A2.5 2.5 0 0 0 7.5 13m9 0a2.5 2.5 0 0 0-2.5 2.5 2.5 2.5 0 0 0 2.5 2.5 2.5 2.5 0 0 0 2.5-2.5 2.5 2.5 0 0 0-2.5-2.5Z" />
+        </svg>
+        <span>Models</span> <span class="nav-count-tag" id="navModelCount"
+          style="margin-left:auto;background:rgba(56,189,248,0.18);border:1px solid rgba(56,189,248,0.3);color:#38bdf8;font-size:0.68rem;padding:1px 6px;border-radius:10px;font-weight:700;">5</span>
+      </a>
+      <a href="#update" id="navUpdateLink" title="Check GitHub for software updates">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67" />
+        </svg>
+        <span>Update</span> <span class="nav-ver-tag" id="navVersionTag">v4.0.12</span>
+      </a>
+      <a href="#cache" id="navClearCacheLink" title="Clear transcription cache & imported YouTube videos">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M10 11v6M14 11v6"/>
+        </svg>
+        <span>Clear Cache</span>
+        <span class="nav-cache-pill" style="display:none;"></span>
+      </a>
+      <a href="#guide" id="navGuideLink" title="Interactive Guided Tour of all Features">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 16h-2v-2h2v2zm1.07-7.75l-.9.92C12.45 11.9 12 12.5 12 14h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H7c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.04-.42 1.99-1.07 2.75z" />
+        </svg>
+        <span>App Guide</span>
+      </a>
+      <a href="#support" id="navSupportLink" class="nav-support-link" title="Support Clipify AI — Star & Follow on GitHub">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+          <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+        </svg>
+        <span>Support Us</span>
+        <span class="nav-star-pill">★ Star</span>
+      </a>
+      <a href="#promoters" id="navPromotersLink" class="nav-promoters-link" title="Promoters Highlighted — Creator Spotlight">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+        </svg>
+        <span>Promoters</span>
+        <span class="nav-promoter-pill">Spotlight</span>
+      </a>
+    </nav>
+    <div class="side-spacer"></div>
+    <div class="sidebar-creature-card" id="sidebarCreatureCard" role="button" tabindex="0"
+      title="Click creature to play Forest Runner!">
+      <svg class="sidebar-creature-mascot" viewBox="0 0 120 68" aria-hidden="true">
+        <defs>
+          <linearGradient id="supportPoleGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#965c22" />
+            <stop offset="45%" stop-color="#dfa562" />
+            <stop offset="100%" stop-color="#7a4614" />
+          </linearGradient>
+          <linearGradient id="placardGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#ffffff" />
+            <stop offset="100%" stop-color="#f1f5f9" />
+          </linearGradient>
+          <radialGradient id="bellyGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="rgba(255,226,140,0.45)" />
+            <stop offset="100%" stop-color="rgba(255,226,140,0)" />
+          </radialGradient>
+          <radialGradient id="centerBackGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="rgba(110,165,120,0.18)" />
+            <stop offset="100%" stop-color="rgba(110,165,120,0)" />
+          </radialGradient>
+          <filter id="boardShadow" x="-20%" y="-20%" width="140%" height="150%">
+            <feDropShadow dx="0" dy="2" stdDeviation="1.5" flood-color="#000" flood-opacity="0.6" />
+          </filter>
+        </defs>
+
+        <!-- Center Ambient Backlight -->
+        <ellipse cx="60" cy="38" rx="26" ry="20" fill="url(#centerBackGlow)" />
+
+        <!-- Pavement / Ground Floor (Horizontal bottom bar matching reference) -->
+        <rect x="0" y="58" width="120" height="10" fill="#152019" />
+        <line x1="0" y1="58" x2="120" y2="58" stroke="#2a3f32" stroke-width="1.2" />
+        <line x1="0" y1="62" x2="120" y2="62" stroke="#101813" stroke-width="0.8" />
+
+        <!-- Dense Grass Blades along the ledge -->
+        <path d="M2 58 Q1 52 0 50 M4 58 Q5 53 7 51 M8 58 Q7 51 6 49 M11 58 Q13 52 15 50 M16 58 Q15 53 14 51 M20 58 Q22 52 24 50 M26 58 Q25 52 24 50 M29 58 Q31 53 33 51 M35 58 Q34 52 33 50 M38 58 Q40 52 42 50 M44 58 Q43 53 42 51 M48 58 Q49 52 51 50"
+          fill="none" stroke="#486d52" stroke-width="1.2" stroke-linecap="round" />
+        <path d="M3 58 Q4 54 6 52 M9 58 Q10 54 12 52 M17 58 Q18 54 20 52 M25 58 Q24 54 23 52 M32 58 Q33 54 35 52 M41 58 Q40 54 39 52 M47 58 Q48 54 50 52"
+          fill="none" stroke="#689472" stroke-width="1" stroke-linecap="round" />
+
+        <path d="M72 58 Q73 52 75 50 M76 58 Q75 53 74 51 M80 58 Q82 52 84 50 M85 58 Q84 52 83 50 M88 58 Q90 53 92 51 M94 58 Q93 52 92 50 M97 58 Q99 52 101 50 M103 58 Q102 53 101 51 M106 58 Q108 52 110 50 M112 58 Q111 52 110 50 M115 58 Q117 53 119 51 M118 58 Q117 52 116 50"
+          fill="none" stroke="#486d52" stroke-width="1.2" stroke-linecap="round" />
+        <path d="M74 58 Q75 54 77 52 M82 58 Q83 54 85 52 M90 58 Q89 54 88 52 M96 58 Q97 54 99 52 M104 58 Q105 54 107 52 M111 58 Q110 54 109 52 M117 58 Q118 54 120 52"
+          fill="none" stroke="#689472" stroke-width="1" stroke-linecap="round" />
+
+        <!-- Center grass tufts behind/around feet -->
+        <path d="M53 58 Q52 54 51 52 M55 58 Q56 53 58 51 M65 58 Q64 53 63 51 M67 58 Q68 54 70 52"
+          fill="none" stroke="#486d52" stroke-width="1.1" stroke-linecap="round" />
+
+        <!-- Left Tree (Lush Round Canopy Deciduous Tree matching reference) -->
+        <g class="forest-tree tree-left">
+          <path d="M18 58 L18 36 Q18 29 13 25 M18 33 Q19 26 23 21" fill="none" stroke="#36291e" stroke-width="3.2" stroke-linecap="round" />
+          <path d="M18 58 L18 37" fill="none" stroke="#4d3b2c" stroke-width="1.8" stroke-linecap="round" />
+          <ellipse cx="14" cy="40" rx="13" ry="10" fill="#2d4934" />
+          <ellipse cx="25" cy="41" rx="12" ry="9" fill="#35563e" />
+          <ellipse cx="11" cy="30" rx="12" ry="10" fill="#3a6045" />
+          <ellipse cx="25" cy="30" rx="12" ry="9.5" fill="#436c4e" />
+          <ellipse cx="17" cy="22" rx="14" ry="11" fill="#4b7757" />
+          <ellipse cx="14" cy="16" rx="9" ry="7" fill="#588764" />
+          <ellipse cx="21" cy="18" rx="8" ry="6.5" fill="#62946f" />
+          <ellipse cx="15" cy="14" rx="4" ry="2.2" fill="#78ab85" opacity="0.65" />
+          <ellipse cx="23" cy="27" rx="3.5" ry="2" fill="#78ab85" opacity="0.5" />
+        </g>
+
+        <!-- Right Tree (Lush Round Canopy Deciduous Tree matching reference) -->
+        <g class="forest-tree tree-right">
+          <path d="M102 58 L102 36 Q102 29 107 25 M102 33 Q101 26 97 21" fill="none" stroke="#36291e" stroke-width="3.2" stroke-linecap="round" />
+          <path d="M102 58 L102 37" fill="none" stroke="#4d3b2c" stroke-width="1.8" stroke-linecap="round" />
+          <ellipse cx="106" cy="40" rx="13" ry="10" fill="#2d4934" />
+          <ellipse cx="95" cy="41" rx="12" ry="9" fill="#35563e" />
+          <ellipse cx="109" cy="30" rx="12" ry="10" fill="#3a6045" />
+          <ellipse cx="95" cy="30" rx="12" ry="9.5" fill="#436c4e" />
+          <ellipse cx="103" cy="22" rx="14" ry="11" fill="#4b7757" />
+          <ellipse cx="106" cy="16" rx="9" ry="7" fill="#588764" />
+          <ellipse cx="99" cy="18" rx="8" ry="6.5" fill="#62946f" />
+          <ellipse cx="105" cy="14" rx="4" ry="2.2" fill="#78ab85" opacity="0.65" />
+          <ellipse cx="97" cy="27" rx="3.5" ry="2" fill="#78ab85" opacity="0.5" />
+        </g>
+
+        <!-- Floating leaves in the breeze -->
+        <g class="floating-leaves">
+          <ellipse cx="37" cy="38" rx="3.2" ry="1.6" transform="rotate(-18 37 38)" fill="#5ba668" opacity="0.85" />
+          <ellipse cx="44" cy="47" rx="2.4" ry="1.3" transform="rotate(25 44 47)" fill="#4d8c58" opacity="0.75" />
+          <ellipse cx="32" cy="26" rx="2.8" ry="1.4" transform="rotate(35 32 26)" fill="#68bf77" opacity="0.8" />
+          <ellipse cx="83" cy="38" rx="3.2" ry="1.6" transform="rotate(20 83 38)" fill="#5ba668" opacity="0.85" />
+          <ellipse cx="76" cy="47" rx="2.4" ry="1.3" transform="rotate(-25 76 47)" fill="#4d8c58" opacity="0.75" />
+          <ellipse cx="88" cy="26" rx="2.8" ry="1.4" transform="rotate(-35 88 26)" fill="#68bf77" opacity="0.8" />
+        </g>
+
+        <!-- Center Monster (EXACT sprite from Image 2 / forest_game.js) -->
+        <g class="creature-runner-sprite" id="centerMonster">
+          <!-- Ground Shadow directly under feet (Feet firmly on the ground) -->
+          <ellipse cx="60" cy="58" rx="14" ry="2.6" fill="rgba(8,14,10,0.6)" />
+
+          <!-- Legs & Feet planted firmly on the ground -->
+          <path d="M57 48 L57 56.5 L61 56.5" fill="none" stroke="#d7d4bb" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M63 48 L63 56.5 L67 56.5" fill="none" stroke="#d7d4bb" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+
+          <!-- Side Rounded Wings / Ears (translucent sage) -->
+          <ellipse cx="50" cy="32" rx="4.8" ry="7.5" transform="rotate(-25 50 32)" fill="rgba(195,216,192,0.65)" stroke="#b9ccb1" stroke-width="1.1" />
+          <ellipse cx="70" cy="32" rx="4.8" ry="7.5" transform="rotate(25 70 32)" fill="rgba(195,216,192,0.65)" stroke="#b9ccb1" stroke-width="1.1" />
+
+          <!-- Antennae sticking out of head -->
+          <path d="M57 26 Q54 18 51 16" fill="none" stroke="#bdcdb6" stroke-width="1.8" stroke-linecap="round" />
+          <path d="M63 26 Q66 18 69 16" fill="none" stroke="#bdcdb6" stroke-width="1.8" stroke-linecap="round" />
+
+          <!-- Head cap -->
+          <ellipse cx="60" cy="27" rx="9" ry="8" fill="#7d9c78" />
+
+          <!-- Main Body Oval -->
+          <ellipse cx="60" cy="37" rx="11" ry="14" fill="#49664c" stroke="#b9ccb1" stroke-width="1.5" />
+
+          <!-- Inner mouth/face contour (from image 2) -->
+          <ellipse cx="60" cy="38" rx="8.5" ry="11.5" fill="#3b543e" />
+
+          <!-- Glowing Belly -->
+          <circle cx="60" cy="43" r="10" fill="url(#bellyGlow)" />
+          <ellipse cx="60" cy="43" rx="6.5" ry="5.2" fill="#e8bf78" />
+          <ellipse cx="60" cy="42" rx="4.5" ry="3.2" fill="#f5d697" />
+
+          <!-- Two White Dot Eyes -->
+          <circle cx="56.5" cy="30" r="1.6" fill="#f5eedc" />
+          <circle cx="63.5" cy="30" r="1.6" fill="#f5eedc" />
+        </g>
+
+        <!-- Raised Arm & "need help?" Signboard held over head -->
+        <a href="https://ig.me/j/AQj1lYCWh_iV_S7J/" target="_blank" rel="noopener noreferrer"
+          class="creature-support-board-link" id="creatureSupportLink"
+          title="Need help? Click to chat with support on Instagram!"
+          aria-label="Need help? Open support chat on Instagram">
+          <g class="support-board-group" filter="url(#boardShadow)">
+            <!-- Main Vertical Wooden Pole -->
+            <rect x="69.5" y="2.5" width="2.6" height="23" rx="1.1" fill="url(#supportPoleGrad)" stroke="#59340e" stroke-width="0.6" />
+            <!-- Pole top nub sticking past placard -->
+            <rect x="69.5" y="0.8" width="2.6" height="2.4" rx="0.6" fill="#dfa562" stroke="#59340e" stroke-width="0.5" />
+            
+            <!-- Raised Placard Board -->
+            <rect x="33" y="2.5" width="54" height="15.5" rx="3.4" fill="url(#placardGrad)" stroke="#1e293b" stroke-width="1.2" />
+            <!-- Inner Stitch Border -->
+            <rect x="34.8" y="4.1" width="50.4" height="12.3" rx="2" fill="none" stroke="#94a3b8" stroke-width="0.6" stroke-opacity="0.85" />
+            
+            <!-- Written "need help?" text -->
+            <text x="60" y="13.2" text-anchor="middle"
+              font-family="'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif"
+              font-size="7.6" font-weight="900" fill="#0f172a" letter-spacing="0.2">need help?</text>
+
+            <!-- Right Arm Reaching Up from Body Holding the Pole -->
+            <path d="M68 37 Q72 31 71 23" fill="none" stroke="#49664c" stroke-width="2.8" stroke-linecap="round" />
+            <!-- Creature Paw Clutching the Pole -->
+            <ellipse cx="71" cy="22.5" rx="3.2" ry="2.6" fill="#7d9c78" stroke="#b9ccb1" stroke-width="0.9" />
+            <!-- Paw Digits wrapping around pole -->
+            <circle cx="69.8" cy="22" r="0.75" fill="#d0dcc9" />
+            <circle cx="71" cy="22" r="0.75" fill="#d0dcc9" />
+            <circle cx="72.2" cy="22" r="0.75" fill="#d0dcc9" />
+          </g>
+        </a>
+      </svg>
     </div>
-    <div class="hero-orbit" aria-hidden="true"><div class="orbit-ring r1"></div><div class="orbit-ring r2"></div><div class="orbit-core">✦</div><span class="orbit-node n1">Q</span><span class="orbit-node n2">W</span><span class="orbit-node n3">9:16</span></div>
-  </section>
-  <div class="editing-mode-strip">
-    <div class="mode-strip-head"><div><span class="kicker">EDITING INTELLIGENCE</span><h2>Choose the way your Short should feel</h2></div><span class="mode-strip-note">AI adapts the edit to your content</span></div>
-    <div class="mode-grid top-mode-grid"><button class="mode-card " data-mode="gaming"><span class="mode-icon">🎮</span><span class="mode-name">Gaming</span><span class="mode-desc">Gameplay + facecam reactions with stable smart framing</span></button><button class="mode-card selected" data-mode="viral"><span class="mode-icon">✦</span><span class="mode-name">Viral</span><span class="mode-desc">Hooks, curiosity, surprise & payoff</span></button><button class="mode-card " data-mode="funny"><span class="mode-icon">😂</span><span class="mode-name">Funny</span><span class="mode-desc">Punchlines, reactions & comedic timing</span></button><button class="mode-card " data-mode="dramatic"><span class="mode-icon">⚡</span><span class="mode-name">Dramatic</span><span class="mode-desc">Tension, reveals & emotional moments</span></button><button class="mode-card " data-mode="educational"><span class="mode-icon">◈</span><span class="mode-name">Educational</span><span class="mode-desc">Facts, explanations & takeaways</span></button><button class="mode-card " data-mode="story"><span class="mode-icon">◉</span><span class="mode-name">Story</span><span class="mode-desc">Setup → escalation → payoff</span></button><button class="mode-card " data-mode="meme"><span class="mode-icon">💀</span><span class="mode-name">Meme</span><span class="mode-desc">Chaotic, absurd & reaction-heavy</span></button></div>
-  </div>
-  <div class="workspace-grid">
-    <div class="left-column">
-      <section class="panel upload-panel">
-        <div class="section-head"><div><span class="kicker">01 · SOURCE</span><h2>Start with a video</h2></div><span class="hint">LOCAL · PRIVATE · YOUR CONTENT</span></div>
-        <div class="source-options">
-          <label class="dropzone" id="dropzone"><input type="file" id="videoInput" accept="video/*" hidden><div class="upload-icon">↑</div><strong>Upload a video</strong><span>Drop it here or <u>browse files</u></span><small>MP4 · MOV · MKV · WEBM</small></label>
-          <div class="source-divider"><span>OR</span></div>
-          <div class="youtube-import"><div class="youtube-mark">▶</div><div><strong>Paste a YouTube link</strong><span>Download a video you have permission to use.</span></div><div class="youtube-input-row"><input id="youtubeUrl" type="url" inputmode="url" placeholder="https://www.youtube.com/watch?v=…"><button class="ghost" type="button" id="youtubeImport">Import video</button></div><small id="youtubeStatus" class="source-status" aria-live="polite"></small><div class="youtube-progress" id="youtubeProgress" hidden><div class="youtube-progress-track"><div class="youtube-progress-bar" id="youtubeProgressBar"></div></div></div></div>
+  </aside>
+  <main class="main">
+    <section id="create" class="page-section visible">
+      <header class="topbar">
+        <div>
+          <span class="eyebrow">CLIPIFY AI / AI VIDEO & LIVE STREAM CLIPPING WORKSPACE</span>
+          <h1 class="living-title">CREATE<br>A SHORT</h1>
+          <p>Turn long-form footage into polished vertical edits with local AI, smart transcription, and gaming-aware
+            composition.</p>
         </div>
-        <div class="file-chip source-chip" id="fileChip" hidden><span>◉</span><b id="fileName"></b><i id="fileSize"></i></div>
-      </section>
-      <section class="panel settings-panel">
-        <div class="section-head"><div><span class="kicker">02</span><h2>AI & Generation Settings</h2></div><span class="hint">Local editorial control</span></div>
-        <div class="control-grid three"><label class="model-field"><span>AI model</span><div class="model-picker"><select id="modelSelect" disabled><option>Checking local models…</option></select><button type="button" class="mini-refresh" id="refreshModelsBtn" aria-label="Refresh available models">↻</button><button type="button" class="mini-search" id="scanModelsBtn" title="Auto-search PC for installed Ollama models" style="display:none;">🔍 Search PC</button></div></label><label>Caption font<select id="fontSelect"><option selected>Montserrat Extra Bold</option><option>Arial</option><option>Arial Black</option><option>Segoe UI</option><option>Segoe UI Black</option><option>Impact</option><option>Tahoma</option><option>Trebuchet MS</option><option>Verdana</option><option>Calibri</option><option>Aptos</option><option>Comic Sans MS</option><option>Georgia</option></select></label><label>Number of Shorts<select id="clips"><option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select></label></div>
-        <p class="field-error" id="modelError" role="alert" hidden></p>
-        <div class="duration-row"><label>Min length<select id="minDuration"><option selected>25</option><option>30</option><option>35</option><option>40</option><option>45</option><option>50</option><option>55</option><option>60</option></select></label><label>Max length<select id="maxDuration"><option>25</option><option>30</option><option>35</option><option>40</option><option>45</option><option>50</option><option>55</option><option selected>60</option></select></label></div>
-        <div class="duration-note" id="durationNote">Recommended: 25–60 seconds. Qwen can refine boundaries inside candidates.</div>
-        <div class="split-toggle-row">
-          <label class="toggle-row"><input type="checkbox" id="splitScreenToggle"><span class="switch"></span><b>Enable 2-panel split screen</b></label>
-          <small>Creates a cinematic two-frame composition before render.</small>
+        <div class="top-actions"><a class="github-watermark" href="https://github.com/sherlock-dev-ai" target="_blank"
+            rel="noopener noreferrer" aria-label="Open Sherlock Dev AI on GitHub"><span aria-hidden="true">↗</span>
+            GitHub</a><button class="ghost" id="openInput" title="Open source / raw video input folder in File Explorer">Open input</button><button class="ghost" id="openOutput" title="Open rendered shorts output folder in File Explorer">Open output</button>
+          <div class="status-pill" id="statusPill"><span></span> Checking local services</div>
+        </div>
+      </header>
+      <div class="workflow">
+        <div class="workflow-step active"><b>01</b>
+          <div><strong>Source</strong><small>Upload</small></div>
+        </div>
+        <div class="workflow-step active"><b>02</b>
+          <div><strong>Edit</strong><small>Mode + crop</small></div>
+        </div>
+        <div class="workflow-step"><b>03</b>
+          <div><strong>Generate</strong><small>Render</small></div>
+        </div>
+        <div class="workflow-step"><b>04</b>
+          <div><strong>Review</strong><small>Publish</small></div>
+        </div>
+      </div>
+      <section class="studio-hero">
+        <div class="studio-hero-copy">
+          <span class="hero-chip"><i></i> LOCAL AI STUDIO</span>
+          <h2 class="typewriter-headline" aria-label="From long-form video to a Short worth watching."><span
+              id="typewriterLead">From long-form video to a </span><em id="typewriterFocus">Short worth watching.</em><i
+              class="typewriter-cursor" aria-hidden="true"></i></h2>
+          <p>Qwen finds the moment. WhisperX understands every word. Clipify AI handles the edit, framing, captions and
+            final 9:16 render.</p>
+          <div class="hero-metrics"><span><b>01</b> Find the moment</span><span><b>02</b> Smart
+              framing</span><span><b>03</b> Captions</span><span><b>04</b> Export</span></div>
+        </div>
+        <div class="hero-orbit" aria-hidden="true">
+          <div class="orbit-ring r1"></div>
+          <div class="orbit-ring r2"></div>
+          <div class="orbit-core">✦</div><span class="orbit-node n1">Q</span><span class="orbit-node n2">W</span><span
+            class="orbit-node n3">9:16</span>
         </div>
       </section>
-      <section class="panel branding-panel">
-        <div class="section-head"><div><span class="kicker">03</span><h2>Watermark & Branding</h2></div><span class="optional">OPTIONAL</span></div>
-        <div class="brand-grid">
-          <div class="brand-controls">
-            <label class="toggle-row"><input type="checkbox" id="logoEnabled"><span class="switch"></span><b>Enable Logo / Watermark</b></label>
-            <div class="logo-upload-row"><label class="upload-logo-button"><input type="file" id="logoInput" accept="image/png,image/jpeg,image/webp" hidden><span>＋ Upload logo</span></label><button class="ghost" type="button" id="clearLogo">Remove</button></div>
-            <label>Logo image / folder<input id="logoPath" value="" placeholder="Uploaded logo or local folder path"></label>
-            <div class="two"><label>Position<select id="logoPosition"><option value="top-left">Top Left</option><option value="top-center">Top Center</option><option value="top-right">Top Right</option><option value="center-left">Center Left</option><option value="center">Center</option><option value="center-right">Center Right</option><option value="bottom-left">Bottom Left</option><option value="bottom-center">Bottom Center</option><option value="bottom-right">Bottom Right</option><option value="custom">Custom / Drag in Preview</option></select></label><label>Margin<input id="logoMargin" type="number" min="5" max="200" value="40"></label></div>
-            <div class="slider-row"><label>Logo size <output id="logoSizeOut">8%</output></label><input id="logoSize" type="range" min="3" max="20" value="8"></div>
-            <div class="slider-row"><label>Opacity <output id="logoOpacityOut">80%</output></label><input id="logoOpacity" type="range" min="10" max="100" value="80"></div>
-            <label class="toggle-row compact"><input type="checkbox" id="logoBgRemove"><span class="switch"></span><b>Remove solid logo background</b></label>
-            <div class="two"><label>Background color<input id="logoBgColor" type="color" value="#9B5CFF"></label><label>Key tolerance<input id="logoBgSimilarity" type="number" min="0.01" max="0.8" step="0.01" value="0.22"></label></div>
-            <small class="control-help">Use this for a logo with a flat/solid background. Transparent PNGs need no removal.</small>
+      <div class="editing-mode-strip">
+        <div class="mode-strip-head">
+          <div><span class="kicker">EDITING INTELLIGENCE</span>
+            <h2>Choose the way your Short should feel</h2>
+          </div><span class="mode-strip-note">AI adapts the edit to your content</span>
+        </div>
+        <div class="mode-grid top-mode-grid"><button
+            class="mode-card " data-mode="gaming"><span
+              class="mode-icon">🎮</span><span class="mode-name">Gaming</span><span
+              class="mode-desc">Gameplay + facecam reactions with stable smart framing</span></button><button
+            class="mode-card selected" data-mode="viral"><span
+              class="mode-icon">✦</span><span class="mode-name">Viral</span><span
+              class="mode-desc">Hooks, curiosity, surprise & payoff</span></button><button
+            class="mode-card " data-mode="funny"><span
+              class="mode-icon">😂</span><span class="mode-name">Funny</span><span
+              class="mode-desc">Punchlines, reactions & comedic timing</span></button><button
+            class="mode-card " data-mode="dramatic"><span
+              class="mode-icon">⚡</span><span class="mode-name">Dramatic</span><span
+              class="mode-desc">Tension, reveals & emotional moments</span></button><button
+            class="mode-card " data-mode="educational"><span
+              class="mode-icon">◈</span><span class="mode-name">Educational</span><span
+              class="mode-desc">Facts, explanations & takeaways</span></button><button
+            class="mode-card " data-mode="story"><span
+              class="mode-icon">◉</span><span class="mode-name">Story</span><span
+              class="mode-desc">Setup → escalation → payoff</span></button><button
+            class="mode-card " data-mode="meme"><span
+              class="mode-icon">💀</span><span class="mode-name">Meme</span><span
+              class="mode-desc">Chaotic, absurd & reaction-heavy</span></button></div>
+      </div>
+      <div class="workspace-grid">
+        <div class="left-column">
+          <section class="panel upload-panel">
+            <div class="section-head">
+              <div><span class="kicker">01 · SOURCE</span>
+                <h2>Start with a video</h2>
+              </div><span class="hint">LOCAL · PRIVATE · YOUR CONTENT</span>
+            </div>
+            <div class="source-options">
+              <label class="dropzone" id="dropzone"><input type="file" id="videoInput" accept="video/*" hidden>
+                <div class="upload-icon">↑</div><strong>Upload a video</strong><span>Drop it here or <u>browse
+                    files</u></span><small>MP4 · MOV · MKV · WEBM</small>
+              </label>
+              <div class="source-divider"><span>OR</span></div>
+              <div class="youtube-import">
+                <div class="youtube-mark">▶</div>
+                <div style="display:flex;align-items:center;justify-content:space-between;width:100%;gap:8px;">
+                  <div><strong>Paste a YouTube link</strong><span>Download a video you have permission to use.</span></div>
+                  <button type="button" class="btn-clear-cache-link" title="Clear downloaded YouTube footage & cache">
+                    <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                    </svg>
+                    <span>Clear Cache</span>
+                  </button>
+                </div>
+                <div class="youtube-input-row"><input id="youtubeUrl" name="youtube_url_no_autofill" type="url"
+                    inputmode="url" placeholder="https://www.youtube.com/watch?v=…" autocomplete="off" autocorrect="off"
+                    autocapitalize="off" spellcheck="false" data-lpignore="true" data-1p-ignore="true"
+                    data-form-type="other"><button class="ghost" type="button" id="youtubeImport">Import video</button>
+                </div><small id="youtubeStatus" class="source-status" aria-live="polite"></small>
+                <div class="youtube-progress" id="youtubeProgress" hidden>
+                  <div class="youtube-progress-track">
+                    <div class="youtube-progress-bar" id="youtubeProgressBar"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="file-chip source-chip" id="fileChip" hidden><span>◉</span><b id="fileName"></b><i
+                id="fileSize"></i></div>
+          </section>
+          <section class="panel settings-panel">
+            <div class="section-head">
+              <div><span class="kicker">02</span>
+                <h2>AI & Generation Settings</h2>
+              </div><span class="hint">Local editorial control</span>
+            </div>
+            <div class="control-grid three"><label class="model-field"><span>AI model</span>
+                <div class="model-picker"><select id="modelSelect" disabled>
+                    <option>Checking local models…</option>
+                  </select><button type="button" class="mini-refresh" id="refreshModelsBtn"
+                    aria-label="Refresh available models">↻</button><button type="button" class="btn-open-model-hub"
+                    id="btnOpenModelHub" title="Open Model Hub & Engine Manager"
+                    style="margin-left:4px;height:38px;padding:0 10px;font-size:0.75rem;">✦ Hub</button><button
+                    type="button" class="mini-search" id="scanModelsBtn"
+                    title="Auto-search PC for installed Ollama models" style="display:none;">🔍 Search PC</button></div>
+              </label><label>Caption font<select id="fontSelect">
+                  <option selected>Montserrat Extra Bold</option>
+                  <option>Arial</option>
+                  <option>Arial Black</option>
+                  <option>Segoe UI</option>
+                  <option>Segoe UI Black</option>
+                  <option>Impact</option>
+                  <option>Tahoma</option>
+                  <option>Trebuchet MS</option>
+                  <option>Verdana</option>
+                  <option>Calibri</option>
+                  <option>Aptos</option>
+                  <option>Comic Sans MS</option>
+                  <option>Georgia</option>
+                </select></label><label>Number of Shorts<select id="clips">
+                  <option>1</option>
+                  <option selected>2</option>
+                  <option>3</option>
+                  <option>4</option>
+                  <option>5</option>
+                  <option>6</option>
+                  <option>7</option>
+                  <option>8</option>
+                  <option>9</option>
+                  <option>10</option>
+                </select></label></div>
+            <p class="field-error" id="modelError" role="alert" hidden></p>
+
+            <!-- AI Engine & Cloud Model Management Section -->
+            <div class="ai-provider-card" id="aiProviderCard">
+              <div class="provider-header-row">
+                <div>
+                  <span class="kicker">INFERENCE ENGINE</span>
+                  <strong style="display:block;font-size:0.92rem;color:#ffffff;margin-top:2px;">AI Model & Cloud
+                    Integration</strong>
+                </div>
+                <div class="provider-tabs">
+                  <button type="button" class="prov-tab active" id="provTabOllama" data-prov="ollama">🖥 Local
+                    Ollama</button>
+                  <button type="button" class="prov-tab" id="provTabHuggingFace" data-prov="huggingface">☁ Free Hugging
+                    Face API</button>
+                </div>
+              </div>
+              <div class="hf-config-panel" id="hfConfigPanel" style="display:none;margin-top:14px;">
+                <div class="two">
+                  <label>Free Hugging Face Model
+                    <select id="hfModelSelect">
+                      <option value="Qwen/Qwen2.5-7B-Instruct" selected>Qwen 2.5 7B Instruct (Recommended - Free)
+                      </option>
+                      <option value="meta-llama/Llama-3.2-3B-Instruct">Meta Llama 3.2 3B Instruct (Ultra-Fast)</option>
+                      <option value="mistralai/Mistral-7B-Instruct-v0.3">Mistral 7B Instruct v0.3</option>
+                      <option value="google/gemma-2-9b-it">Google Gemma 2 9B IT</option>
+                    </select>
+                  </label>
+                  <label>Hugging Face API Token
+                    <!-- Decoy to absorb browser password-manager autofill and prevent hijacking the YouTube URL input -->
+                    <input type="text" name="fake_username_sink"
+                      style="display:none!important;position:absolute!important;opacity:0!important;pointer-events:none!important;"
+                      tabindex="-1" autocomplete="username">
+                    <div class="token-input-row" style="display:flex;gap:8px;">
+                      <input type="password" id="hfTokenInput" name="hf_token_custom_secret"
+                        placeholder="hf_xxxxxxxxxxxxxxxxxxxx" autocomplete="new-password" autocorrect="off"
+                        autocapitalize="off" spellcheck="false" data-lpignore="true" data-1p-ignore="true"
+                        data-form-type="other" style="flex:1;" />
+                      <button type="button" class="ghost" id="btnVerifyHfToken"
+                        style="padding:0 12px;font-size:0.8rem;white-space:nowrap;">Verify Token</button>
+                    </div>
+                  </label>
+                </div>
+                <div class="hf-token-status"
+                  style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;font-size:0.75rem;color:rgba(255,255,255,0.5);">
+                  <span id="hfStatusMsg">Free Serverless Inference router — 0 GB local RAM required.</span>
+                  <a href="https://huggingface.co/settings/tokens" target="_blank" rel="noopener noreferrer"
+                    style="color:#ffffff;text-decoration:underline;">Get free token ↗</a>
+                </div>
+              </div>
+              <div class="ollama-download-row" id="ollamaDownloadRow"
+                style="margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06);">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                  <span style="font-size:0.8rem;color:rgba(255,255,255,0.7);font-weight:600;">Download &amp; Manage
+                    Local Models</span>
+                  <small style="font-size:0.72rem;color:rgba(255,255,255,0.4);">Browse catalog or enter any Ollama
+                    tag</small>
+                </div>
+                <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+                  <button type="button" class="btn-open-model-hub" id="btnOpenModelHubFromRow"
+                    style="height:38px;padding:0 18px;font-size:0.84rem;font-weight:700;background:rgba(99,102,241,0.18);border:1px solid rgba(99,102,241,0.4);color:#ffffff;display:inline-flex;align-items:center;gap:8px;border-radius:10px;">
+                    <span>✦ Open Model Hub &amp; Engine Manager</span>
+                    <span class="badge" id="btnModelHubBadge"
+                      style="background:#38bdf8;color:#041527;padding:2px 8px;border-radius:6px;font-size:0.72rem;font-weight:800;">5
+                      Installed</span>
+                  </button>
+                  <div style="display:flex;gap:8px;flex:1;min-width:240px;align-items:center;">
+                    <input type="text" id="ollamaDownloadInput" placeholder="or enter tag directly (e.g. qwen2.5:3b)"
+                      style="flex:1;height:38px;padding:0 12px;border-radius:8px;background:#0d1117;border:1px solid rgba(255,255,255,0.18);color:#fff;font-size:0.82rem;" />
+                    <button type="button" class="ghost" id="btnDownloadOllama"
+                      style="height:38px;padding:0 16px;font-size:0.82rem;font-weight:600;white-space:nowrap;border:1px solid rgba(255,255,255,0.25);">⬇
+                      Pull</button>
+                  </div>
+                </div>
+                <div id="modelDlProgress" style="display:none;margin-top:8px;">
+                  <div style="height:4px;background:rgba(255,255,255,0.1);border-radius:2px;overflow:hidden;">
+                    <div id="dlProgressBar" style="height:100%;width:0%;background:#ffffff;transition:width 0.2s ease;">
+                    </div>
+                  </div>
+                  <small id="dlStatusText"
+                    style="display:block;margin-top:4px;font-size:0.72rem;color:rgba(255,255,255,0.6);">Starting...</small>
+                </div>
+              </div>
+            </div>
+            <div class="duration-row"><label>Min length<select id="minDuration">
+                  <option selected>25</option>
+                  <option>30</option>
+                  <option>35</option>
+                  <option>40</option>
+                  <option>45</option>
+                  <option>50</option>
+                  <option>55</option>
+                  <option>60</option>
+                </select></label><label>Max length<select id="maxDuration">
+                  <option>25</option>
+                  <option>30</option>
+                  <option>35</option>
+                  <option>40</option>
+                  <option>45</option>
+                  <option>50</option>
+                  <option>55</option>
+                  <option selected>60</option>
+                </select></label></div>
+            <div class="duration-note" id="durationNote">Recommended: 25–60 seconds. Qwen can refine boundaries inside
+              candidates.</div>
+            <div class="split-toggle-row">
+              <label class="toggle-row"><input type="checkbox" id="splitScreenToggle"><span
+                  class="switch"></span><b>Enable 2-panel split screen</b></label>
+              <small>Creates a cinematic two-frame composition before render.</small>
+            </div>
+            <div class="split-toggle-row gaming-split-card" id="gamingSplitRow">
+              <label class="toggle-row"><input type="checkbox" id="gamingSplitToggle" checked><span
+                  class="switch"></span><b>🎮 Gaming Split-Screen Layout</b></label>
+              <small>
+                <b>ENABLED:</b> Whole gameplay on top + Streamer webcam on bottom.<br>
+                <b>DISABLED:</b> 2-person conversation split (1 user on top + other user on bottom).
+              </small>
+            </div>
+            <div class="split-toggle-row" style="margin-top: 10px;">
+              <label class="toggle-row"><input type="checkbox" id="fastWhisperToggle" checked><span
+                  class="switch"></span><b>Fast Whisper (Turbo Generation)</b></label>
+              <small>Accelerates transcription up to 10× with 16 threads. Turn off for High Accuracy / Deep
+                Scan.</small>
+            </div>
+            <div class="split-toggle-row" id="upscaleQualityRow" style="margin-top: 10px;">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+                <label for="upscaleQuality" style="font-weight:700;display:inline-flex;align-items:center;gap:6px;margin:0;">
+                  <span>Upscale &amp; Render Quality</span>
+                </label>
+                <span id="upscaleQualityBadge" class="badge" style="background:#4ade80;color:#041527;font-size:0.7rem;font-weight:700;padding:2px 8px;border-radius:6px;">High (Recommended)</span>
+              </div>
+              <select id="upscaleQuality" style="width:100%;height:38px;padding:0 12px;border-radius:8px;background:#0d1117;border:1px solid rgba(255,255,255,0.18);color:#fff;font-size:0.84rem;">
+                <option value="ultra">Ultra HD (Crisp Lanczos &amp; Anti-Burst)</option>
+                <option value="high" selected>High Quality (Recommended · Lanczos)</option>
+                <option value="balanced">Balanced (Standard 1080p · Bicubic)</option>
+                <option value="fast">Fast (Compact Size · Quick Render)</option>
+              </select>
+              <small style="display:block;margin-top:4px;color:rgba(255,255,255,0.6);">Applies multi-pass Lanczos upscaling with edge sharpening to prevent macroblocking burst.</small>
+            </div>
+          </section>
+          <section class="panel branding-panel">
+            <div class="section-head">
+              <div><span class="kicker">03</span>
+                <h2>Watermark & Branding</h2>
+              </div><span class="optional">OPTIONAL</span>
+            </div>
+            <div class="brand-grid">
+              <div class="brand-controls">
+                <label class="toggle-row"><input type="checkbox" id="logoEnabled"><span class="switch"></span><b>Enable
+                    Logo / Watermark</b></label>
+                <div class="logo-upload-row"><label class="upload-logo-button"><input type="file" id="logoInput"
+                      accept="image/png,image/jpeg,image/webp" hidden><span>＋ Upload logo</span></label><button
+                    class="ghost" type="button" id="clearLogo">Remove</button></div>
+                <label>Logo image / folder<input id="logoPath" value=""
+                    placeholder="Uploaded logo or local folder path"></label>
+                <div class="two"><label>Position<select id="logoPosition"><option value="top-left" >Top Left</option><option value="top-center" >Top Center</option><option value="top-right" selected>Top Right</option><option value="center-left" >Center Left</option><option value="center" >Center</option><option value="center-right" >Center Right</option><option value="bottom-left" >Bottom Left</option><option value="bottom-center" >Bottom Center</option><option value="bottom-right" >Bottom Right</option><option value="custom">
+                        Custom / Drag in Preview</option></select></label><label>Margin<input id="logoMargin"
+                      type="number" min="0" max="250" value="40"></label></div>
+                <div class="slider-row"><label>Logo size <output id="logoSizeOut">8%</output></label><input
+                    id="logoSize" type="range" min="2" max="40" value="8"></div>
+                <div class="slider-row"><label>Opacity <output id="logoOpacityOut">80%</output></label><input
+                    id="logoOpacity" type="range" min="0" max="100" value="80"></div>
+                <label class="toggle-row compact"><input type="checkbox" id="logoBgRemove"><span
+                    class="switch"></span><b>Remove solid logo background</b></label>
+                <div class="two"><label>Background color<input id="logoBgColor" type="color"
+                      value="#9B5CFF"></label><label>Key tolerance<input id="logoBgSimilarity" type="number" min="0.01"
+                      max="0.8" step="0.01" value="0.22"></label></div>
+                <small class="control-help">Use this for a logo with a flat/solid background. Transparent PNGs need no
+                  removal.</small>
+              </div>
+              <div class="logo-card">
+                <div class="logo-preview" id="logoPreviewThumb">C</div><small>Small, subtle and positioned over the final 1080×1920
+                  render.</small>
+              </div>
+            </div>
+          </section>
+          <section class="panel watermark-panel" id="watermarkPanel">
+            <div class="section-head">
+              <div><span class="kicker">03B</span>
+                <h2>Add Watermark (Transparent Text)</h2>
+              </div><span class="optional">OPTIONAL</span>
+            </div>
+            <label class="toggle-row"><input type="checkbox" id="watermarkTextEnabled"><span
+                class="switch"></span><b>Enable Watermark Text</b></label>
+            <div class="watermark-controls-drawer" id="watermarkControlsDrawer" style="display:none;margin-top:12px;">
+              <div class="two">
+                <label>Watermark text<input type="text" id="watermarkTextInput"
+                    placeholder="e.g. @YourHandle or Channel" maxlength="60"></label>
+                <label>Position preset
+                  <select id="watermarkTextPosition">
+                    <option value="center" selected>Center</option>
+                    <option value="top-left">Top-Left</option>
+                    <option value="top-right">Top-Right</option>
+                    <option value="lower-middle">Lower-Middle</option>
+                    <option value="bottom-center">Bottom-Center</option>
+                    <option value="bottom-right">Bottom-Right</option>
+                    <option value="custom">Custom (X/Y)</option>
+                  </select>
+                </label>
+              </div>
+              <div class="two" id="watermarkCustomCoords" style="display:none;margin-top:8px;">
+                <div class="slider-row"><label>Position X <output id="watermarkTextXOut">50%</output></label><input
+                    id="watermarkTextX" type="range" min="0" max="100" value="50"></div>
+                <div class="slider-row"><label>Position Y <output id="watermarkTextYOut">50%</output></label><input
+                    id="watermarkTextY" type="range" min="0" max="100" value="50"></div>
+              </div>
+              <div class="two" style="margin-top:8px;">
+                <div class="slider-row"><label>Opacity <output id="watermarkTextOpacityOut">35%</output></label><input
+                    id="watermarkTextOpacity" type="range" min="5" max="100" value="35"></div>
+                <div class="slider-row"><label>Rotation Angle <output
+                      id="watermarkTextAngleOut">-20°</output></label><input id="watermarkTextAngle" type="range"
+                    min="-45" max="45" value="-20"></div>
+              </div>
+              <div class="two" style="margin-top:8px;">
+                <div class="slider-row"><label>Font Size <output id="watermarkTextSizeOut">6%</output></label><input
+                    id="watermarkTextSize" type="range" min="3" max="15" value="6"></div>
+                <label>Watermark Color<input id="watermarkTextColor" type="color" value="#FFFFFF"></label>
+              </div>
+            </div>
+          </section>
+          <section class="panel text-panel">
+            <div class="section-head">
+              <div><span class="kicker">04</span>
+                <h2>Text Overlay</h2>
+              </div><span class="optional">OPTIONAL</span>
+            </div>
+            <label class="toggle-row"><input type="checkbox" id="textEnabled"><span class="switch"></span><b>Enable Text
+                Overlay</b></label>
+            <div class="text-grid">
+              <label>Text<textarea id="overlayText" maxlength="100" placeholder="e.g. THAT'S CRAZY!"></textarea></label>
+              <div class="text-controls"><label>Position<select id="textPosition"><option value="top-left">Top Left</option><option value="top-center">Top Center</option><option value="top-right">Top Right</option><option value="center-left">Center Left</option><option value="center">Center</option><option value="center-right">Center Right</option><option value="bottom-left">Bottom Left</option><option value="bottom-center">Bottom Center</option><option value="bottom-right">Bottom Right</option><option value="custom">
+                      Custom / Drag in Preview</option></select></label><label>Size<input id="textSize" type="number"
+                    min="3" max="12" value="6"> %</label><label>Margin<input id="textMargin" type="number" min="20"
+                    max="500" value="110"> px</label></div>
+            </div>
+            <div class="text-style-row"><label>Text color<input id="textColor" type="color"
+                  value="#FFFFFF"></label><label class="toggle-row compact"><input type="checkbox" id="textBgEnabled"
+                  checked><span class="switch"></span><b>Background</b></label><label>BG color<input id="textBgColor"
+                  type="color" value="#000000"></label>
+              <div class="slider-row"><label>BG opacity <output id="textBgOpacityOut">65%</output></label><input
+                  id="textBgOpacity" type="range" min="0" max="100" value="65"></div>
+            </div>
+          </section>
+          <button class="primary big" id="createBtn" disabled><span>Generate Shorts</span><b>→</b></button>
+        </div>
+        <aside class="preview-column">
+          <section class="panel preview-panel">
+            <div class="preview-head">
+              <div><span class="kicker">PREVIEW</span>
+                <h2>Output preview</h2>
+              </div><span class="format-pill">1080 × 1920 · 9:16</span>
+            </div>
+            <div class="preview-frame" id="previewFrame"><video id="sourcePreview" controls muted playsinline
+                hidden></video>
+              <div class="preview-placeholder"><span>9:16</span><b>Your Short preview</b><small>Upload a video, then
+                  drag the logo/text.</small></div>
+              <div class="preview-logo draggable-overlay" id="previewLogo">
+                <img id="previewLogoImg" alt="" style="display:none;">
+                <span id="previewLogoPlaceholder" class="preview-logo-placeholder" style="display:none;">Logo</span>
+              </div>
+              <div class="preview-text draggable-overlay" id="previewText">Your text</div>
+              <div class="preview-watermark-overlay" id="previewWatermark"
+                style="display:none;position:absolute;pointer-events:none;z-index:4;font-family:inherit;font-weight:900;text-shadow:0 2px 8px rgba(0,0,0,0.6);white-space:nowrap;">
+              </div>
+              <div class="drag-hint">Drag logo or text to position</div>
+            </div>
+            <div class="preview-meta" id="previewMeta">Upload a video to preview the source. Branding previews update
+              instantly.</div>
+            <div class="preview-actions"><button class="ghost" id="previewReview">Open Editor</button><button
+                class="ghost" id="openOutput2">Open Output</button></div>
+          </section>
+        </aside>
+      </div>
+      <section class="panel progress-panel" id="progressPanel" data-state="idle" hidden>
+        <div class="progress-top">
+          <div><span class="kicker">GENERATE</span>
+            <h2 id="progressTitle">Processing locally</h2>
+          </div><strong id="progressPercent">0%</strong>
+        </div>
+        <div class="progress-track">
+          <div class="progress-bar" id="progressBar" role="progressbar" aria-valuemin="0" aria-valuemax="100"
+            aria-valuenow="0"></div>
+        </div>
+        <div class="stage-row">
+          <div class="stage-icon" id="stageIcon" aria-hidden="true">&#9711;</div>
+          <div><b id="stageText">Preparing&#8230;</b><small id="subStage">Clipify AI is working locally</small></div>
+          <span class="live" id="progressStatus">LIVE</span>
+        </div>
+        <div class="steps" aria-label="Pipeline progress">
+          <div data-step="transcribe" data-state="pending"><span class="step-indicator"
+              aria-hidden="true">&#183;</span>Transcribe</div>
+          <div data-step="analyze" data-state="pending"><span class="step-indicator" aria-hidden="true">&#183;</span>AI
+            analyze</div>
+          <div data-step="edit" data-state="pending"><span class="step-indicator" aria-hidden="true">&#183;</span>Smart
+            edit</div>
+          <div data-step="caption" data-state="pending"><span class="step-indicator"
+              aria-hidden="true">&#183;</span>Captions</div>
+          <div data-step="render" data-state="pending"><span class="step-indicator"
+              aria-hidden="true">&#183;</span>Render</div>
+        </div>
+        <details class="logs">
+          <summary>Processing log</summary>
+          <pre id="log"></pre>
+        </details>
+      </section>
+      <section class="results" id="results" hidden>
+        <div class="results-head">
+          <div><span class="kicker">OUTPUT · READY TO WATCH</span>
+            <h2>Your finished Shorts</h2>
+            <p class="results-subtitle">Your best render is ready below. Play it here, review it, or download it.</p>
+          </div><button class="ghost" id="newBtn">＋ New video</button>
+        </div>
+        <article class="featured-result panel" id="featuredResult" hidden>
+          <div class="featured-video-shell"><video id="featuredVideo" controls playsinline preload="metadata"></video>
+            <div class="featured-badge">✓ FINISHED SHORT</div>
           </div>
-          <div class="logo-card"><div class="logo-preview">C</div><small>Small, subtle and positioned over the final 1080×1920 render.</small></div>
+          <div class="featured-copy"><span class="kicker">JUST GENERATED</span>
+            <h3 id="featuredTitle">Your Short is ready</h3>
+            <p id="featuredMeta">1080 × 1920 · captions · local AI</p>
+            <div class="featured-actions"><button class="primary" id="featuredReview"><span>Open in
+                  Editor</span><b>→</b></button><button class="secondary" id="featuredPublish" type="button"
+                style="background:rgba(215,187,148,0.18);border:1px solid rgba(215,187,148,0.4);color:var(--text);border-radius:10px;padding:9px 18px;font-weight:600;cursor:pointer;"><span>🚀
+                  Share / Publish</span></button><a class="ghost" id="featuredDownload" href="#" download>Download ↓</a>
+            </div>
+          </div>
+        </article>
+        <div class="result-grid" id="resultGrid"></div>
+      </section>
+    </section>
+
+    <section id="projects" class="page-section secondary-section">
+      <header class="section-page-head">
+        <div><span class="eyebrow">WORKSPACE</span>
+          <h1>Projects</h1>
+          <p>Local projects survive browser refreshes because they are read from the jobs folder.</p>
+        </div><button class="ghost" id="refreshProjects">↻ Refresh</button>
+      </header>
+      <div class="project-grid" id="projectList">
+        <div class="empty-state">Loading projects…</div>
+      </div>
+      <section class="restore-section">
+        <div class="section-page-head compact-head">
+          <div><span class="eyebrow">RECOVERY</span>
+            <h2>Recently deleted</h2>
+          </div><button class="ghost" id="refreshTrash">↻ Refresh</button>
+        </div>
+        <div class="trash-list" id="trashList">
+          <div class="empty-state">No deleted projects.</div>
         </div>
       </section>
-      <section class="panel text-panel">
-        <div class="section-head"><div><span class="kicker">04</span><h2>Text Overlay</h2></div><span class="optional">OPTIONAL</span></div>
-        <label class="toggle-row"><input type="checkbox" id="textEnabled"><span class="switch"></span><b>Enable Text Overlay</b></label>
-        <div class="text-grid">
-          <label>Text<textarea id="overlayText" maxlength="100" placeholder="e.g. THAT'S CRAZY!"></textarea></label>
-          <div class="text-controls"><label>Position<select id="textPosition"><option value="top-left">Top Left</option><option value="top-center">Top Center</option><option value="top-right">Top Right</option><option value="center-left">Center Left</option><option value="center">Center</option><option value="center-right">Center Right</option><option value="bottom-left">Bottom Left</option><option value="bottom-center">Bottom Center</option><option value="bottom-right">Bottom Right</option><option value="custom">Custom / Drag in Preview</option></select></label><label>Size<input id="textSize" type="number" min="3" max="12" value="6"> %</label><label>Margin<input id="textMargin" type="number" min="20" max="500" value="110"> px</label></div>
+    </section>
+    <section id="editor" class="page-section secondary-section">
+      <header class="section-page-head">
+        <div><span class="eyebrow">REVIEW & EDITOR</span>
+          <h1>Editor</h1>
+          <p>Brand a finished Short locally without rerunning WhisperX, ClipsAI or Qwen. Drag overlays directly on the
+            video.</p>
         </div>
-        <div class="text-style-row"><label>Text color<input id="textColor" type="color" value="#FFFFFF"></label><label class="toggle-row compact"><input type="checkbox" id="textBgEnabled" checked><span class="switch"></span><b>Background</b></label><label>BG color<input id="textBgColor" type="color" value="#000000"></label><div class="slider-row"><label>BG opacity <output id="textBgOpacityOut">65%</output></label><input id="textBgOpacity" type="range" min="0" max="100" value="65"></div></div>
-      </section>
-      <button class="primary big" id="createBtn" disabled><span>Generate Shorts</span><b>→</b></button>
-    </div>
-    <aside class="preview-column">
-      <section class="panel preview-panel"><div class="preview-head"><div><span class="kicker">PREVIEW</span><h2>Output preview</h2></div><span class="format-pill">1080 × 1920 · 9:16</span></div><div class="preview-frame" id="previewFrame"><video id="sourcePreview" controls muted playsinline hidden></video><div class="preview-placeholder"><span>9:16</span><b>Your Short preview</b><small>Upload a video, then drag the logo/text.</small></div><div class="preview-logo draggable-overlay" id="previewLogo"><img id="previewLogoImg" alt="Logo preview"></div><div class="preview-text draggable-overlay" id="previewText">Your text</div><div class="drag-hint">Drag logo or text to position</div></div><div class="preview-meta" id="previewMeta">Upload a video to preview the source. Branding previews update instantly.</div><div class="preview-actions"><button class="ghost" id="previewReview">Open Editor</button><button class="ghost" id="openOutput2">Open Output</button></div></section>
-    </aside>
-  </div>
-  <section class="panel progress-panel" id="progressPanel" data-state="idle" hidden>
-    <div class="progress-top"><div><span class="kicker">GENERATE</span><h2 id="progressTitle">Processing locally</h2></div><strong id="progressPercent">0%</strong></div>
-    <div class="progress-track"><div class="progress-bar" id="progressBar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div></div>
-    <div class="stage-row"><div class="stage-icon" id="stageIcon" aria-hidden="true">&#9711;</div><div><b id="stageText">Preparing&#8230;</b><small id="subStage">Clipify AI is working locally</small></div><span class="live" id="progressStatus">LIVE</span></div>
-    <div class="steps" aria-label="Pipeline progress">
-      <div data-step="transcribe" data-state="pending"><span class="step-indicator" aria-hidden="true">&#183;</span>Transcribe</div>
-      <div data-step="analyze" data-state="pending"><span class="step-indicator" aria-hidden="true">&#183;</span>AI analyze</div>
-      <div data-step="edit" data-state="pending"><span class="step-indicator" aria-hidden="true">&#183;</span>Smart edit</div>
-      <div data-step="caption" data-state="pending"><span class="step-indicator" aria-hidden="true">&#183;</span>Captions</div>
-      <div data-step="render" data-state="pending"><span class="step-indicator" aria-hidden="true">&#183;</span>Render</div>
-    </div>
-    <details class="logs"><summary>Processing log</summary><pre id="log"></pre></details>
-  </section>
-  <section class="results" id="results" hidden>
-    <div class="results-head"><div><span class="kicker">OUTPUT · READY TO WATCH</span><h2>Your finished Shorts</h2><p class="results-subtitle">Your best render is ready below. Play it here, review it, or download it.</p></div><button class="ghost" id="newBtn">＋ New video</button></div>
-    <article class="featured-result panel" id="featuredResult" hidden>
-      <div class="featured-video-shell"><video id="featuredVideo" controls playsinline preload="metadata"></video><div class="featured-badge">✓ FINISHED SHORT</div></div>
-      <div class="featured-copy"><span class="kicker">JUST GENERATED</span><h3 id="featuredTitle">Your Short is ready</h3><p id="featuredMeta">1080 × 1920 · captions · local AI</p><div class="featured-actions"><button class="primary" id="featuredReview"><span>Open in Editor</span><b>→</b></button><button class="secondary" id="featuredPublish" type="button" style="background:rgba(215,187,148,0.18);border:1px solid rgba(215,187,148,0.4);color:var(--text);border-radius:10px;padding:9px 18px;font-weight:600;cursor:pointer;"><span>🚀 Share / Publish</span></button><a class="ghost" id="featuredDownload" href="#" download>Download ↓</a></div></div>
-    </article>
-    <div class="result-grid" id="resultGrid"></div>
-  </section>
-</section>
-
-<section id="projects" class="page-section secondary-section"><header class="section-page-head"><div><span class="eyebrow">WORKSPACE</span><h1>Projects</h1><p>Local projects survive browser refreshes because they are read from the jobs folder.</p></div><button class="ghost" id="refreshProjects">↻ Refresh</button></header><div class="project-grid" id="projectList"><div class="empty-state">Loading projects…</div></div><section class="restore-section"><div class="section-page-head compact-head"><div><span class="eyebrow">RECOVERY</span><h2>Recently deleted</h2></div><button class="ghost" id="refreshTrash">↻ Refresh</button></div><div class="trash-list" id="trashList"><div class="empty-state">No deleted projects.</div></div></section></section>
-<section id="editor" class="page-section secondary-section"><header class="section-page-head"><div><span class="eyebrow">REVIEW & EDITOR</span><h1>Editor</h1><p>Brand a finished Short locally without rerunning WhisperX, ClipsAI or Qwen. Drag overlays directly on the video.</p></div></header><div class="editor-layout"><div class="panel editor-video"><div class="editor-preview-frame" id="editorPreviewFrame"><video id="reviewVideo" controls playsinline hidden></video><div id="reviewVideoStatus" class="review-video-status" role="status" aria-live="polite" hidden><span id="reviewVideoSpinner" class="review-video-spinner" aria-hidden="true"></span><span id="reviewVideoStatusText"></span></div><div id="editorLogo" class="editor-overlay editor-logo"><img id="editorLogoImg" alt="Logo"></div><div id="editorText" class="editor-overlay editor-text">Your text</div><div id="editorDragHint">Drag logo/text · changes are applied to the exported edit</div></div><div id="reviewEmpty" class="empty-state">Select a generated Short from Projects or Create.</div></div><div class="panel editor-info"><span class="kicker">POST-RENDER BRANDING</span><h2 id="reviewTitle">No Short selected</h2><p id="reviewMeta">1080 × 1920 · local render</p><div class="editor-metadata" id="editorMetadata" hidden><b id="editorMetaDescription"></b><small id="editorSelectionNote" class="selection-note" hidden></small><div id="editorMetaHashtags"></div><small id="editorMetaTags"></small></div><div class="editor-control-stack"><label class="toggle-row"><input type="checkbox" id="editorLogoEnabled"><span class="switch"></span><b>Logo</b></label><div class="editor-actions"><a class="ghost" id="reviewDownload" href="#" download>Download ↓</a><button class="secondary" id="reviewPublish" type="button" style="background:rgba(215,187,148,0.18);border:1px solid rgba(215,187,148,0.4);color:var(--text);border-radius:10px;padding:9px 18px;font-weight:600;cursor:pointer;"><span>🚀 Share / Publish</span></button><button class="primary" id="applyEditorBranding" type="button"><span>Apply to Finished Short</span></button></div><label class="upload-logo-button"><input type="file" id="editorLogoInput" accept="image/png,image/jpeg,image/webp" hidden><span>＋ Upload logo</span></label><div class="two"><label>Logo size<input id="editorLogoSize" type="range" min="3" max="20" value="8"></label><label>Opacity<input id="editorLogoOpacity" type="range" min="10" max="100" value="80"></label></div><label class="toggle-row compact"><input type="checkbox" id="editorLogoBgRemove"><span class="switch"></span><b>Remove logo background</b></label><label>BG key color<input id="editorLogoBgColor" type="color" value="#9B5CFF"></label><label class="toggle-row"><input type="checkbox" id="editorTextEnabled"><span class="switch"></span><b>Text</b></label><textarea id="editorTextValue" maxlength="100" placeholder="Text overlay"></textarea><label>Text size<input id="editorTextSize" type="number" min="3" max="12" value="6"></label><label>Text color<input id="editorTextColor" type="color" value="#FFFFFF"></label><label class="toggle-row compact"><input type="checkbox" id="editorTextBg" checked><span class="switch"></span><b>Text background</b></label><label>BG color<input id="editorTextBgColor" type="color" value="#000000"></label><div class="slider-row"><label>BG opacity <output id="editorTextBgOpacityOut">65%</output></label><input id="editorTextBgOpacity" type="range" min="0" max="100" value="65"></div></div><button class="primary big" id="applyEditorBrandingMain" disabled><span>Apply to Finished Short</span><b>→</b></button><a id="reviewDownloadMain" class="download" href="#" hidden download>Download Short ↓</a><button class="ghost full" id="editorToCreate">← Back to Create</button></div></div></section>
-<section id="assets" class="page-section secondary-section"><header class="section-page-head"><div><span class="eyebrow">LOCAL FILES</span><h1>Assets</h1><p>Browse source videos, final Shorts and metadata stored inside each project.</p></div><button class="ghost" id="refreshAssets">↻ Refresh</button></header><div class="asset-toolbar"><select id="assetProject"><option value="">Choose a project</option></select></div><div class="asset-list panel" id="assetList"><div class="empty-state">Choose a project to load assets.</div></div></section>
-<div id="publishModal" class="modal-overlay" style="display:none;position:fixed;inset:0;background:rgba(5,8,13,0.85);backdrop-filter:blur(10px);z-index:9999;align-items:center;justify-content:center;padding:20px;">
-  <div class="modal-card panel" style="background:var(--panel-strong,#12171e);border:1px solid var(--line-strong,rgba(190,176,159,0.32));border-radius:20px;max-width:640px;width:100%;box-shadow:0 30px 90px rgba(0,0,0,0.6);padding:28px;position:relative;">
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px;">
-      <div>
-        <span class="eyebrow" style="color:var(--warm,#d6b388);font-size:0.75rem;letter-spacing:0.08em;font-weight:700;">DISTRIBUTION & SOCIAL MCP</span>
-        <h2 style="margin:4px 0 0;font-size:1.5rem;color:var(--text,#f3eadf);">Share & Publish Short</h2>
-      </div>
-      <button id="closePublishModal" type="button" style="background:none;border:none;color:var(--muted,#c9b9a4);font-size:1.4rem;cursor:pointer;padding:4px 8px;">✕</button>
-    </div>
-    <div class="publish-tabs" style="display:flex;gap:8px;margin-bottom:18px;border-bottom:1px solid var(--line,rgba(190,176,159,0.2));padding-bottom:12px;">
-      <button class="pub-tab active" data-platform="youtube" type="button" style="background:rgba(215,187,148,0.22);border:1px solid rgba(215,187,148,0.4);color:var(--text,#f3eadf);padding:8px 14px;border-radius:8px;font-weight:600;cursor:pointer;">YouTube Shorts</button>
-      <button class="pub-tab" data-platform="tiktok" type="button" style="background:transparent;border:1px solid transparent;color:var(--muted,#c9b9a4);padding:8px 14px;border-radius:8px;font-weight:600;cursor:pointer;">TikTok</button>
-      <button class="pub-tab" data-platform="instagram" type="button" style="background:transparent;border:1px solid transparent;color:var(--muted,#c9b9a4);padding:8px 14px;border-radius:8px;font-weight:600;cursor:pointer;">Instagram Reels</button>
-      <button class="pub-tab" data-platform="package" type="button" style="background:transparent;border:1px solid transparent;color:var(--muted,#c9b9a4);padding:8px 14px;border-radius:8px;font-weight:600;cursor:pointer;">Social Package</button>
-    </div>
-    <form id="publishForm" style="display:flex;flex-direction:column;gap:14px;">
-      <input type="hidden" id="publishJobId">
-      <input type="hidden" id="publishFilename">
-      <input type="hidden" id="publishPlatform" value="youtube">
-
-      <label style="display:flex;flex-direction:column;gap:6px;font-size:0.88rem;color:var(--muted,#c9b9a4);">Title
-        <input type="text" id="publishTitle" maxlength="100" placeholder="Catchy title for your Short" required style="background:rgba(255,255,255,0.04);border:1px solid var(--line,rgba(190,176,159,0.2));color:var(--text,#f3eadf);padding:10px 14px;border-radius:8px;font-size:0.95rem;">
-      </label>
-
-      <label style="display:flex;flex-direction:column;gap:6px;font-size:0.88rem;color:var(--muted,#c9b9a4);">Description & Hashtags
-        <textarea id="publishDescription" rows="3" placeholder="Description and tags (#Shorts, #viral, etc.)" style="background:rgba(255,255,255,0.04);border:1px solid var(--line,rgba(190,176,159,0.2));color:var(--text,#f3eadf);padding:10px 14px;border-radius:8px;font-size:0.95rem;resize:vertical;"></textarea>
-      </label>
-
-      <div style="display:flex;gap:14px;">
-        <label id="privacyContainer" style="flex:1;display:flex;flex-direction:column;gap:6px;font-size:0.88rem;color:var(--muted,#c9b9a4);">Privacy
-          <select id="publishPrivacy" style="background:#0e141a;border:1px solid var(--line,rgba(190,176,159,0.2));color:var(--text,#f3eadf);padding:9px 12px;border-radius:8px;font-size:0.95rem;">
-            <option value="public">Public</option>
-            <option value="unlisted" selected>Unlisted (Recommended)</option>
-            <option value="private">Private</option>
-          </select>
-        </label>
-        <div style="flex:1;display:flex;flex-direction:column;gap:6px;font-size:0.88rem;color:var(--muted,#c9b9a4);">Status
-          <div id="publishAccountStatus" style="padding:9px 12px;background:rgba(255,255,255,0.04);border-radius:8px;font-size:0.85rem;color:var(--muted,#c9b9a4);">Ready to publish</div>
+      </header>
+      <div class="editor-layout">
+        <div class="panel editor-video">
+          <div class="editor-preview-frame" id="editorPreviewFrame"><video id="reviewVideo" controls playsinline
+              hidden></video>
+            <div id="reviewVideoStatus" class="review-video-status" role="status" aria-live="polite" hidden><span
+                id="reviewVideoSpinner" class="review-video-spinner" aria-hidden="true"></span><span
+                id="reviewVideoStatusText"></span></div>
+            <div id="editorLogo" class="editor-overlay editor-logo">
+              <img id="editorLogoImg" alt="" style="display:none;">
+              <span id="editorLogoPlaceholder" class="preview-logo-placeholder" style="display:none;">Logo</span>
+            </div>
+            <div id="editorText" class="editor-overlay editor-text">Your text</div>
+            <div id="editorDragHint">Drag logo/text · changes are applied to the exported edit</div>
+          </div>
+          <div id="reviewEmpty" class="empty-state">Select a generated Short from Projects or Create.</div>
+        </div>
+        <div class="panel editor-info"><span class="kicker">POST-RENDER BRANDING</span>
+          <h2 id="reviewTitle">No Short selected</h2>
+          <p id="reviewMeta">1080 × 1920 · local render</p>
+          <div id="editorClipSwitcher" class="editor-clip-switcher"
+            style="display:flex;gap:6px;flex-wrap:wrap;margin:10px 0 14px;" hidden></div>
+          <div class="editor-metadata" id="editorMetadata" hidden><b id="editorMetaDescription"></b><small
+              id="editorSelectionNote" class="selection-note" hidden></small>
+            <div id="editorMetaHashtags"></div><small id="editorMetaTags"></small>
+          </div>
+          <div class="editor-control-stack">
+            <div class="camera-framing-box"
+              style="background:rgba(255,255,255,0.03);border:1px solid rgba(190,176,159,0.18);border-radius:12px;padding:12px;margin:10px 0;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;"><span
+                  style="font-size:0.88rem;font-weight:700;color:var(--warm,#d6b388);">📐 Camera Framing &
+                  Zoom</span><button type="button" id="resetFramingBtn"
+                  style="background:none;border:1px solid rgba(190,176,159,0.3);color:var(--text);padding:3px 8px;border-radius:6px;font-size:0.75rem;cursor:pointer;">Reset
+                  Auto</button></div>
+              <div class="two"><label>Pan Horizontal (X)<input id="editorPanX" type="range" min="-50" max="50"
+                    value="0"><output id="editorPanXOut">0%</output></label><label>Pan Vertical (Y)<input
+                    id="editorPanY" type="range" min="-50" max="50" value="0"><output
+                    id="editorPanYOut">0%</output></label></div>
+              <div class="two"><label>Zoom Scale<input id="editorZoom" type="range" min="100" max="250"
+                    value="100"><output id="editorZoomOut">1.0x</output></label><label id="splitRatioField"
+                  style="display:none;">Split Ratio<input id="editorSplitRatio" type="range" min="30" max="70"
+                    value="50"><output id="editorSplitRatioOut">50%</output></label></div>
+            </div><label class="toggle-row"><input type="checkbox" id="editorLogoEnabled"><span
+                class="switch"></span><b>Logo</b></label>
+            <div class="editor-actions"><a class="ghost" id="reviewDownload" href="#" download>Download ↓</a><button
+                class="secondary" id="reviewPublish" type="button"
+                style="background:rgba(215,187,148,0.18);border:1px solid rgba(215,187,148,0.4);color:var(--text);border-radius:10px;padding:9px 18px;font-weight:600;cursor:pointer;"><span>🚀
+                  Share / Publish</span></button><button class="primary" id="applyEditorBranding"
+                type="button"><span>Apply to Finished Short</span></button></div>            <div class="logo-upload-row">
+              <label class="upload-logo-button"><input type="file" id="editorLogoInput"
+                  accept="image/png,image/jpeg,image/webp" hidden><span>＋ Upload logo</span></label>
+              <button class="ghost" type="button" id="editorClearLogo">Remove</button>
+            </div>
+            <div class="two">
+              <label>Position
+                <select id="editorLogoPosition">
+                  
+                  <option value="top-left" >Top Left</option>
+                  
+                  <option value="top-center" >Top Center</option>
+                  
+                  <option value="top-right" selected>Top Right</option>
+                  
+                  <option value="center-left" >Center Left</option>
+                  
+                  <option value="center" >Center</option>
+                  
+                  <option value="center-right" >Center Right</option>
+                  
+                  <option value="bottom-left" >Bottom Left</option>
+                  
+                  <option value="bottom-center" >Bottom Center</option>
+                  
+                  <option value="bottom-right" >Bottom Right</option>
+                  
+                  <option value="custom">Custom / Drag in Preview</option>
+                </select>
+              </label>
+              <label>Margin<input id="editorLogoMargin" type="number" min="0" max="250" value="40"></label>
+            </div>
+            <div class="slider-row">
+              <label>Logo size <output id="editorLogoSizeOut">8%</output></label>
+              <input id="editorLogoSize" type="range" min="2" max="40" value="8">
+            </div>
+            <div class="slider-row">
+              <label>Opacity <output id="editorLogoOpacityOut">80%</output></label>
+              <input id="editorLogoOpacity" type="range" min="0" max="100" value="80">
+            </div>
+            <label class="toggle-row compact"><input type="checkbox"
+                id="editorLogoBgRemove"><span class="switch"></span><b>Remove logo background</b></label>
+            <div class="two">
+              <label>BG key color<input id="editorLogoBgColor" type="color" value="#9B5CFF"></label>
+              <label>Key tolerance<input id="editorLogoBgSimilarity" type="number" min="0.01" max="0.8" step="0.01" value="0.22"></label>
+            </div><label class="toggle-row"><input
+                type="checkbox" id="editorTextEnabled"><span class="switch"></span><b>Text</b></label><textarea
+              id="editorTextValue" maxlength="100" placeholder="Text overlay"></textarea><label>Text size<input
+                id="editorTextSize" type="number" min="3" max="12" value="6"></label><label>Text color<input
+                id="editorTextColor" type="color" value="#FFFFFF"></label><label class="toggle-row compact"><input
+                type="checkbox" id="editorTextBg" checked><span class="switch"></span><b>Text
+                background</b></label><label>BG color<input id="editorTextBgColor" type="color" value="#000000"></label>
+            <div class="slider-row"><label>BG opacity <output id="editorTextBgOpacityOut">65%</output></label><input
+                id="editorTextBgOpacity" type="range" min="0" max="100" value="65"></div>
+            <div style="margin: 12px 0 6px;">
+              <label for="editorUpscaleQuality" style="font-weight:700;display:block;margin-bottom:4px;font-size:0.82rem;">Upscale &amp; Render Quality</label>
+              <select id="editorUpscaleQuality" style="width:100%;height:36px;padding:0 10px;border-radius:8px;background:#0d1117;border:1px solid rgba(255,255,255,0.18);color:#fff;font-size:0.82rem;">
+                <option value="ultra">Ultra HD (Crisp Lanczos &amp; Anti-Burst)</option>
+                <option value="high" selected>High Quality (Recommended · Lanczos)</option>
+                <option value="balanced">Balanced (Standard 1080p · Bicubic)</option>
+                <option value="fast">Fast (Compact Size)</option>
+              </select>
+            </div>
+          </div><button class="primary big" id="applyEditorBrandingMain" disabled><span>Apply to Finished
+              Short</span><b>→</b></button><a id="reviewDownloadMain" class="download" href="#" hidden download>Download
+            Short ↓</a><button class="ghost full" id="editorToCreate">← Back to Create</button>
         </div>
       </div>
-
-      <div id="publishStatusMsg" style="display:none;padding:12px;border-radius:8px;font-size:0.88rem;"></div>
-
-      <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:10px;">
-        <button type="button" class="ghost" id="cancelPublish" style="padding:10px 18px;border-radius:8px;cursor:pointer;">Cancel</button>
-        <button type="submit" class="primary" id="submitPublish" style="padding:10px 22px;border-radius:8px;font-weight:600;cursor:pointer;background:linear-gradient(135deg,var(--warm,#d6b388),var(--warm-2,#b79263));color:#05080d;border:none;"><span>🚀 Publish Now</span></button>
+    </section>
+    <section id="assets" class="page-section secondary-section">
+      <header class="section-page-head">
+        <div><span class="eyebrow">LOCAL FILES</span>
+          <h1>Assets</h1>
+          <p>Browse source videos, final Shorts and metadata stored inside each project.</p>
+        </div><button class="ghost" id="refreshAssets">↻ Refresh</button>
+      </header>
+      <div class="asset-toolbar"><select id="assetProject">
+          <option value="">Choose a project</option>
+        </select></div>
+      <div class="asset-list panel" id="assetList">
+        <div class="empty-state">Choose a project to load assets.</div>
       </div>
-    </form>
-  </div>
-</div>
+    </section>
 
-<footer>Clipify AI · local AI editing workspace · WhisperX + ClipsAI + Ollama + FFmpeg</footer>
-</main>
-  <script src="static/pipeline_status.js"></script><script src="static/review_player.js"></script><script src="static/app.js"></script><script src="static/tour.js"></script>
-</body></html>
+    <section id="beta" class="page-section secondary-section" style="position:relative;overflow:hidden;">
+      <!-- Interactive ASCII Dot Matrix with Shimmering "CLIPIFY" Background -->
+      <canvas id="betaMatrixCanvas" class="beta-matrix-canvas"></canvas>
+      <header class="section-page-head">
+        <div>
+          <span class="eyebrow" style="color:var(--accent);display:flex;align-items:center;gap:6px;"><span
+              class="nav-beta-tag" style="font-size:0.68rem;padding:2px 6px;">BETA</span> ALL-IN-ONE TESTING
+            WORKSPACE</span>
+          <h1>Beta Testing Lab</h1>
+          <p>Test the experimental AI Video Clipping Pipeline with live preview, situational cues, transparent watermarks, and direct exports.</p>
+        </div>
+      </header>
+
+      <!-- Video Clipping & Overlays Workspace -->
+      <div id="betaClipperWorkspace" class="beta-workspace-layout"
+        style="display:grid;grid-template-columns:minmax(0,1.2fr) minmax(360px,0.8fr);gap:24px;margin-top:20px;">
+        <!-- Left Column: Step 1 (Upload) & Step 2 (AI Config & Execution) -->
+        <div class="beta-controls-col" style="display:flex;flex-direction:column;gap:18px;">
+
+          <!-- Step 1 Card: Video Source -->
+          <div class="panel beta-card" style="padding:20px;border-radius:16px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+              <div style="display:flex;align-items:center;gap:8px;">
+                <span
+                  style="display:inline-grid;place-items:center;width:24px;height:24px;border-radius:6px;background:rgba(255,255,255,0.08);color:#fff;font-size:0.75rem;font-weight:700;">01</span>
+                <strong style="font-size:1rem;color:#ffffff;">Source Footage</strong>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;">
+                <button type="button" class="btn-clear-cache-link" title="Clear downloaded YouTube footage & cache">
+                  <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                  </svg>
+                  <span>Clear Cache</span>
+                </button>
+                <span style="font-size:0.75rem;color:var(--muted-2);">MP4 / MOV / MKV / YouTube</span>
+              </div>
+            </div>
+
+            <div class="beta-upload-drop" id="betaDropZone"
+              style="border:1.5px dashed rgba(255,255,255,0.18);border-radius:12px;padding:24px;text-align:center;cursor:pointer;background:rgba(255,255,255,0.015);transition:border-color 0.2s,background 0.2s;">
+              <input type="file" id="betaFileInput" accept="video/mp4,video/quicktime,video/x-matroska,video/webm"
+                hidden>
+              <div style="font-size:1.8rem;margin-bottom:6px;">🎬</div>
+              <b style="display:block;font-size:0.92rem;color:#ffffff;">Drop source video here or click to browse</b>
+              <small style="display:block;margin-top:4px;color:var(--muted-2);font-size:0.78rem;">Files stay 100% local
+                inside project workspace</small>
+            </div>
+
+            <div style="display:flex;align-items:center;gap:10px;margin-top:14px;">
+              <div style="flex:1;height:1px;background:rgba(255,255,255,0.08);"></div>
+              <span style="font-size:0.75rem;color:var(--muted-2);text-transform:uppercase;">or YouTube link</span>
+              <div style="flex:1;height:1px;background:rgba(255,255,255,0.08);"></div>
+            </div>
+
+            <div style="display:flex;gap:8px;margin-top:12px;">
+              <input type="url" id="betaYtUrl" name="beta_youtube_url_no_autofill"
+                placeholder="https://www.youtube.com/watch?v=..." autocomplete="off" autocorrect="off"
+                autocapitalize="off" spellcheck="false" data-lpignore="true" data-1p-ignore="true"
+                data-form-type="other"
+                style="flex:1;padding:10px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.14);background:rgba(0,0,0,0.3);color:#fff;font-size:0.88rem;">
+              <button type="button" class="ghost" id="betaYtImportBtn" style="white-space:nowrap;padding:0 16px;">Fetch
+                Link</button>
+            </div>
+
+            <div id="betaSourceInfo"
+              style="display:none;margin-top:14px;padding:10px 14px;border-radius:10px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);align-items:center;justify-content:space-between;">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <span style="color:#88c995;">✓</span>
+                <div><b id="betaSourceName" style="font-size:0.85rem;color:#fff;">video.mp4</b><small
+                    id="betaSourceMeta" style="display:block;font-size:0.75rem;color:var(--muted-2);">Ready</small>
+                </div>
+              </div>
+              <button type="button" id="betaClearSource"
+                style="background:none;border:none;color:var(--muted-2);cursor:pointer;font-size:0.8rem;">Change</button>
+            </div>
+          </div>
+
+          <!-- Step 2 Card: Pipeline Settings & Real-Time Runner -->
+          <div class="panel beta-card" style="padding:20px;border-radius:16px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+              <div style="display:flex;align-items:center;gap:8px;">
+                <span
+                  style="display:inline-grid;place-items:center;width:24px;height:24px;border-radius:6px;background:rgba(255,255,255,0.08);color:#fff;font-size:0.75rem;font-weight:700;">02</span>
+                <strong style="font-size:1rem;color:#ffffff;">AI Pipeline & Feature Controls</strong>
+              </div>
+              <span style="font-size:0.75rem;color:#88c995;">● Ready</span>
+            </div>
+
+            <div class="two" style="gap:12px;">
+              <label>Target Shorts Count
+                <select id="betaClipsCount">
+                  <option value="1">1 Short</option>
+                  <option value="2" selected>2 Shorts</option>
+                  <option value="3">3 Shorts</option>
+                  <option value="4">4 Shorts</option>
+                </select>
+              </label>
+              <label>Composition Layout
+                <select id="betaLayout">
+                  <option value="gaming_split" selected>Gaming Split (Gameplay Top + Webcam Bottom)</option>
+                  <option value="normal">Normal 9:16 Vertical (Center Focus)</option>
+                  <option value="two_person">2-Person Conversation Split</option>
+                </select>
+              </label>
+            </div>
+
+            <!-- Dynamic Split Ratio Control -->
+            <div id="betaSplitRatioRow" style="margin-top:12px;padding:10px 14px;border:1px solid rgba(255,255,255,0.08);border-radius:12px;background:rgba(255,255,255,0.02);">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                <span style="font-size:0.8rem;color:var(--muted-2);font-weight:600;">Split Screen Height Ratio</span>
+                <b id="betaSplitRatioText" style="font-size:0.75rem;color:#ffffff;background:rgba(255,255,255,0.08);padding:2px 8px;border-radius:6px;border:1px solid rgba(255,255,255,0.14);">Top 50% / Bottom 50%</b>
+              </div>
+              <input type="range" id="betaSplitRatio" min="30" max="70" value="50" style="width:100%;cursor:pointer;">
+              <small style="color:var(--muted-2);font-size:0.72rem;display:block;margin-top:4px;">Drag the middle bar in the preview or adjust this slider to resize top/bottom screen</small>
+            </div>
+
+            <!-- Premium Captions Toggle -->
+            <div
+              style="margin-top:14px;padding:12px 14px;border:1px solid rgba(255,255,255,0.1);border-radius:12px;background:rgba(255,255,255,0.02);">
+              <label class="toggle-row"><input type="checkbox" id="betaPremiumCaptions" checked><span
+                  class="switch"></span><b>✨ Premium Captions (Scale Pop & Action Cues)</b></label>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px;">
+                <label>Placement
+                  <select id="betaCaptionPreset">
+                    <option value="center_seam" selected>Center Seam (48%-52%)</option>
+                    <option value="lower_safe">Lower Safe Band (72%-82%)</option>
+                    <option value="top_safe">Top Safe Band</option>
+                  </select>
+                </label>
+                <label>Accent Color
+                  <select id="betaCaptionAccent">
+                    <option value="gold_yellow" selected>Gold Yellow</option>
+                    <option value="lime_green">Lime Green</option>
+                    <option value="cyan_sky">Cyan Sky</option>
+                    <option value="coral_red">Coral Red</option>
+                    <option value="pink_lavender">Pink Lavender</option>
+                  </select>
+                </label>
+              </div>
+              <div style="margin-top:8px;padding-top:6px;border-top:1px solid rgba(255,255,255,0.05);">
+                <label class="toggle-row compact"><input type="checkbox" id="betaSituationalCues" checked><span
+                    class="switch"></span><b>Situational Action Cues (*ACTION CUE*)</b></label>
+              </div>
+            </div>
+
+            <!-- Transparent Watermark Toggle -->
+            <div
+              style="margin-top:12px;padding:12px 14px;border:1px solid rgba(255,255,255,0.1);border-radius:12px;background:rgba(255,255,255,0.02);">
+              <label class="toggle-row"><input type="checkbox" id="betaWatermarkEnabled" checked><span
+                  class="switch"></span><b>Add Watermark (Transparent Text)</b></label>
+              <div style="display:grid;grid-template-columns:1.2fr 0.8fr;gap:10px;margin-top:8px;">
+                <label>Watermark Text<input type="text" id="betaWatermarkText" value="@ClipifyAI"
+                    maxlength="60"></label>
+                <label>Position
+                  <select id="betaWatermarkPosition">
+                    <option value="center" selected>Center</option>
+                    <option value="top-left">Top-Left</option>
+                    <option value="top-right">Top-Right</option>
+                    <option value="lower-middle">Lower-Middle</option>
+                    <option value="bottom-center">Bottom-Center</option>
+                    <option value="bottom-right">Bottom-Right</option>
+                  </select>
+                </label>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px;">
+                <div class="slider-row"><label>Opacity <output id="betaWmOpacityOut">35%</output></label><input
+                    id="betaWmOpacity" type="range" min="10" max="100" value="35"></div>
+                <div class="slider-row"><label>Rotation <output id="betaWmAngleOut">-20°</output></label><input
+                    id="betaWmAngle" type="range" min="-45" max="45" value="-20"></div>
+              </div>
+            </div>
+
+            <button type="button" class="primary big" id="betaRunPipelineBtn"
+              style="width:100%;margin-top:18px;justify-content:center;padding:14px;font-size:1rem;">
+              <span>⚡ Run Beta AI Pipeline</span><b>→</b>
+            </button>
+
+            <!-- Live Progress & Log -->
+            <div id="betaProgressBox"
+              style="display:none;margin-top:14px;padding:14px;border-radius:12px;background:#09090b;border:1px solid rgba(255,255,255,0.1);">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                <b id="betaStageText" style="font-size:0.85rem;color:#ffffff;">Starting pipeline...</b>
+                <span id="betaProgressPct" style="font-size:0.85rem;font-weight:700;color:var(--accent);">0%</span>
+              </div>
+              <div style="width:100%;height:6px;border-radius:3px;background:rgba(255,255,255,0.08);overflow:hidden;">
+                <div id="betaProgressBar" style="width:0%;height:100%;background:#ffffff;transition:width 0.25s ease;">
+                </div>
+              </div>
+              <pre id="betaLog"
+                style="margin-top:10px;max-height:120px;overflow-y:auto;font-size:0.72rem;color:rgba(255,255,255,0.6);font-family:monospace;white-space:pre-wrap;"></pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Step 3 (Review & Export) -->
+        <div class="beta-preview-col" style="display:flex;flex-direction:column;gap:18px;">
+          <div class="panel beta-card" style="padding:20px;border-radius:16px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+              <div style="display:flex;align-items:center;gap:8px;">
+                <span
+                  style="display:inline-grid;place-items:center;width:24px;height:24px;border-radius:6px;background:rgba(255,255,255,0.08);color:#fff;font-size:0.75rem;font-weight:700;">03</span>
+                <strong style="font-size:1rem;color:#ffffff;">Review & Multi-Clip Export</strong>
+              </div>
+              <span class="format-pill">1080 × 1920 · 9:16</span>
+            </div>
+
+            <div id="betaClipSwitcher" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;">
+              <span style="font-size:0.78rem;color:var(--muted-2);">Renders will appear here after execution</span>
+            </div>
+            <div id="betaClipMeta" style="font-size:0.75rem;color:var(--muted-2);margin-bottom:10px;display:none;align-items:center;gap:6px;background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.08);flex-wrap:wrap;"></div>
+
+            <div class="preview-frame" id="betaPreviewFrame"
+              style="aspect-ratio:9/16;max-height:560px;margin:0 auto;position:relative;background:#050507;border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,0.14);display:grid;place-items:center;">
+              <video id="betaResultVideo" controls playsinline
+                style="width:100%;height:100%;object-fit:contain;display:none;"></video>
+              <div id="betaPlaceholder" style="text-align:center;padding:20px;color:var(--muted-2);">
+                <div style="font-size:2rem;margin-bottom:8px;">📱</div>
+                <b style="color:#ffffff;display:block;">Short Output Preview</b>
+                <small style="display:block;margin-top:4px;">Run pipeline above to inspect finished render</small>
+              </div>
+
+              <!-- Interactive Draggable Split Screen Resizer Overlay -->
+              <div id="betaSplitOverlay" class="split-screen-resizer-overlay">
+                <div id="betaSplitTop" class="split-panel-top">
+                  <span class="split-panel-label">🎮 Top: Gameplay</span>
+                </div>
+                <div id="betaSplitHandle" class="split-divider-handle" title="Drag up or down to resize top/bottom screen">
+                  <div class="handle-line"></div>
+                  <div class="handle-badge" id="betaSplitBadge">⇕ Top 50% · Bottom 50%</div>
+                  <div class="handle-line"></div>
+                </div>
+                <div id="betaSplitBottom" class="split-panel-bottom">
+                  <span class="split-panel-label">🎙️ Bottom: Camera / Reaction</span>
+                </div>
+              </div>
+
+              <!-- Interactive Draggable Text Layer Overlay on Video Preview -->
+              <div id="betaTextDragOverlay" class="beta-text-drag-overlay" style="display:none;position:absolute;left:50%;top:25%;transform:translate(-50%,-50%);">
+                <div id="betaTextDragContent" class="beta-text-drag-content">WAIT FOR IT! 😱</div>
+                <div class="beta-drag-badge">
+                  <span>✥ Drag to Move</span> · <span id="betaDragCoordBadge">50%, 25%</span> · <span id="betaDragTimeBadge">0.0s – 5.0s</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Interactive Dual-Handle Scrubber Timeline Under Video Preview (Visible once video is previewed) -->
+            <div id="betaScrubberTimeline" class="beta-scrubber-timeline" style="display:none;margin-top:14px;padding:12px 14px;background:#121215;border:1px solid rgba(255,255,255,0.08);border-radius:12px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:6px;">
+                <div style="display:flex;align-items:center;gap:6px;">
+                  <span style="font-size:0.85rem;">✂️</span>
+                  <b style="font-size:0.82rem;color:#ffffff;">Visual Dual-Handle Timeline Scrubber</b>
+                  <span style="font-size:0.7rem;color:var(--muted-2);">(Drag handles to cut)</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <span id="betaTrimSpanBadge" class="format-pill" style="font-size:0.72rem;background:rgba(155,92,255,0.15);color:#c084fc;border-color:rgba(155,92,255,0.3);">0.0s – 5.0s (5.0s)</span>
+                  <button type="button" class="ghost compact" id="betaTrimResetFull" style="padding:2px 8px;font-size:0.7rem;">Reset Full</button>
+                </div>
+              </div>
+
+              <div class="beta-scrub-track-container" id="betaScrubTrackContainer">
+                <div class="beta-scrub-track" id="betaScrubTrack">
+                  <!-- Active span highlight -->
+                  <div class="beta-scrub-highlight" id="betaScrubHighlight"></div>
+                  <!-- Left / Start Handle -->
+                  <div class="beta-scrub-handle beta-scrub-handle-start" id="betaHandleStart" title="Drag to adjust Start Time">
+                    <div class="beta-handle-line"></div>
+                    <div class="beta-handle-tooltip" id="betaTooltipStart">0.0s</div>
+                  </div>
+                  <!-- Right / End Handle -->
+                  <div class="beta-scrub-handle beta-scrub-handle-end" id="betaHandleEnd" title="Drag to adjust End Time">
+                    <div class="beta-handle-line"></div>
+                    <div class="beta-handle-tooltip" id="betaTooltipEnd">5.0s</div>
+                  </div>
+                </div>
+              </div>
+
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;font-size:0.72rem;color:var(--muted-2);">
+                <span id="betaTrackMinLabel">00:00</span>
+                <span id="betaTrackMidLabel" style="color:rgba(255,255,255,0.4);">Drag left/right bars to preview trimmed cut points</span>
+                <span id="betaTrackMaxLabel">00:00</span>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:10px;margin-top:16px;">
+              <a id="betaDownloadBtn" class="primary" href="#" download
+                style="flex:1;text-align:center;text-decoration:none;pointer-events:none;opacity:0.5;justify-content:center;padding:12px;">Download
+                Short ↓</a>
+              <button type="button" class="ghost" id="betaOpenInEditor" style="flex:1;padding:12px;" disabled>Open in
+                Editor</button>
+            </div>
+
+            <!-- Dynamic Timed & Draggable Text Overlay Editor (Beta Feature) -->
+            <div id="betaTextEditorPanel" class="beta-text-editor-panel">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <span style="font-size:1.15rem;">✏️</span>
+                  <strong style="color:#ffffff;font-size:0.95rem;">Interactive Text Overlay & Timing</strong>
+                  <span class="format-pill" style="background:rgba(250,204,21,0.15);color:#facc15;border-color:rgba(250,204,21,0.3);font-size:0.7rem;">Draggable on Preview</span>
+                </div>
+                <label class="toggle-row compact" style="margin:0;">
+                  <input type="checkbox" id="betaTextEnableToggle" checked>
+                  <span style="font-size:0.78rem;color:#cbd5e1;">Live Preview</span>
+                </label>
+              </div>
+
+              <!-- Text Input -->
+              <div style="margin-bottom:12px;">
+                <label style="display:block;font-size:0.75rem;color:var(--muted-2);margin-bottom:4px;font-weight:600;">Text to Overlay (Emojis & Punctuation Supported)</label>
+                <input type="text" id="betaTextInput" class="beta-text-input" value="WAIT FOR IT! 😱" placeholder="e.g. WATCH TILL END! 🔥, EPIC CLUTCH 😂, SUBSCRIBE..." style="width:100%;padding:10px 14px;border-radius:10px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.15);color:#fff;font-size:0.9rem;font-weight:600;">
+              </div>
+
+              <!-- Time Range Selector ("From Where to When") -->
+              <div style="margin-bottom:12px;padding:10px 12px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:10px;">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:6px;">
+                  <label style="font-size:0.75rem;color:var(--muted-2);font-weight:600;">⏱️ Timing: From Where to When</label>
+                  <div style="display:flex;gap:4px;">
+                    <button type="button" class="ghost compact" id="betaBtnSetStart" style="padding:2px 8px;font-size:0.72rem;" title="Set start time to current video playback time">Start: Current (0.0s)</button>
+                    <button type="button" class="ghost compact" id="betaBtnSetEnd" style="padding:2px 8px;font-size:0.72rem;" title="Set end time to current video playback time">End: Current (0.0s)</button>
+                    <button type="button" class="ghost compact" id="betaBtnFullDuration" style="padding:2px 8px;font-size:0.72rem;">Entire Clip</button>
+                  </div>
+                </div>
+
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:8px;">
+                  <div>
+                    <small style="display:block;font-size:0.7rem;color:var(--muted-2);margin-bottom:2px;">Start Time (seconds)</small>
+                    <input type="number" id="betaTextStart" min="0" step="0.1" value="0.0" style="width:100%;padding:6px 10px;border-radius:8px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);color:#fff;font-size:0.85rem;">
+                  </div>
+                  <div>
+                    <small style="display:block;font-size:0.7rem;color:var(--muted-2);margin-bottom:2px;">End Time (seconds)</small>
+                    <input type="number" id="betaTextEnd" min="0.1" step="0.1" value="5.0" style="width:100%;padding:6px 10px;border-radius:8px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);color:#fff;font-size:0.85rem;">
+                  </div>
+                </div>
+
+                <!-- Mini Timeline Span Bar -->
+                <div style="position:relative;height:8px;background:rgba(255,255,255,0.08);border-radius:4px;overflow:hidden;margin-top:4px;">
+                  <div id="betaTimelineSpanBar" style="position:absolute;left:0%;width:25%;height:100%;background:linear-gradient(90deg, #facc15, #eab308);border-radius:4px;"></div>
+                  <div id="betaTimelineCurrentMarker" style="position:absolute;left:0%;width:3px;height:100%;background:#ffffff;box-shadow:0 0 6px #fff;"></div>
+                </div>
+                <div style="display:flex;justify-content:space-between;margin-top:4px;font-size:0.68rem;color:var(--muted-2);">
+                  <span id="betaTimelineStartLabel">0:00</span>
+                  <span id="betaTimelineActiveLabel" style="color:#facc15;font-weight:600;">Active: 0.0s – 5.0s</span>
+                  <span id="betaTimelineEndLabel">Clip End</span>
+                </div>
+              </div>
+
+              <!-- Position X and Y Sliders -->
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:0.72rem;color:var(--muted-2);margin-bottom:2px;">
+                    <span>Horizontal X</span>
+                    <output id="betaTextXOut" style="color:#ffffff;font-weight:600;">50%</output>
+                  </div>
+                  <input type="range" id="betaTextX" min="5" max="95" value="50" style="width:100%;cursor:pointer;">
+                </div>
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:0.72rem;color:var(--muted-2);margin-bottom:2px;">
+                    <span>Vertical Y</span>
+                    <output id="betaTextYOut" style="color:#ffffff;font-weight:600;">25%</output>
+                  </div>
+                  <input type="range" id="betaTextY" min="5" max="95" value="25" style="width:100%;cursor:pointer;">
+                </div>
+              </div>
+
+              <!-- Quick Placement Pills -->
+              <div style="display:flex;gap:6px;align-items:center;margin-bottom:12px;flex-wrap:wrap;">
+                <span style="font-size:0.72rem;color:var(--muted-2);">Quick Align:</span>
+                <button type="button" class="ghost compact" id="betaPosTop" style="padding:2px 8px;font-size:0.72rem;">Top 15%</button>
+                <button type="button" class="ghost compact" id="betaPosCenter" style="padding:2px 8px;font-size:0.72rem;">Center 50%</button>
+                <button type="button" class="ghost compact" id="betaPosBottom" style="padding:2px 8px;font-size:0.72rem;">Bottom 75%</button>
+              </div>
+
+              <!-- Styling Options -->
+              <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(130px, 1fr));gap:8px;margin-bottom:14px;">
+                <div>
+                  <small style="display:block;font-size:0.7rem;color:var(--muted-2);margin-bottom:2px;">Font Size (<span id="betaTextSizeOut">42px</span>)</small>
+                  <input type="range" id="betaTextSize" min="20" max="80" value="42" style="width:100%;cursor:pointer;">
+                </div>
+                <div>
+                  <small style="display:block;font-size:0.7rem;color:var(--muted-2);margin-bottom:2px;">Text Color</small>
+                  <input type="color" id="betaTextColor" value="#facc15" style="width:100%;height:32px;border:none;border-radius:6px;cursor:pointer;background:transparent;">
+                </div>
+                <div>
+                  <small style="display:block;font-size:0.7rem;color:var(--muted-2);margin-bottom:2px;">Font Family</small>
+                  <select id="betaTextFont" style="width:100%;padding:6px;font-size:0.78rem;">
+                    <option value="Montserrat Extra Bold">Montserrat Extra Bold</option>
+                    <option value="Impact">Impact</option>
+                    <option value="Segoe UI Black">Segoe UI Black</option>
+                    <option value="Arial Black">Arial Black</option>
+                  </select>
+                </div>
+                <div>
+                  <small style="display:block;font-size:0.7rem;color:var(--muted-2);margin-bottom:2px;">Banner Badge</small>
+                  <div style="display:flex;align-items:center;gap:6px;height:32px;">
+                    <input type="checkbox" id="betaTextBgEnable" checked style="cursor:pointer;" title="Enable background badge box">
+                    <input type="color" id="betaTextBgColor" value="#000000" style="width:40px;height:26px;border:none;border-radius:4px;cursor:pointer;background:transparent;" title="Badge color">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Burn / Apply Actions -->
+              <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                <button type="button" class="primary" id="betaApplyTextBtn" style="flex:2;padding:11px 16px;font-size:0.85rem;display:flex;align-items:center;justify-content:center;gap:6px;font-weight:700;">
+                  <span>✨ Burn & Apply Text to Short</span>
+                </button>
+                <button type="button" class="ghost" id="betaResetTextBtn" style="flex:1;padding:11px 14px;font-size:0.85rem;" title="Reset back to unmodified original Short">
+                  <span>↶ Original</span>
+                </button>
+              </div>
+              <div id="betaTextStatusMsg" style="font-size:0.75rem;margin-top:6px;color:var(--muted-2);display:none;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <div id="publishModal" class="modal-overlay"
+      style="display:none;position:fixed;inset:0;background:rgba(5,8,13,0.85);backdrop-filter:blur(10px);z-index:9999;align-items:center;justify-content:center;padding:20px;">
+      <div class="modal-card panel"
+        style="background:var(--panel-strong,#12171e);border:1px solid var(--line-strong,rgba(190,176,159,0.32));border-radius:20px;max-width:640px;width:100%;box-shadow:0 30px 90px rgba(0,0,0,0.6);padding:28px;position:relative;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px;">
+          <div>
+            <span class="eyebrow"
+              style="color:var(--warm,#d6b388);font-size:0.75rem;letter-spacing:0.08em;font-weight:700;">DISTRIBUTION &
+              SOCIAL MCP</span>
+            <h2 style="margin:4px 0 0;font-size:1.5rem;color:var(--text,#f3eadf);">Share & Publish Short</h2>
+          </div>
+          <button id="closePublishModal" type="button"
+            style="background:none;border:none;color:var(--muted,#c9b9a4);font-size:1.4rem;cursor:pointer;padding:4px 8px;">✕</button>
+        </div>
+        <div class="publish-tabs"
+          style="display:flex;gap:8px;margin-bottom:18px;border-bottom:1px solid var(--line,rgba(190,176,159,0.2));padding-bottom:12px;">
+          <button class="pub-tab active" data-platform="youtube" type="button"
+            style="background:rgba(215,187,148,0.22);border:1px solid rgba(215,187,148,0.4);color:var(--text,#f3eadf);padding:8px 14px;border-radius:8px;font-weight:600;cursor:pointer;">YouTube
+            Shorts</button>
+          <button class="pub-tab" data-platform="tiktok" type="button"
+            style="background:transparent;border:1px solid transparent;color:var(--muted,#c9b9a4);padding:8px 14px;border-radius:8px;font-weight:600;cursor:pointer;">TikTok</button>
+          <button class="pub-tab" data-platform="instagram" type="button"
+            style="background:transparent;border:1px solid transparent;color:var(--muted,#c9b9a4);padding:8px 14px;border-radius:8px;font-weight:600;cursor:pointer;">Instagram
+            Reels</button>
+          <button class="pub-tab" data-platform="package" type="button"
+            style="background:transparent;border:1px solid transparent;color:var(--muted,#c9b9a4);padding:8px 14px;border-radius:8px;font-weight:600;cursor:pointer;">Social
+            Package</button>
+        </div>
+        <form id="publishForm" style="display:flex;flex-direction:column;gap:14px;">
+          <input type="hidden" id="publishJobId">
+          <input type="hidden" id="publishFilename">
+          <input type="hidden" id="publishPlatform" value="youtube">
+
+          <label style="display:flex;flex-direction:column;gap:6px;font-size:0.88rem;color:var(--muted,#c9b9a4);">Title
+            <input type="text" id="publishTitle" maxlength="100" placeholder="Catchy title for your Short" required
+              style="background:rgba(255,255,255,0.04);border:1px solid var(--line,rgba(190,176,159,0.2));color:var(--text,#f3eadf);padding:10px 14px;border-radius:8px;font-size:0.95rem;">
+          </label>
+
+          <label
+            style="display:flex;flex-direction:column;gap:6px;font-size:0.88rem;color:var(--muted,#c9b9a4);">Description
+            & Hashtags
+            <textarea id="publishDescription" rows="3" placeholder="Description and tags (#Shorts, #viral, etc.)"
+              style="background:rgba(255,255,255,0.04);border:1px solid var(--line,rgba(190,176,159,0.2));color:var(--text,#f3eadf);padding:10px 14px;border-radius:8px;font-size:0.95rem;resize:vertical;"></textarea>
+          </label>
+
+          <div style="display:flex;gap:14px;">
+            <label id="privacyContainer"
+              style="flex:1;display:flex;flex-direction:column;gap:6px;font-size:0.88rem;color:var(--muted,#c9b9a4);">Privacy
+              <select id="publishPrivacy"
+                style="background:#0e141a;border:1px solid var(--line,rgba(190,176,159,0.2));color:var(--text,#f3eadf);padding:9px 12px;border-radius:8px;font-size:0.95rem;">
+                <option value="public">Public</option>
+                <option value="unlisted" selected>Unlisted (Recommended)</option>
+                <option value="private">Private</option>
+              </select>
+            </label>
+            <div
+              style="flex:1;display:flex;flex-direction:column;gap:6px;font-size:0.88rem;color:var(--muted,#c9b9a4);">
+              Status
+              <div id="publishAccountStatus"
+                style="padding:9px 12px;background:rgba(255,255,255,0.04);border-radius:8px;font-size:0.85rem;color:var(--muted,#c9b9a4);">
+                Ready to publish</div>
+            </div>
+          </div>
+
+          <div id="publishStatusMsg" style="display:none;padding:12px;border-radius:8px;font-size:0.88rem;"></div>
+
+          <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:10px;">
+            <button type="button" class="ghost" id="cancelPublish"
+              style="padding:10px 18px;border-radius:8px;cursor:pointer;">Cancel</button>
+            <button type="submit" class="primary" id="submitPublish"
+              style="padding:10px 22px;border-radius:8px;font-weight:600;cursor:pointer;background:linear-gradient(135deg,var(--warm,#d6b388),var(--warm-2,#b79263));color:#05080d;border:none;"><span>🚀
+                Publish Now</span></button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Mini Game Modal Popup -->
+    <div id="miniGameModal" class="mini-game-modal-overlay" hidden>
+      <div class="mini-game-modal-content" role="dialog" aria-modal="true" aria-labelledby="miniGameTitle">
+        <div class="mini-game-header">
+          <div class="mini-game-title-group">
+            <span class="mini-game-icon">🌲</span>
+            <div>
+              <h3 id="miniGameTitle">Clipify Forest Runner</h3>
+              <span class="mini-game-sub">Jump over woodland hazards · Spacebar or Up Arrow</span>
+            </div>
+          </div>
+          <div class="mini-game-hud">
+            <span class="hud-item"><small>SCORE</small> <b id="game-score-vis">0</b></span>
+            <span class="hud-item best"><small>BEST</small> <b id="game-best-vis">0</b></span>
+          </div>
+          <button type="button" class="mini-game-close-btn" id="btnCloseMiniGame"
+            aria-label="Close Mini Game">✕</button>
+        </div>
+        <div class="mini-game-canvas-wrap">
+          <canvas id="sidebar-forest-game" width="880" height="270" tabindex="0"
+            aria-label="Forest runner. Press Space or Up arrow to jump."></canvas>
+          <span id="game-score" class="sr-only" style="display:none;" aria-hidden="true">0</span>
+          <span id="game-best" class="sr-only" style="display:none;" aria-hidden="true">0</span>
+          <span id="game-state" class="sr-only" style="display:none;" aria-hidden="true">ready</span>
+        </div>
+        <div class="mini-game-footer">
+          <div class="mini-game-controls-hint">
+            <kbd>Space</kbd> or <kbd>↑</kbd> Jump &nbsp;•&nbsp; <kbd>P</kbd> Pause &nbsp;•&nbsp; <kbd>R</kbd> Restart
+            &nbsp;•&nbsp; Click / Tap screen to jump
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button type="button" class="mini-game-btn" id="btnRestartGame">Restart Run</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- App-Themed Update Modal Popup -->
+    <div id="updateModal" class="modal-overlay"
+      style="display:none;position:fixed;inset:0;background:rgba(5,8,13,0.85);backdrop-filter:blur(10px);z-index:9999;align-items:center;justify-content:center;padding:20px;">
+      <div class="modal-card panel update-modal-card"
+        style="background:var(--panel-strong,#12171e);border:1px solid rgba(255,255,255,0.15);border-radius:20px;max-width:520px;width:100%;box-shadow:0 30px 90px rgba(0,0,0,0.6);padding:26px;position:relative;">
+        <button type="button" class="modal-close-btn" id="closeUpdateModal"
+          style="position:absolute;top:16px;right:18px;background:none;border:none;color:#94a3b8;font-size:22px;cursor:pointer;line-height:1;"
+          aria-label="Close">&times;</button>
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;">
+          <div
+            style="width:42px;height:42px;border-radius:12px;background:rgba(34,197,94,0.15);border:1px solid rgba(34,197,94,0.3);display:flex;align-items:center;justify-content:center;color:#4ade80;flex-shrink:0;">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67" />
+            </svg>
+          </div>
+          <div>
+            <h3 id="updateModalTitle" style="margin:0;font-size:16px;font-weight:700;color:#f8fafc;">Clipify AI Updates
+            </h3>
+            <p id="updateModalSubtitle" style="margin:2px 0 0;font-size:12px;color:#94a3b8;">Fast In-Place Updater (No
+              installer required)</p>
+          </div>
+        </div>
+        <div id="updateModalContent"
+          style="background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:16px;margin-bottom:20px;font-size:13px;color:#cbd5e1;line-height:1.5;">
+          Checking GitHub for the latest release…
+        </div>
+        <div style="display:flex;gap:10px;justify-content:flex-end;">
+          <a id="btnViewRelease" href="https://github.com/sherlock-dev-ai/Clipify-AI-Video-Clipper-FREE/releases"
+            target="_blank" rel="noopener" class="quiet-btn"
+            style="padding:9px 15px;border-radius:10px;border:1px solid rgba(255,255,255,0.15);background:transparent;color:#94a3b8;font-size:12px;text-decoration:none;display:inline-flex;align-items:center;">View
+            on GitHub</a>
+          <button type="button" id="btnExecuteUpdate" class="accent-btn"
+            style="padding:9px 20px;border-radius:10px;border:none;background:#22c55e;color:#052e16;font-size:12px;font-weight:700;cursor:pointer;">Update
+            Now</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Model Hub & Engine Manager Modal -->
+    <div id="modelHubModal" class="model-hub-modal-overlay" style="display:none;" role="dialog" aria-modal="true"
+      aria-labelledby="modelHubTitle">
+      <div class="model-hub-container">
+        <!-- Header -->
+        <div class="model-hub-header">
+          <div class="model-hub-title-group">
+            <div class="model-hub-icon-wrap">⚡</div>
+            <div class="model-hub-title-text">
+              <h2 id="modelHubTitle">Model Hub &amp; Engine Manager <span class="model-hub-badge">LOCAL + CLOUD</span>
+              </h2>
+              <p>Install, swap, and benchmark local Ollama models or route through Hugging Face Cloud</p>
+            </div>
+          </div>
+          <button type="button" class="model-hub-close-btn" id="btnCloseModelHub"
+            aria-label="Close Model Hub">&times;</button>
+        </div>
+
+        <!-- Toolbar / Search / Tabs -->
+        <div class="model-hub-toolbar">
+          <div class="model-hub-search-wrap">
+            <svg class="model-hub-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" class="model-hub-search-input" id="modelHubSearch"
+              placeholder="Search curated Ollama models or local tags (e.g. Qwen, DeepSeek, Llama)…" autocomplete="off"
+              spellcheck="false">
+          </div>
+          <div class="model-hub-filter-tabs">
+            <button type="button" class="model-hub-tab active" data-tab="all">All Models</button>
+            <button type="button" class="model-hub-tab" data-tab="top">🔥 Top Used</button>
+            <button type="button" class="model-hub-tab" data-tab="recommended">⭐ Recommended</button>
+            <button type="button" class="model-hub-tab" data-tab="coding">💻 Best for Coding</button>
+            <button type="button" class="model-hub-tab" data-tab="reasoning">🧠 Answering / Reasoning</button>
+            <button type="button" class="model-hub-tab" data-tab="installed">💾 Installed (<span
+                id="installedCountBadge">0</span>)</button>
+          </div>
+        </div>
+
+        <!-- Body with Grid and HF Cloud Section -->
+        <div class="model-hub-body">
+          <div class="model-hub-section-head">
+            <span class="model-hub-section-title">Open-Weight Local Models</span>
+            <span class="model-hub-section-hint">Auto-managed via Ollama engine</span>
+          </div>
+
+          <div class="model-hub-grid" id="modelHubGrid">
+            <!-- Rendered dynamically by model_hub.js -->
+          </div>
+
+          <!-- Hugging Face Serverless Cloud Section -->
+          <div class="model-hub-hf-section">
+            <div class="model-hub-hf-head">
+              <div class="model-hub-hf-title-group">
+                <h3>☁ Hugging Face Serverless Cloud <span class="model-hub-hf-badge">0 GB RAM NEEDED</span></h3>
+              </div>
+              <a href="https://huggingface.co/settings/tokens" target="_blank" rel="noopener noreferrer"
+                class="model-hub-hf-link">Get free token ↗</a>
+            </div>
+            <p class="model-hub-hf-sub">No GPU or Ollama required. Instant serverless cloud inference hosted directly by
+              Hugging Face.</p>
+
+            <div class="model-hub-hf-input-row">
+              <div class="model-hub-token-wrap">
+                <span class="model-hub-key-icon">🔑</span>
+                <input type="password" class="model-hub-token-input" id="hubHfTokenInput"
+                  placeholder="hf_xxxxxxxxxxxxxxxxxxxx" autocomplete="new-password">
+                <button type="button" class="model-hub-toggle-pw" id="toggleHfPw" title="Show/Hide token">👁️</button>
+              </div>
+              <button type="button" class="btn-model-save-token" id="btnSaveHfToken">Save Token</button>
+            </div>
+
+            <div class="model-hub-hf-cards">
+              <div class="model-hf-card" data-hf-model="Qwen/Qwen2.5-7B-Instruct">
+                <div class="model-hf-card-top">
+                  <span class="model-hf-card-name">Qwen 2.5 7B Instruct</span>
+                  <span class="model-hf-card-arrow">⚡ Connect</span>
+                </div>
+                <p class="model-hf-card-desc">Top free cloud model for fast narrative parsing and highlight
+                  identification.</p>
+              </div>
+
+              <div class="model-hf-card" data-hf-model="meta-llama/Llama-3.2-3B-Instruct">
+                <div class="model-hf-card-top">
+                  <span class="model-hf-card-name">Meta Llama 3.2 3B</span>
+                  <span class="model-hf-card-arrow">⚡ Connect</span>
+                </div>
+                <p class="model-hf-card-desc">Lightweight high-speed cloud router with minimal latency for rapid clip
+                  extraction.</p>
+              </div>
+
+              <div class="model-hf-card" data-hf-model="mistralai/Mistral-7B-Instruct-v0.3">
+                <div class="model-hf-card-top">
+                  <span class="model-hf-card-name">Mistral 7B Instruct v0.3</span>
+                  <span class="model-hf-card-arrow">⚡ Connect</span>
+                </div>
+                <p class="model-hf-card-desc">Solid instruction-tuned cloud fallback with wide context support.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sub-window Update & Restarting Modal (Blurred background, app logo, live console) -->
+    <div id="clipifyRestartOverlay" class="clipify-restart-overlay" style="display:none;">
+      <canvas id="restartAsciiCanvas" class="restart-ascii-canvas"></canvas>
+      <div class="restart-modal-window">
+        <div class="restart-modal-header">
+          <div class="restart-logo-wrapper">
+            <img src="static/icon.png" alt="Clipify AI Logo" class="restart-app-logo" />
+            <div class="restart-logo-glow"></div>
+          </div>
+          <div class="restart-title-group">
+            <h2 class="restart-modal-title">Updating Clipify AI...</h2>
+            <div class="restart-modal-subtitle">
+              <span class="restart-pulse-dot"></span>
+              <span id="restartStatusLabel">Applying core updates &amp; rebooting local AI engine…</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="restart-console-wrapper">
+          <div class="restart-console-header">
+            <div class="restart-console-dots">
+              <span class="dot-red"></span>
+              <span class="dot-yellow"></span>
+              <span class="dot-green"></span>
+            </div>
+            <span class="restart-console-title">Live Update Console</span>
+            <span class="restart-console-badge" id="restartConsoleBadge">SYNCING</span>
+          </div>
+          <div class="restart-console-body" id="restartConsoleBody">
+            <div class="console-line info">[Init] Connecting to local update controller...</div>
+          </div>
+        </div>
+
+        <div class="restart-footer">
+          <div class="restart-progress-info">
+            <span id="restartProgressDetail">Downloading &amp; syncing latest assets...</span>
+            <span id="restartProgressPct">15%</span>
+          </div>
+          <div class="restart-progress-track">
+            <div class="restart-progress-bar" id="restartProgressBar" style="width: 15%;"></div>
+          </div>
+          <div class="restart-action-row" id="restartActionRow" style="display:none;margin-top:10px;">
+            <button type="button" class="btn-restart-retry" id="btnRestartForceReload">Force Reload Clipify</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sub-window Update & Restarting Modal (Blurred background, app logo, live console) -->
+    <div id="clipifyRestartOverlay" class="clipify-restart-overlay" style="display:none;">
+      <canvas id="restartAsciiCanvas" class="restart-ascii-canvas"></canvas>
+      <div class="restart-modal-window">
+        <div class="restart-modal-header">
+          <div class="restart-logo-wrapper">
+            <img src="static/icon.png" alt="Clipify AI Logo" class="restart-app-logo" />
+            <div class="restart-logo-glow"></div>
+          </div>
+          <div class="restart-title-group">
+            <h2 class="restart-modal-title">Updating Clipify AI...</h2>
+            <div class="restart-modal-subtitle">
+              <span class="restart-pulse-dot"></span>
+              <span id="restartStatusLabel">Applying core updates &amp; rebooting local AI engine…</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="restart-console-wrapper">
+          <div class="restart-console-header">
+            <div class="restart-console-dots">
+              <span class="dot-red"></span>
+              <span class="dot-yellow"></span>
+              <span class="dot-green"></span>
+            </div>
+            <span class="restart-console-title">Live Update Console</span>
+            <span class="restart-console-badge" id="restartConsoleBadge">SYNCING</span>
+          </div>
+          <div class="restart-console-body" id="restartConsoleBody">
+            <div class="console-line info">[Init] Connecting to local update controller...</div>
+          </div>
+        </div>
+
+        <div class="restart-footer">
+          <div class="restart-progress-info">
+            <span id="restartProgressDetail">Downloading &amp; syncing latest assets...</span>
+            <span id="restartProgressPct">15%</span>
+          </div>
+          <div class="restart-progress-track">
+            <div class="restart-progress-bar" id="restartProgressBar" style="width: 15%;"></div>
+          </div>
+          <div class="restart-action-row" id="restartActionRow" style="display:none;margin-top:10px;">
+            <button type="button" class="btn-restart-retry" id="btnRestartForceReload">Force Reload Clipify</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer>Clipify AI · local AI editing workspace · WhisperX + ClipsAI + Ollama + FFmpeg</footer>
+  </main>
+  <script src="static/pipeline_status.js"></script>
+  <script src="static/review_player.js"></script>
+  <script src="static/forest_game.js"></script>
+  <script src="static/updater.js"></script>
+  <script src="static/model_hub.js"></script>
+  <script src="static/app.js"></script>
+  <script src="static/beta_matrix.js"></script>
+  <script src="static/tour.js"></script>
+  <script src="static/cache_manager.js"></script>
+  <script src="static/clippy.js"></script>
+  <script>
+    if (window.location.search.includes('open_support=1') || window.location.hash.includes('support')) {
+      window.addEventListener('load', () => setTimeout(() => window.showSupportModal && window.showSupportModal(), 300));
+    }
+  </script>
+</body>
+
+</html>

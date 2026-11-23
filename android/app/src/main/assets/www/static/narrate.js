@@ -13,7 +13,54 @@ $('#scriptInput').addEventListener('input',()=>{state.scriptGenerated=false;show
 function renderVoices(){const query=$('#voiceSearch').value.toLowerCase();const active=document.querySelector('.voice-filter.active')?.dataset.filter||'All';const list=state.voices.filter(v=>(active==='All'||v.category===active||v.gender===active)&&(!query||`${v.name} ${v.category} ${v.language} ${v.engine}`.toLowerCase().includes(query)));$('#voiceGrid').innerHTML=list.length?list.map(v=>`<button class="voice-card ${state.voice?.id===v.id?'selected':''}" data-voice="${escapeHtml(v.id)}"><strong>${escapeHtml(v.name)}</strong><small>${escapeHtml(v.language)} · ${escapeHtml(v.gender)} · ${escapeHtml(v.engine)}</small><span class="voice-card-actions"><em>Select</em><i class="voice-preview">▶ Preview</i></span></button>`).join(''):'<div class="loading">No installed voices match this filter.</div>';document.querySelectorAll('.voice-card').forEach(card=>{card.onclick=async event=>{state.voice=state.voices.find(v=>v.id===card.dataset.voice);$('#selectedVoice').textContent=state.voice.name;const prevBtn=event.target.closest('.voice-preview');if(prevBtn){event.stopPropagation();prevBtn.textContent='⏳ Loading…';prevBtn.style.pointerEvents='none';try{const r=await fetch('/api/narrate/preview-voice',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({voice:state.voice.id})});const d=await r.json();if(!r.ok)throw Error(d.error);const audio=new Audio(d.url);await audio.play();}catch(error){alert(error.message)}finally{prevBtn.textContent='▶ Preview';prevBtn.style.pointerEvents='auto';}}renderVoices();updateReady();};});}
 function renderFilters(){const categories=['All',...new Set(state.voices.map(v=>v.category))];$('#voiceFilters').innerHTML=categories.map((v,i)=>`<button class="voice-filter ${i?'':'active'}" data-filter="${escapeHtml(v)}">${escapeHtml(v)}</button>`).join('');document.querySelectorAll('.voice-filter').forEach(b=>b.onclick=()=>{document.querySelectorAll('.voice-filter').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderVoices();});}
 $('#voiceSearch').oninput=renderVoices;
-function renderClips(){const q=$('#clipSearch').value.toLowerCase();const list=state.clips.filter(v=>!q||v.name.toLowerCase().includes(q));$('#clipGrid').innerHTML=list.length?list.map(v=>`<button class="clip-card ${state.clip?.id===v.id?'selected':''}" data-clip="${escapeHtml(v.id)}"><video muted playsinline preload="metadata" src="/api/narrate/media/${encodeURIComponent(v.id)}"></video><span class="clip-copy"><strong>${escapeHtml(v.name)}</strong><small>${v.duration_label} · ${v.width}×${v.height} · ${v.generated?'Clipify export':'Library'}</small></span></button>`).join(''):'<div class="loading">No Narrate clips found.</div>';document.querySelectorAll('.clip-card').forEach(card=>card.onclick=()=>{state.clip=state.clips.find(v=>v.id===card.dataset.clip);renderClips();updateReady();});}
+function renderClips(){
+  const q=$('#clipSearch').value.toLowerCase();
+  const list=state.clips.filter(v=>!q||v.name.toLowerCase().includes(q));
+  $('#clipGrid').innerHTML=list.length?list.map(v=>`
+    <button class="clip-card ${state.clip?.id===v.id?'selected':''}" data-clip="${escapeHtml(v.id)}" title="${escapeHtml(v.name)}">
+      <div class="clip-media-wrapper">
+        <img class="clip-thumb" loading="lazy" src="/api/narrate/thumbnail/${encodeURIComponent(v.id)}" alt="${escapeHtml(v.name)}" onerror="this.onerror=null; this.style.display='none';">
+        <video class="clip-hover-video" muted playsinline loop preload="none" data-src="/api/narrate/media/${encodeURIComponent(v.id)}" style="display:none;"></video>
+      </div>
+      <span class="clip-copy">
+        <strong>${escapeHtml(v.name)}</strong>
+        <small>${v.duration_label} · ${v.width}×${v.height} · ${v.generated?'Clipify export':'Library'}</small>
+      </span>
+    </button>
+  `).join(''):'<div class="loading">No Narrate clips found.</div>';
+
+  document.querySelectorAll('.clip-card').forEach(card=>{
+    card.onclick=()=>{
+      state.clip=state.clips.find(v=>v.id===card.dataset.clip);
+      renderClips();
+      updateReady();
+    };
+    let hoverTimer = null;
+    card.onmouseenter=()=>{
+      hoverTimer = setTimeout(()=>{
+        const vid = card.querySelector('.clip-hover-video');
+        const img = card.querySelector('.clip-thumb');
+        if(vid && vid.dataset.src){
+          if(!vid.src) vid.src = vid.dataset.src;
+          vid.style.display = 'block';
+          if(img) img.style.opacity = '0';
+          vid.play().catch(()=>{});
+        }
+      }, 200);
+    };
+    card.onmouseleave=()=>{
+      if(hoverTimer) clearTimeout(hoverTimer);
+      const vid = card.querySelector('.clip-hover-video');
+      const img = card.querySelector('.clip-thumb');
+      if(vid){
+        vid.pause();
+        vid.currentTime = 0;
+        vid.style.display = 'none';
+      }
+      if(img) img.style.opacity = '1';
+    };
+  });
+}
 $('#clipSearch').oninput=renderClips;
 $('#customVideo').onchange=async e=>{const file=e.target.files[0];if(!file)return;const form=new FormData();form.append('video',file);try{const r=await fetch('/api/narrate/upload',{method:'POST',body:form});const d=await r.json();if(!r.ok)throw Error(d.error);const clips=await fetch('/api/narrate/videos');state.clips=(await clips.json()).videos||[];state.clip=state.clips.find(v=>v.id===d.video_id)||state.clips.find(v=>v.filename===d.video)||state.clips[0];renderClips();updateReady();}catch(err){alert(err.message)}};
 function updateReady(){$('#generateNarrate').disabled=!($('#scriptInput').value.trim()&&state.voice&&state.clip);}

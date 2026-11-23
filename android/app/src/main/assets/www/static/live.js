@@ -254,6 +254,10 @@
             liveSourceUrl.placeholder = 'https://www.twitch.tv/channel or channel name';
             const hint = document.getElementById('sourceHelpText');
             if (hint) hint.textContent = 'Twitch live broadcast link (e.g. twitch.tv/channel) or channel username.';
+          } else if (currentSourceType === 'kick') {
+            liveSourceUrl.placeholder = 'https://kick.com/channel or channel username';
+            const hint = document.getElementById('sourceHelpText');
+            if (hint) hint.textContent = 'Kick live broadcast link (e.g. kick.com/channel) or channel username.';
           }
         }
       });
@@ -894,10 +898,11 @@
       if (liveConnectedControls) liveConnectedControls.style.display = 'flex';
       setMonitorState('live');
 
-      // Check YouTube or Twitch live stream URL for embedded playback
+      // Check YouTube or Twitch or Kick live stream URL for embedded playback
       const streamUrl = statusData.source_url || (liveSourceUrl ? liveSourceUrl.value.trim() : '');
       const ytId = extractYoutubeId(streamUrl);
       const twitchCh = (statusData.source_type === 'twitch' || currentSourceType === 'twitch') ? extractTwitchChannel(streamUrl) : null;
+      const kickCh = (statusData.source_type === 'kick' || currentSourceType === 'kick') ? extractKickChannel(streamUrl) : null;
 
       if (ytId && monitorLiveEmbed) {
         const expectedSrc = `https://www.youtube-nocookie.com/embed/${ytId}?autoplay=1&mute=0&controls=1&modestbranding=1&rel=0`;
@@ -915,6 +920,19 @@
       } else if (twitchCh && monitorLiveEmbed) {
         const expectedSrc = `https://player.twitch.tv/?channel=${twitchCh}&parent=localhost&parent=127.0.0.1&muted=false`;
         if (!monitorLiveEmbed.src || !monitorLiveEmbed.src.includes(`channel=${twitchCh}`)) {
+          monitorLiveEmbed.src = expectedSrc;
+        }
+        if (monitorViewToggles) monitorViewToggles.style.display = 'inline-flex';
+        if (!showingSnapshotMode) {
+          monitorLiveEmbed.style.display = 'block';
+          if (monitorVideoFrame) monitorVideoFrame.style.display = 'none';
+        } else {
+          monitorLiveEmbed.style.display = 'none';
+          if (monitorVideoFrame) monitorVideoFrame.style.display = 'block';
+        }
+      } else if (kickCh && monitorLiveEmbed) {
+        const expectedSrc = `https://player.kick.com/${kickCh}?autoplay=true&muted=false`;
+        if (!monitorLiveEmbed.src || !monitorLiveEmbed.src.includes(`player.kick.com/${kickCh}`)) {
           monitorLiveEmbed.src = expectedSrc;
         }
         if (monitorViewToggles) monitorViewToggles.style.display = 'inline-flex';
@@ -1033,6 +1051,12 @@
   function extractTwitchChannel(url) {
     if (!url) return null;
     const clean = url.trim().replace(/^https?:\/\//i, '').replace(/^(www\.)?twitch\.tv\//i, '').replace(/^\/+/, '').split(/[\/?#]/)[0];
+    return clean ? clean.replace(/^@/, '') : null;
+  }
+
+  function extractKickChannel(url) {
+    if (!url) return null;
+    const clean = url.trim().replace(/^https?:\/\//i, '').replace(/^(www\.)?kick\.com\//i, '').replace(/^\/+/, '').split(/[\/?#]/)[0];
     return clean ? clean.replace(/^@/, '') : null;
   }
 

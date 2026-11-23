@@ -1,5 +1,5 @@
-const state={jobId:null,mode:'viral',source:null,logoFile:null,logoPath:null,logoServerPath:null,es:null,model:null,modelsAvailable:false,font:'Montserrat Extra Bold',outputs:[],currentOutputIndex:0,drag:null,reviewFile:null,editorLogoFile:null,editorLogoPath:null,youtubePoll:null,sourcePreviewUrl:null};
-const $=s=>document.querySelector(s); const $$=s=>[...document.querySelectorAll(s)];
+const state = { jobId: null, mode: 'viral', source: null, logoFile: null, logoPath: null, logoServerPath: null, es: null, model: null, modelsAvailable: false, font: 'Montserrat Extra Bold', outputs: [], currentOutputIndex: 0, drag: null, reviewFile: null, editorLogoFile: null, editorLogoPath: null, youtubePoll: null, sourcePreviewUrl: null };
+const $ = s => document.querySelector(s); const $$ = s => [...document.querySelectorAll(s)];
 
 async function safeJson(response, fallbackMsg = 'Server response error') {
   const text = await response.text();
@@ -10,51 +10,51 @@ async function safeJson(response, fallbackMsg = 'Server response error') {
     try {
       const doc = new DOMParser().parseFromString(text, 'text/html');
       msg = doc.querySelector('title, h1, p')?.textContent?.trim() || fallbackMsg;
-    } catch (_) {}
+    } catch (_) { }
     throw new Error(msg);
   }
 }
-const editorDownloads=()=>['#reviewDownload','#reviewDownloadMain'].map($).filter(Boolean);
-const editorApplyButtons=()=>['#applyEditorBranding','#applyEditorBrandingMain'].map($).filter(Boolean);
-const reviewPlayer=window.ClipifyReviewPlayer?.attach($('#reviewVideo'),$('#reviewVideoStatus'),$('#reviewVideoSpinner'),$('#reviewVideoStatusText'));
-const input=$('#videoInput'),drop=$('#dropzone'),create=$('#createBtn'),chip=$('#fileChip'),nameEl=$('#fileName'),sizeEl=$('#fileSize'),progressPanel=$('#progressPanel'),results=$('#results'),grid=$('#resultGrid'),log=$('#log'),modelSelect=$('#modelSelect'),refreshModelsBtn=$('#refreshModelsBtn'),scanModelsBtn=$('#scanModelsBtn'),fontSelect=$('#fontSelect'),minDuration=$('#minDuration'),maxDuration=$('#maxDuration'),youtubeUrl=$('#youtubeUrl'),youtubeImport=$('#youtubeImport'),youtubeStatus=$('#youtubeStatus');
-const positions=['top-left','top-center','top-right','center-left','center','center-right','bottom-left','bottom-center','bottom-right','custom'];
+const editorDownloads = () => ['#reviewDownload', '#reviewDownloadMain'].map($).filter(Boolean);
+const editorApplyButtons = () => ['#applyEditorBranding', '#applyEditorBrandingMain'].map($).filter(Boolean);
+const reviewPlayer = window.ClipifyReviewPlayer?.attach($('#reviewVideo'), $('#reviewVideoStatus'), $('#reviewVideoSpinner'), $('#reviewVideoStatusText'));
+const input = $('#videoInput'), drop = $('#dropzone'), create = $('#createBtn'), chip = $('#fileChip'), nameEl = $('#fileName'), sizeEl = $('#fileSize'), progressPanel = $('#progressPanel'), results = $('#results'), grid = $('#resultGrid'), log = $('#log'), modelSelect = $('#modelSelect'), refreshModelsBtn = $('#refreshModelsBtn'), scanModelsBtn = $('#scanModelsBtn'), fontSelect = $('#fontSelect'), minDuration = $('#minDuration'), maxDuration = $('#maxDuration'), youtubeUrl = $('#youtubeUrl'), youtubeImport = $('#youtubeImport'), youtubeStatus = $('#youtubeStatus');
+const positions = ['top-left', 'top-center', 'top-right', 'center-left', 'center', 'center-right', 'bottom-left', 'bottom-center', 'bottom-right', 'custom'];
 
-function startTypewriter(){
-  const lead=$('#typewriterLead');
-  const focus=$('#typewriterFocus');
-  if(!lead||!focus)return;
-  const leadText='From long-form video to a ';
-  const focusText='Short worth watching.';
-  let index=0;
-  let phase='typingLead';
-  const tick=()=>{
-    if(phase==='typingLead'){
-      lead.textContent=leadText.slice(0,++index);
-      if(index>=leadText.length){index=0;phase='typingFocus';}
-      return setTimeout(tick,62);
+function startTypewriter() {
+  const lead = $('#typewriterLead');
+  const focus = $('#typewriterFocus');
+  if (!lead || !focus) return;
+  const leadText = 'From long-form video to a ';
+  const focusText = 'Short worth watching.';
+  let index = 0;
+  let phase = 'typingLead';
+  const tick = () => {
+    if (phase === 'typingLead') {
+      lead.textContent = leadText.slice(0, ++index);
+      if (index >= leadText.length) { index = 0; phase = 'typingFocus'; }
+      return setTimeout(tick, 62);
     }
-    if(phase==='typingFocus'){
-      focus.textContent=focusText.slice(0,++index);
-      if(index>=focusText.length){phase='pause';return setTimeout(tick,2100);}
-      return setTimeout(tick,72);
+    if (phase === 'typingFocus') {
+      focus.textContent = focusText.slice(0, ++index);
+      if (index >= focusText.length) { phase = 'pause'; return setTimeout(tick, 2100); }
+      return setTimeout(tick, 72);
     }
-    if(phase==='pause'){phase='erasingFocus';index=focusText.length;return tick();}
-    if(phase==='erasingFocus'){
-      focus.textContent=focusText.slice(0,--index);
-      if(index<=0){phase='erasingLead';index=leadText.length;}
-      return setTimeout(tick,42);
+    if (phase === 'pause') { phase = 'erasingFocus'; index = focusText.length; return tick(); }
+    if (phase === 'erasingFocus') {
+      focus.textContent = focusText.slice(0, --index);
+      if (index <= 0) { phase = 'erasingLead'; index = leadText.length; }
+      return setTimeout(tick, 42);
     }
-    lead.textContent=leadText.slice(0,--index);
-    if(index<=0){phase='typingLead';index=0;return setTimeout(tick,500);}
-    return setTimeout(tick,42);
+    lead.textContent = leadText.slice(0, --index);
+    if (index <= 0) { phase = 'typingLead'; index = 0; return setTimeout(tick, 500); }
+    return setTimeout(tick, 42);
   };
-  setTimeout(tick,350);
+  setTimeout(tick, 350);
 }
 
 startTypewriter();
 
-modelSelect.addEventListener('change',()=>{state.model=modelSelect.value});
+modelSelect?.addEventListener('change', () => { state.model = modelSelect.value });
 
 refreshModelsBtn?.addEventListener('click', async () => {
   try {
@@ -62,7 +62,14 @@ refreshModelsBtn?.addEventListener('click', async () => {
       refreshModelsBtn.disabled = true;
       refreshModelsBtn.textContent = '…';
     }
+    // Deep PC scan & auto-recover unmounted or offline Ollama models
+    try {
+      await fetch('/api/models/scan', { method: 'POST', cache: 'no-store' });
+    } catch (_) {}
     await loadOptions();
+    if (window.refreshModelHub) {
+      await window.refreshModelHub();
+    }
   } finally {
     if (refreshModelsBtn) {
       refreshModelsBtn.disabled = false;
@@ -95,7 +102,7 @@ scanModelsBtn?.addEventListener('click', async () => {
   }
 });
 
-async function refreshModelOptions(){
+async function refreshModelOptions() {
   if (refreshModelsBtn) {
     refreshModelsBtn.disabled = true;
     refreshModelsBtn.textContent = '…';
@@ -111,215 +118,219 @@ async function refreshModelOptions(){
   }
 }
 
-function formatBytes(n){
-  if(!n)return '';
-  const u=['B','KB','MB','GB'];
-  let i=0;
-  while(n>=1024&&i<3){n/=1024;i++}
-  return `${n.toFixed(i?1:0)} ${u[i]}`
+function formatBytes(n) {
+  if (!n) return '';
+  const u = ['B', 'KB', 'MB', 'GB'];
+  let i = 0;
+  while (n >= 1024 && i < 3) { n /= 1024; i++ }
+  return `${n.toFixed(i ? 1 : 0)} ${u[i]}`
 }
 
-function setFile(file){
-  state.jobId=null;
-  state.source=file;
-  nameEl.textContent=file.name;
-  sizeEl.textContent=formatBytes(file.size);
-  chip.hidden=false;
-  create.disabled=false;
-  if(youtubeStatus)youtubeStatus.textContent='';
-  const url=URL.createObjectURL(file);
-  const preview=$('#sourcePreview');
+function setFile(file) {
+  state.jobId = null;
+  state.source = file;
+  nameEl.textContent = file.name;
+  sizeEl.textContent = formatBytes(file.size);
+  chip.hidden = false;
+  create.disabled = false;
+  if (youtubeStatus) youtubeStatus.textContent = '';
+  const url = URL.createObjectURL(file);
+  const preview = $('#sourcePreview');
   // Assigning src is not enough: the element was hidden while the file was
   // being read, and Chromium leaves a blob-backed <video> parked in
   // NETWORK_LOADING (readyState 0) so the preview box stays empty. load()
   // restarts the fetch and lets the poster render.
-  if(state.sourcePreviewUrl)URL.revokeObjectURL(state.sourcePreviewUrl);
-  state.sourcePreviewUrl=url;
-  preview.src=url;
+  if (state.sourcePreviewUrl) URL.revokeObjectURL(state.sourcePreviewUrl);
+  state.sourcePreviewUrl = url;
+  preview.src = url;
   preview.load();
-  preview.hidden=false;
-  $('.preview-placeholder').style.display='none';
-  $('#previewMeta').textContent=`${file.name} · ${formatBytes(file.size)}`
+  preview.hidden = false;
+  $('.preview-placeholder').style.display = 'none';
+  $('#previewMeta').textContent = `${file.name} · ${formatBytes(file.size)}`
 }
 
-input.addEventListener('change',e=>e.target.files[0]&&setFile(e.target.files[0]));
+input?.addEventListener('change', e => e.target.files[0] && setFile(e.target.files[0]));
 
-['dragenter','dragover'].forEach(x=>drop.addEventListener(x,e=>{
+['dragenter', 'dragover'].forEach(x => drop?.addEventListener(x, e => {
   e.preventDefault();
   drop.classList.add('drag')
 }));
 
-['dragleave','drop'].forEach(x=>drop.addEventListener(x,e=>{
+['dragleave', 'drop'].forEach(x => drop?.addEventListener(x, e => {
   e.preventDefault();
   drop.classList.remove('drag')
 }));
 
-drop.addEventListener('drop',e=>{
-  const f=e.dataTransfer.files[0];
-  if(f&&f.type.startsWith('video/'))setFile(f)
+drop?.addEventListener('drop', e => {
+  const f = e.dataTransfer.files[0];
+  if (f && (f.type.startsWith('video/') || /\.(mp4|mov|mkv|webm|avi|m4v|ts|flv)$/i.test(f.name))) {
+    setFile(f);
+  }
 });
 
-async function importYouTube(){
-  const url=youtubeUrl.value.trim();
+async function importYouTube() {
+  sanitizeYouTubeInput(youtubeUrl);
+  const url = youtubeUrl.value.trim();
 
-  if(!url){
-    youtubeStatus.textContent='Paste a YouTube link first.';
+  if (!url || (url.includes('@') && !url.includes('youtube.com') && !url.includes('youtu.be'))) {
+    youtubeUrl.value = '';
+    youtubeStatus.textContent = 'Paste a valid YouTube video link first.';
     return;
   }
 
-  youtubeImport.disabled=true;
-  youtubeImport.textContent='Connecting…';
-  youtubeStatus.textContent='Connecting to YouTube…';
+  youtubeImport.disabled = true;
+  youtubeImport.textContent = 'Connecting…';
+  youtubeStatus.textContent = 'Connecting to YouTube…';
 
-  const track=$('#youtubeProgress');
-  const bar=$('#youtubeProgressBar');
+  const track = $('#youtubeProgress');
+  const bar = $('#youtubeProgressBar');
 
-  if(track)track.hidden=false;
-  if(bar)bar.style.width='0%';
+  if (track) track.hidden = false;
+  if (bar) bar.style.width = '0%';
 
-  try{
-    const r=await fetch('/api/import-youtube',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({url})
+  try {
+    const r = await fetch('/api/import-youtube', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url })
     });
 
-    const d=await safeJson(r, 'Could not start YouTube import.');
+    const d = await safeJson(r, 'Could not start YouTube import.');
 
-    if(!r.ok)throw Error(d.error||'Could not start YouTube import.');
+    if (!r.ok) throw Error(d.error || 'Could not start YouTube import.');
 
-    state.jobId=d.job_id||state.jobId;
-    state.source=null;
-    chip.hidden=true;
-    create.disabled=true;
+    state.jobId = d.job_id || state.jobId;
+    state.source = null;
+    chip.hidden = true;
+    create.disabled = true;
 
-    youtubeImport.textContent='Downloading…';
+    youtubeImport.textContent = 'Downloading…';
 
     await waitForYouTubeDownload(d.job_id);
 
-  }catch(error){
+  } catch (error) {
 
-    if(state.youtubePoll)clearInterval(state.youtubePoll);
-    state.youtubePoll=null;
+    if (state.youtubePoll) clearInterval(state.youtubePoll);
+    state.youtubePoll = null;
 
-    youtubeStatus.textContent=error.message;
-    youtubeImport.disabled=false;
-    youtubeImport.textContent='Import video';
+    youtubeStatus.textContent = error.message;
+    youtubeImport.disabled = false;
+    youtubeImport.textContent = 'Import video';
 
-    if(track)track.hidden=true;
+    if (track) track.hidden = true;
   }
 }
 
-async function waitForYouTubeDownload(jobId){
+async function waitForYouTubeDownload(jobId) {
 
-  const track=$('#youtubeProgress');
-  const bar=$('#youtubeProgressBar');
+  const track = $('#youtubeProgress');
+  const bar = $('#youtubeProgressBar');
 
-  let finished=false;
+  let finished = false;
 
-  const tick=async()=>{
+  const tick = async () => {
 
-    try{
+    try {
 
-      const r=await fetch(`/api/status/${jobId}`,{cache:'no-store'});
-      const d=await safeJson(r, 'Could not read YouTube download status.');
+      const r = await fetch(`/api/status/${jobId}`, { cache: 'no-store' });
+      const d = await safeJson(r, 'Could not read YouTube download status.');
 
-      if(!r.ok)throw Error(d.error||'Could not read YouTube download status.');
+      if (!r.ok) throw Error(d.error || 'Could not read YouTube download status.');
 
-      const pct=Math.max(
+      const pct = Math.max(
         0,
-        Math.min(100,Number(d.progress)||0)
+        Math.min(100, Number(d.progress) || 0)
       );
 
-      if(bar)bar.style.width=pct+'%';
+      if (bar) bar.style.width = pct + '%';
 
-      youtubeStatus.textContent=
-        `${pct}% · ${d.detail||d.stage||'Downloading video…'}`;
+      youtubeStatus.textContent =
+        `${pct}% · ${d.detail || d.stage || 'Downloading video…'}`;
 
-      if(d.status==='uploaded'){
+      if (d.status === 'uploaded') {
 
-        finished=true;
+        finished = true;
 
-        if(state.youtubePoll)clearInterval(state.youtubePoll);
-        state.youtubePoll=null;
+        if (state.youtubePoll) clearInterval(state.youtubePoll);
+        state.youtubePoll = null;
 
-        state.jobId=jobId;
-        state.source={
-          name:d.filename,
-          size:0,
-          origin:'youtube',
-          jobId:jobId
+        state.jobId = jobId;
+        state.source = {
+          name: d.filename,
+          size: 0,
+          origin: 'youtube',
+          jobId: jobId
         };
 
-        nameEl.textContent=d.filename;
-        sizeEl.textContent='Downloaded locally';
-        chip.hidden=false;
+        nameEl.textContent = d.filename;
+        sizeEl.textContent = 'Downloaded locally';
+        chip.hidden = false;
 
         // Immediately show the downloaded YouTube video in the main preview frame
-        const mediaUrl=`/project-media/${encodeURIComponent(jobId)}/input/${encodeURIComponent(d.filename)}`;
-        const preview=$('#sourcePreview');
-        if(preview){
-          preview.src=mediaUrl;
+        const mediaUrl = `/project-media/${encodeURIComponent(jobId)}/input/${encodeURIComponent(d.filename)}`;
+        const preview = $('#sourcePreview');
+        if (preview) {
+          preview.src = mediaUrl;
           preview.load();
-          preview.hidden=false;
+          preview.hidden = false;
         }
-        const placeholder=$('.preview-placeholder');
-        if(placeholder)placeholder.style.display='none';
-        const meta=$('#previewMeta');
-        if(meta)meta.textContent=`${d.filename} · Downloaded from YouTube`;
+        const placeholder = $('.preview-placeholder');
+        if (placeholder) placeholder.style.display = 'none';
+        const meta = $('#previewMeta');
+        if (meta) meta.textContent = `${d.filename} · Downloaded from YouTube`;
 
-        youtubeStatus.textContent=
+        youtubeStatus.textContent =
           '100% · Download complete. Video ready.';
 
-        youtubeImport.disabled=false;
-        youtubeImport.textContent='Import video';
+        youtubeImport.disabled = false;
+        youtubeImport.textContent = 'Import video';
 
-        if(!state.modelsAvailable){
-          try{await loadOptions();}catch{}
+        if (!state.modelsAvailable) {
+          try { await loadOptions(); } catch { }
         }
 
-        create.disabled=false;
+        create.disabled = false;
 
-        if(track)track.hidden=true;
+        if (track) track.hidden = true;
 
-      }else if(d.status==='error'){
+      } else if (d.status === 'error') {
 
-        finished=true;
+        finished = true;
 
-        if(state.youtubePoll)clearInterval(state.youtubePoll);
-        state.youtubePoll=null;
+        if (state.youtubePoll) clearInterval(state.youtubePoll);
+        state.youtubePoll = null;
 
         throw Error(
-          d.error||
-          d.detail||
+          d.error ||
+          d.detail ||
           'YouTube download failed.'
         );
       }
 
-    }catch(error){
+    } catch (error) {
 
-      if(state.youtubePoll)clearInterval(state.youtubePoll);
-      state.youtubePoll=null;
+      if (state.youtubePoll) clearInterval(state.youtubePoll);
+      state.youtubePoll = null;
 
-      youtubeImport.disabled=false;
-      youtubeImport.textContent='Import video';
-      youtubeStatus.textContent=error.message;
+      youtubeImport.disabled = false;
+      youtubeImport.textContent = 'Import video';
+      youtubeStatus.textContent = error.message;
 
-      if(track)track.hidden=true;
+      if (track) track.hidden = true;
 
-      state.jobId=null;
-      state.source=null;
-      create.disabled=true;
+      state.jobId = null;
+      state.source = null;
+      create.disabled = true;
     }
 
-    if(finished)return;
+    if (finished) return;
   };
 
   await tick();
 
-  if(finished)return;
+  if (finished) return;
 
-  state.youtubePoll=setInterval(tick,500);
+  state.youtubePoll = setInterval(tick, 500);
 }
 
 youtubeImport?.addEventListener(
@@ -329,8 +340,8 @@ youtubeImport?.addEventListener(
 
 youtubeUrl?.addEventListener(
   'keydown',
-  event=>{
-    if(event.key==='Enter'){
+  event => {
+    if (event.key === 'Enter') {
       event.preventDefault();
       importYouTube();
     }
@@ -339,62 +350,132 @@ youtubeUrl?.addEventListener(
 
 youtubeUrl?.addEventListener(
   'paste',
-  event=>{
-    setTimeout(()=>{
-      const val = (youtubeUrl.value||'').trim();
-      if(val.includes('youtube.com/') || val.includes('youtu.be/')){
+  event => {
+    setTimeout(() => {
+      const val = (youtubeUrl.value || '').trim();
+      if (val.includes('youtube.com/') || val.includes('youtu.be/')) {
         importYouTube();
       }
     }, 50);
   }
 );
 
-$$('.mode-card').forEach(btn=>
-  btn.addEventListener('click',()=>{
-    $$('.mode-card').forEach(x=>
+// Prevent browser password/email autofill from injecting credentials into YouTube link inputs
+function sanitizeYouTubeInput(inputEl) {
+  if (!inputEl) return;
+  const v = (inputEl.value || '').trim();
+  if (v && v.includes('@') && !v.includes('youtube.com') && !v.includes('youtu.be')) {
+    inputEl.value = '';
+  }
+}
+
+['DOMContentLoaded', 'load'].forEach(ev => {
+  window.addEventListener(ev, () => {
+    [10, 80, 200, 500, 1000, 2000].forEach(delay => {
+      setTimeout(() => {
+        sanitizeYouTubeInput(youtubeUrl);
+        const betaYt = $('#betaYtUrl');
+        if (betaYt) sanitizeYouTubeInput(betaYt);
+      }, delay);
+    });
+  });
+});
+
+[youtubeUrl, $('#betaYtUrl')].forEach(el => {
+  if (!el) return;
+  ['input', 'change', 'focus', 'animationstart'].forEach(ev => {
+    el.addEventListener(ev, () => sanitizeYouTubeInput(el));
+  });
+});
+
+$$('.mode-card').forEach(btn =>
+  btn.addEventListener('click', () => {
+    $$('.mode-card').forEach(x =>
       x.classList.remove('selected')
     );
 
     btn.classList.add('selected');
-    state.mode=btn.dataset.mode;
+    state.mode = btn.dataset.mode;
   })
 );
 
-function syncDuration(){
+function syncDuration() {
 
-  let min=+minDuration.value;
-  let max=+maxDuration.value;
+  let min = +minDuration.value;
+  let max = +maxDuration.value;
 
-  if(min>max){
-    max=min;
-    maxDuration.value=max;
+  if (min > max) {
+    max = min;
+    maxDuration.value = max;
   }
 
-  $('#durationNote').textContent=
+  $('#durationNote').textContent =
     `Recommended: ${min}–${max} seconds. Qwen can refine boundaries inside candidates.`;
 }
 
-minDuration.addEventListener('change',syncDuration);
-maxDuration.addEventListener('change',syncDuration);
-syncDuration();
+minDuration?.addEventListener('change', syncDuration);
+maxDuration?.addEventListener('change', syncDuration);
+if (minDuration && maxDuration) syncDuration();
 
-function syncRange(id,out){
+function syncRange(id, out, callback) {
 
-  const el=$('#'+id);
-  const o=$('#'+out);
+  const el = $('#' + id);
+  const o = $('#' + out);
+  if (!el || !o) return;
 
-  const f=()=>{
-    o.textContent=el.value+'%';
-    updatePreview();
+  const f = () => {
+    o.textContent = el.value + '%';
+    if (callback) callback();
+    else updatePreview();
   };
 
-  el.addEventListener('input',f);
+  el.addEventListener('input', f);
   f();
 }
 
-syncRange('logoSize','logoSizeOut');
-syncRange('logoOpacity','logoOpacityOut');
-syncRange('textBgOpacity','textBgOpacityOut');
+syncRange('logoSize', 'logoSizeOut');
+syncRange('logoOpacity', 'logoOpacityOut');
+syncRange('editorLogoSize', 'editorLogoSizeOut', editorPreviewUpdate);
+syncRange('editorLogoOpacity', 'editorLogoOpacityOut', editorPreviewUpdate);
+syncRange('textBgOpacity', 'textBgOpacityOut');
+
+function updateUpscaleQualityBadge() {
+  const sel = $('#upscaleQuality');
+  const badge = $('#upscaleQualityBadge');
+  if (!sel || !badge) return;
+  const val = sel.value;
+  if (val === 'ultra') {
+    badge.textContent = 'Ultra HD (Crisp)';
+    badge.style.background = '#a855f7';
+    badge.style.color = '#ffffff';
+  } else if (val === 'high') {
+    badge.textContent = 'High (Recommended)';
+    badge.style.background = '#4ade80';
+    badge.style.color = '#041527';
+  } else if (val === 'balanced') {
+    badge.textContent = 'Balanced (1080p)';
+    badge.style.background = '#38bdf8';
+    badge.style.color = '#041527';
+  } else if (val === 'fast') {
+    badge.textContent = 'Fast (Compact)';
+    badge.style.background = '#fbbf24';
+    badge.style.color = '#041527';
+  }
+  const editorSel = $('#editorUpscaleQuality');
+  if (editorSel && editorSel.value !== val) {
+    editorSel.value = val;
+  }
+}
+$('#upscaleQuality')?.addEventListener('change', updateUpscaleQualityBadge);
+$('#editorUpscaleQuality')?.addEventListener('change', () => {
+  const editorSel = $('#editorUpscaleQuality');
+  const sel = $('#upscaleQuality');
+  if (editorSel && sel) {
+    sel.value = editorSel.value;
+    updateUpscaleQualityBadge();
+  }
+});
+if ($('#upscaleQuality')) updateUpscaleQualityBadge();
 
 [
   'logoEnabled',
@@ -411,200 +492,217 @@ syncRange('textBgOpacity','textBgOpacityOut');
   'textColor',
   'textBgColor',
   'overlayText'
-].forEach(id=>
-  $('#'+id)?.addEventListener(
+].forEach(id =>
+  $('#' + id)?.addEventListener(
     'input',
-    ()=>{
-      if(
-        id==='logoPosition' &&
-        $('#logoPosition').value!=='custom'
-      ){}
+    () => {
+      if (
+        id === 'logoPosition' &&
+        $('#logoPosition').value !== 'custom'
+      ) { }
 
-      if(
-        id==='textPosition' &&
-        $('#textPosition').value!=='custom'
-      ){}
+      if (
+        id === 'textPosition' &&
+        $('#textPosition').value !== 'custom'
+      ) { }
 
       updatePreview();
     }
   )
 );
 
-function hexAlpha(hex,p){
-  return hex+
-    Math.round(p*2.55)
+function hexAlpha(hex, p) {
+  return hex +
+    Math.round(p * 2.55)
       .toString(16)
-      .padStart(2,'0')
+      .padStart(2, '0')
 }
 
-function applyPresetPosition(el,pos,m){
+function applyPresetPosition(el, pos, m) {
 
-  el.style.left='';
-  el.style.right='';
-  el.style.top='';
-  el.style.bottom='';
-  el.style.transform='';
+  el.style.left = '';
+  el.style.right = '';
+  el.style.top = '';
+  el.style.bottom = '';
+  el.style.transform = '';
 
-  if(pos.includes('left'))
-    el.style.left=m+'px';
+  if (pos.includes('left'))
+    el.style.left = m + 'px';
 
-  if(pos.includes('right'))
-    el.style.right=m+'px';
+  if (pos.includes('right'))
+    el.style.right = m + 'px';
 
-  if(
+  if (
     pos.includes('center') &&
     !pos.startsWith('center-')
-  ){
-    el.style.left='50%';
-    el.style.transform='translateX(-50%)';
+  ) {
+    el.style.left = '50%';
+    el.style.transform = 'translateX(-50%)';
   }
 
-  if(pos.startsWith('top'))
-    el.style.top=m+'px';
+  if (pos.startsWith('top'))
+    el.style.top = m + 'px';
 
-  if(pos.startsWith('bottom'))
-    el.style.bottom=m+'px';
+  if (pos.startsWith('bottom'))
+    el.style.bottom = m + 'px';
 
-  if(pos==='center'){
-    el.style.top='50%';
-    el.style.transform='translate(-50%,-50%)';
+  if (pos === 'center') {
+    el.style.top = '50%';
+    el.style.transform = 'translate(-50%,-50%)';
   }
 
-  if(
-    pos==='center-left' ||
-    pos==='center-right'
-  ){
-    el.style.top='50%';
-    el.style.transform='translateY(-50%)';
+  if (
+    pos === 'center-left' ||
+    pos === 'center-right'
+  ) {
+    el.style.top = '50%';
+    el.style.transform = 'translateY(-50%)';
   }
 }
 
-function setCustomFromCenter(el,x,y){
+function setCustomFromCenter(el, x, y) {
 
-  const frame=$('#previewFrame');
-  const r=frame.getBoundingClientRect();
-  const er=el.getBoundingClientRect();
+  const frame = $('#previewFrame');
+  const r = frame.getBoundingClientRect();
+  const er = el.getBoundingClientRect();
 
-  const px=Math.max(
+  const px = Math.max(
     0,
     Math.min(
       100,
-      ((x-r.left-er.width/2)/
-      (r.width-er.width))*100
+      ((x - r.left - er.width / 2) /
+        (r.width - er.width)) * 100
     )
   );
 
-  const py=Math.max(
+  const py = Math.max(
     0,
     Math.min(
       100,
-      ((y-r.top-er.height/2)/
-      (r.height-er.height))*100
+      ((y - r.top - er.height / 2) /
+        (r.height - er.height)) * 100
     )
   );
 
-  return [px,py];
+  return [px, py];
 }
 
-function applyCustom(el,x,y){
+function applyCustom(el, x, y) {
 
-  el.style.left=x+'%';
-  el.style.top=y+'%';
-  el.style.right='auto';
-  el.style.bottom='auto';
-  el.style.transform='translate(-50%,-50%)';
+  el.style.left = x + '%';
+  el.style.top = y + '%';
+  el.style.right = 'auto';
+  el.style.bottom = 'auto';
+  el.style.transform = 'translate(-50%,-50%)';
 
-  el.dataset.x=x;
-  el.dataset.y=y;
+  el.dataset.x = x;
+  el.dataset.y = y;
 }
 
-function updatePreview(){
+function updatePreview() {
 
-  const logo=$('#previewLogo');
-  const txt=$('#previewText');
+  const logo = $('#previewLogo');
+  const txt = $('#previewText');
+  if (!logo || !txt) return;
 
-  const logoImg=$('#previewLogoImg');
-  if(logoImg && state.logoPath){
-    logoImg.src=state.logoPath;
-    logoImg.style.display='block';
+  const isLogoEnabled = $('#logoEnabled')?.checked;
+  logo.style.display = isLogoEnabled ? 'flex' : 'none';
+
+  const logoOpacity = (+($('#logoOpacity')?.value ?? 80));
+  logo.style.opacity = logoOpacity / 100;
+  if ($('#logoOpacityOut')) {
+    $('#logoOpacityOut').textContent = logoOpacity + '%';
   }
 
-  logo.style.display=
-    $('#logoEnabled').checked?'block':'none';
+  const logoSize = (+($('#logoSize')?.value ?? 8));
+  const logoWidthPx = Math.max(16, Math.round(220 * logoSize / 20));
+  logo.style.width = logoWidthPx + 'px';
+  logo.style.height = 'auto';
 
-  logo.style.opacity=
-    (+$('#logoOpacity').value)/100;
+  const posVal = $('#logoPosition')?.value || 'top-right';
+  const marginVal = +($('#logoMargin')?.value ?? 40);
 
-  logo.style.width=
-    Math.max(
-      28,
-      Math.round(
-        220*(+$('#logoSize').value)/20
-      )
-    )+'px';
-
-  logo.style.fontSize=
-    Math.max(
-      14,
-      Math.round(
-        36*(+$('#logoSize').value)/12
-      )
-    )+'px';
-
-  if($('#logoPosition').value==='custom'){
-
+  if (posVal === 'custom') {
     applyCustom(
       logo,
-      +logo.dataset.x||92,
-      +logo.dataset.y||8
+      +logo.dataset.x || 92,
+      +logo.dataset.y || 8
     );
-
-  }else{
-
+  } else {
     applyPresetPosition(
       logo,
-      $('#logoPosition').value,
-      +$('#logoMargin').value
+      posVal,
+      marginVal
     );
   }
 
-  txt.style.display=
+  const logoImg = $('#previewLogoImg');
+  const placeholder = $('#previewLogoPlaceholder');
+
+  if (state.logoPath) {
+    if (logoImg) {
+      const targetSrc = (state.logoPath.startsWith('data:') || state.logoPath.startsWith('blob:'))
+        ? state.logoPath
+        : state.logoPath + (state.logoPath.includes('?') ? '&' : '?') + 'v=' + Date.now();
+      if (logoImg.getAttribute('src') !== targetSrc) {
+        logoImg.src = targetSrc;
+      }
+      logoImg.style.display = 'block';
+      logoImg.onerror = () => {
+        logoImg.style.display = 'none';
+        if (placeholder) placeholder.style.display = isLogoEnabled ? 'inline-flex' : 'none';
+      };
+      logoImg.onload = () => {
+        logoImg.style.display = 'block';
+        if (placeholder) placeholder.style.display = 'none';
+      };
+    }
+    if (placeholder) placeholder.style.display = 'none';
+  } else {
+    if (logoImg) {
+      logoImg.removeAttribute('src');
+      logoImg.style.display = 'none';
+    }
+    if (placeholder) placeholder.style.display = isLogoEnabled ? 'inline-flex' : 'none';
+  }
+
+  txt.style.display =
     $('#textEnabled').checked &&
-    $('#overlayText').value.trim()
-      ?'block'
-      :'none';
+      $('#overlayText').value.trim()
+      ? 'block'
+      : 'none';
 
-  txt.textContent=
-    $('#overlayText').value||'Your text';
+  txt.textContent =
+    $('#overlayText').value || 'Your text';
 
-  txt.style.fontSize=
+  txt.style.fontSize =
     Math.max(
       14,
       Math.round(
-        120*(+$('#textSize').value)/12
+        120 * (+$('#textSize').value) / 12
       )
-    )+'px';
+    ) + 'px';
 
-  txt.style.color=
+  txt.style.color =
     $('#textColor').value;
 
-  txt.style.background=
+  txt.style.background =
     $('#textBgEnabled').checked
-      ?hexAlpha(
+      ? hexAlpha(
         $('#textBgColor').value,
         +$('#textBgOpacity').value
       )
-      :'transparent';
+      : 'transparent';
 
-  if($('#textPosition').value==='custom'){
+  if ($('#textPosition').value === 'custom') {
 
     applyCustom(
       txt,
-      +txt.dataset.x||50,
-      +txt.dataset.y||75
+      +txt.dataset.x || 50,
+      +txt.dataset.y || 75
     );
 
-  }else{
+  } else {
 
     applyPresetPosition(
       txt,
@@ -612,115 +710,147 @@ function updatePreview(){
       +$('#textMargin').value
     );
   }
+
+  const wm = $('#previewWatermark');
+  if (wm) {
+    const wmEnabled = $('#watermarkTextEnabled')?.checked || false;
+    const wmText = ($('#watermarkTextInput')?.value || '').trim();
+    if (wmEnabled && wmText) {
+      wm.style.display = 'block';
+      wm.textContent = wmText;
+      const opacity = (+($('#watermarkTextOpacity')?.value || 35)) / 100;
+      const angle = +($('#watermarkTextAngle')?.value || -20);
+      const sizePct = +($('#watermarkTextSize')?.value || 6);
+      const color = $('#watermarkTextColor')?.value || '#FFFFFF';
+      const pos = $('#watermarkTextPosition')?.value || 'center';
+      wm.style.opacity = opacity;
+      wm.style.color = color;
+      wm.style.fontSize = Math.max(12, Math.round(280 * (sizePct / 100))) + 'px';
+      wm.style.transform = `rotate(${angle}deg)`;
+
+      if (pos === 'custom') {
+        const xPct = +($('#watermarkTextX')?.value || 50);
+        const yPct = +($('#watermarkTextY')?.value || 50);
+        applyCustom(wm, xPct, yPct);
+      } else {
+        applyPresetPosition(wm, pos, 40);
+      }
+    } else {
+      wm.style.display = 'none';
+    }
+  }
 }
 
-function beginDrag(el,e){
+function beginDrag(el, e) {
 
-  if(
-    e.button!==undefined &&
-    e.button!==0
-  )return;
+  if (
+    e.button !== undefined &&
+    e.button !== 0
+  ) return;
 
-  if(
+  if (
     !el ||
-    getComputedStyle(el).display==='none'
-  )return;
+    getComputedStyle(el).display === 'none'
+  ) return;
 
   e.preventDefault();
 
-  const frame=
+  const frame =
     el.closest(
       '.preview-frame,.editor-preview-frame'
     );
 
-  if(!frame)return;
+  if (!frame) return;
 
-  const r=frame.getBoundingClientRect();
-  const er=el.getBoundingClientRect();
+  const r = frame.getBoundingClientRect();
+  const er = el.getBoundingClientRect();
 
-  state.drag={
+  state.drag = {
     el,
     frame,
-    startX:e.clientX,
-    startY:e.clientY,
-    startLeft:er.left-r.left,
-    startTop:er.top-r.top,
-    frameW:r.width,
-    frameH:r.height
+    startX: e.clientX,
+    startY: e.clientY,
+    startLeft: er.left - r.left,
+    startTop: er.top - r.top,
+    frameW: r.width,
+    frameH: r.height
   };
 
   el.classList.add('dragging');
 
-  try{
+  try {
     el.setPointerCapture?.(e.pointerId)
-  }catch{}
+  } catch { }
 }
 
-function dragMove(e){
+function dragMove(e) {
 
-  if(!state.drag)return;
+  if (!state.drag) return;
 
-  const d=state.drag;
-  const er=d.el.getBoundingClientRect();
+  const d = state.drag;
+  const er = d.el.getBoundingClientRect();
 
-  const x=Math.max(
+  const x = Math.max(
     0,
     Math.min(
-      d.frameW-er.width,
-      d.startLeft+(e.clientX-d.startX)
+      d.frameW - er.width,
+      d.startLeft + (e.clientX - d.startX)
     )
   );
 
-  const y=Math.max(
+  const y = Math.max(
     0,
     Math.min(
-      d.frameH-er.height,
-      d.startTop+(e.clientY-d.startY)
+      d.frameH - er.height,
+      d.startTop + (e.clientY - d.startY)
     )
   );
 
-  const px=Math.max(
-    0,
-    Math.min(
-      100,
-      (x+er.width/2)/d.frameW*100
-    )
-  );
-
-  const py=Math.max(
+  const px = Math.max(
     0,
     Math.min(
       100,
-      (y+er.height/2)/d.frameH*100
+      (x + er.width / 2) / d.frameW * 100
     )
   );
 
-  applyCustom(d.el,px,py);
+  const py = Math.max(
+    0,
+    Math.min(
+      100,
+      (y + er.height / 2) / d.frameH * 100
+    )
+  );
 
-  if(d.el.id.includes('Logo')){
+  applyCustom(d.el, px, py);
 
-    if($('#logoPosition'))
-      $('#logoPosition').value='custom';
+  if (d.el.id.includes('Logo')) {
 
-    if($('#editorLogoEnabled'))
-      $('#editorLogoEnabled').checked=true;
+    if ($('#logoPosition'))
+      $('#logoPosition').value = 'custom';
 
-  }else{
+    if ($('#editorLogoPosition'))
+      $('#editorLogoPosition').value = 'custom';
 
-    if($('#textPosition'))
-      $('#textPosition').value='custom';
+    if ($('#editorLogoEnabled'))
+      $('#editorLogoEnabled').checked = true;
 
-    if($('#editorTextEnabled'))
-      $('#editorTextEnabled').checked=true;
+  } else {
+
+    if ($('#textPosition'))
+      $('#textPosition').value = 'custom';
+
+    if ($('#editorTextEnabled'))
+      $('#editorTextEnabled').checked = true;
   }
 }
 
-function endDrag(){
+function endDrag() {
 
-  if(!state.drag)return;
+  if (!state.drag) return;
 
   state.drag.el.classList.remove('dragging');
-  state.drag=null;
+  state.drag = null;
 }
 
 [
@@ -728,11 +858,11 @@ function endDrag(){
   'previewText',
   'editorLogo',
   'editorText'
-].forEach(id=>{
+].forEach(id => {
 
-  $('#'+id)?.addEventListener(
+  $('#' + id)?.addEventListener(
     'pointerdown',
-    e=>beginDrag($('#'+id),e)
+    e => beginDrag($('#' + id), e)
   );
 
 });
@@ -752,71 +882,110 @@ document.addEventListener(
   endDrag
 );
 
-function editorPreviewUpdate(){
+function editorPreviewUpdate() {
 
-  const logo=$('#editorLogo');
-  const txt=$('#editorText');
+  const logo = $('#editorLogo');
+  const txt = $('#editorText');
 
-  if(!logo||!txt)return;
+  if (!logo || !txt) return;
 
-  logo.style.display=
-    $('#editorLogoEnabled')?.checked
-      ?'block'
-      :'none';
+  const isLogoEnabled = $('#editorLogoEnabled')?.checked;
+  logo.style.display = isLogoEnabled ? 'flex' : 'none';
 
-  logo.style.opacity=
-    (+($('#editorLogoOpacity')?.value||80))/100;
+  const logoOpacity = (+($('#editorLogoOpacity')?.value ?? 80));
+  logo.style.opacity = logoOpacity / 100;
+  if ($('#editorLogoOpacityOut')) {
+    $('#editorLogoOpacityOut').textContent = logoOpacity + '%';
+  }
 
-  logo.style.width=
-    Math.max(
-      28,
-      Math.round(
-        220*(+($('#editorLogoSize')?.value||8))/20
-      )
-    )+'px';
+  const logoSize = (+($('#editorLogoSize')?.value ?? 8));
+  const logoWidthPx = Math.max(16, Math.round(220 * logoSize / 20));
+  logo.style.width = logoWidthPx + 'px';
+  logo.style.height = 'auto';
+  if ($('#editorLogoSizeOut')) {
+    $('#editorLogoSizeOut').textContent = logoSize + '%';
+  }
 
-  if(logo.dataset.x){
+  const posVal = $('#editorLogoPosition')?.value || 'custom';
+  const marginVal = +($('#editorLogoMargin')?.value ?? 40);
 
+  if (posVal === 'custom') {
     applyCustom(
       logo,
-      +logo.dataset.x,
-      +logo.dataset.y
+      +logo.dataset.x || 92,
+      +logo.dataset.y || 8
+    );
+  } else {
+    applyPresetPosition(
+      logo,
+      posVal,
+      marginVal
     );
   }
 
-  txt.style.display=
+  const img = $('#editorLogoImg');
+  const placeholder = $('#editorLogoPlaceholder');
+
+  if (state.editorLogoPath) {
+    if (img) {
+      const targetSrc = (state.editorLogoPath.startsWith('data:') || state.editorLogoPath.startsWith('blob:'))
+        ? state.editorLogoPath
+        : state.editorLogoPath + (state.editorLogoPath.includes('?') ? '&' : '?') + 'v=' + Date.now();
+      if (img.getAttribute('src') !== targetSrc) {
+        img.src = targetSrc;
+      }
+      img.style.display = 'block';
+      img.onerror = () => {
+        img.style.display = 'none';
+        if (placeholder) placeholder.style.display = isLogoEnabled ? 'inline-flex' : 'none';
+      };
+      img.onload = () => {
+        img.style.display = 'block';
+        if (placeholder) placeholder.style.display = 'none';
+      };
+    }
+    if (placeholder) placeholder.style.display = 'none';
+  } else {
+    if (img) {
+      img.removeAttribute('src');
+      img.style.display = 'none';
+    }
+    if (placeholder) placeholder.style.display = isLogoEnabled ? 'inline-flex' : 'none';
+  }
+
+  txt.style.display =
     $('#editorTextEnabled')?.checked &&
-    $('#editorTextValue')?.value.trim()
-      ?'block'
-      :'none';
+      $('#editorTextValue')?.value.trim()
+      ? 'block'
+      : 'none';
 
-  txt.textContent=
-    $('#editorTextValue')?.value||'Your text';
+  txt.textContent =
+    $('#editorTextValue')?.value || 'Your text';
 
-  txt.style.fontSize=
+  txt.style.fontSize =
     Math.max(
       14,
       Math.round(
-        120*(+($('#editorTextSize')?.value||6))/12
+        120 * (+($('#editorTextSize')?.value || 6)) / 12
       )
-    )+'px';
+    ) + 'px';
 
-  txt.style.color=
-    $('#editorTextColor')?.value||'#FFFFFF';
+  txt.style.color =
+    $('#editorTextColor')?.value || '#FFFFFF';
 
-  txt.style.background=
+  txt.style.background =
     $('#editorTextBg')?.checked
-      ?hexAlpha(
-        $('#editorTextBgColor')?.value||'#000000',
-        +($('#editorTextBgOpacity')?.value||65)
+      ? hexAlpha(
+        $('#editorTextBgColor')?.value || '#000000',
+        +($('#editorTextBgOpacity')?.value || 65)
       )
-      :'transparent';
+      : 'transparent';
 
-  const bgOut=$('#editorTextBgOpacityOut');
-  if(bgOut)
-    bgOut.textContent=(+($('#editorTextBgOpacity')?.value||65))+'%';
+  const bgOut = $('#editorTextBgOpacityOut');
+  if (bgOut)
+    bgOut.textContent = (+($('#editorTextBgOpacity')?.value || 65)) + '%';
 
-  if(txt.dataset.x){
+  if (txt.dataset.x) {
 
     applyCustom(
       txt,
@@ -824,22 +993,12 @@ function editorPreviewUpdate(){
       +txt.dataset.y
     );
   }
-
-  const img=$('#editorLogoImg');
-
-  if(
-    img &&
-    state.editorLogoPath
-  ){
-    img.src=
-      state.editorLogoPath+
-      (state.editorLogoPath.includes('?')?'&':'?')+
-      'v='+Date.now();
-  }
 }
 
 [
   'editorLogoEnabled',
+  'editorLogoPosition',
+  'editorLogoMargin',
   'editorTextEnabled',
   'editorTextValue',
   'editorLogoSize',
@@ -849,34 +1008,45 @@ function editorPreviewUpdate(){
   'editorTextBg',
   'editorTextBgColor',
   'editorTextBgOpacity'
-].forEach(id=>
-  $('#'+id)?.addEventListener(
-    'input',
-    editorPreviewUpdate
-  )
-);
+].forEach(id => {
+  $('#' + id)?.addEventListener('input', editorPreviewUpdate);
+  $('#' + id)?.addEventListener('change', editorPreviewUpdate);
+});
 
 $('#editorLogoInput')?.addEventListener(
   'change',
-  e=>{
-    const file=e.target.files[0];
+  e => {
+    const file = e.target.files[0];
+    if (!file) return;
 
-    if(!file)return;
+    state.editorLogoFile = file;
 
-    state.editorLogoFile=file;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      state.editorLogoPath = ev.target.result;
+      $('#editorLogoEnabled').checked = true;
+      editorPreviewUpdate();
+    };
+    reader.readAsDataURL(file);
+  }
+);
 
-    const url=URL.createObjectURL(file);
+$('#editorClearLogo')?.addEventListener(
+  'click',
+  () => {
+    state.editorLogoFile = null;
+    state.editorLogoPath = null;
 
-    state.editorLogoPath=url;
+    if ($('#editorLogoInput'))
+      $('#editorLogoInput').value = '';
 
-    const img=$('#editorLogoImg');
+    $('#editorLogoEnabled').checked = false;
 
-    if(img){
-      img.src=url;
-      img.style.display='block';
+    const img = $('#editorLogoImg');
+    if (img) {
+      img.removeAttribute('src');
+      img.style.display = 'none';
     }
-
-    $('#editorLogoEnabled').checked=true;
 
     editorPreviewUpdate();
   }
@@ -884,176 +1054,208 @@ $('#editorLogoInput')?.addEventListener(
 
 $('#logoInput')?.addEventListener(
   'change',
-  e=>{
-    const file=e.target.files[0];
+  e => {
+    const file = e.target.files[0];
+    if (!file) return;
 
-    if(!file)return;
+    state.logoFile = file;
 
-    state.logoFile=file;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      const dataUrl = ev.target.result;
+      state.logoPath = dataUrl;
+      $('#logoPath').value = file.name;
+      $('#logoEnabled').checked = true;
 
-    const url=URL.createObjectURL(file);
+      const thumb = $('#logoPreviewThumb') || $('.logo-preview');
+      if (thumb) {
+        thumb.innerHTML = `<img src="${dataUrl}" style="width:100%;height:100%;object-fit:contain;border-radius:14px;">`;
+      }
 
-    state.logoPath=url;
-
-    $('#logoPath').value=file.name;
-
-    $('#logoEnabled').checked=true;
-
-    updatePreview();
+      updatePreview();
+    };
+    reader.readAsDataURL(file);
   }
 );
 
 $('#clearLogo')?.addEventListener(
   'click',
-  ()=>{
-    state.logoFile=null;
-    state.logoPath=null;
+  () => {
+    state.logoFile = null;
+    state.logoPath = null;
+    state.logoServerPath = null;
 
-    if($('#logoInput'))
-      $('#logoInput').value='';
+    if ($('#logoInput'))
+      $('#logoInput').value = '';
 
-    if($('#logoPath'))
-      $('#logoPath').value='';
+    if ($('#logoPath'))
+      $('#logoPath').value = '';
 
-    $('#logoEnabled').checked=false;
+    $('#logoEnabled').checked = false;
+
+    const thumb = $('#logoPreviewThumb') || $('.logo-preview');
+    if (thumb) thumb.textContent = 'C';
+
+    const img = $('#previewLogoImg');
+    if (img) {
+      img.removeAttribute('src');
+      img.style.display = 'none';
+    }
 
     updatePreview();
   }
 );
 
-function addLog(message){
+function addLog(message) {
 
-  if(!log)return;
+  if (!log) return;
 
-  const line=
+  const line =
     document.createElement('div');
 
-  line.textContent=message;
+  line.textContent = message;
 
   log.appendChild(line);
-  log.scrollTop=log.scrollHeight;
+  log.scrollTop = log.scrollHeight;
 }
 
-function escapeHtml(value){
+function escapeHtml(value) {
 
-  return String(value??'')
-    .replace(/&/g,'&amp;')
-    .replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;')
-    .replace(/"/g,'&quot;')
-    .replace(/'/g,'&#039;');
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
 }
 
-async function loadOptions(){
+async function loadOptions() {
 
   if (refreshModelsBtn) {
     refreshModelsBtn.disabled = false;
     refreshModelsBtn.textContent = '↻';
   }
 
-  try{
+  try {
 
-    const r=await fetch(
+    const r = await fetch(
       '/api/health',
-      {cache:'no-store'}
+      { cache: 'no-store' }
     );
 
-    const d=await r.json();
+    const d = await r.json();
 
-    const models=d.models||[];
+    let models = d.models || [];
 
-    modelSelect.innerHTML='';
+    if (!models.length) {
+      try {
+        const scanRes = await fetch('/api/models/scan', { method: 'POST', cache: 'no-store' });
+        if (scanRes.ok) {
+          const scanData = await scanRes.json();
+          if (scanData.ok && scanData.models && scanData.models.length) {
+            models = scanData.models;
+            d.default_model = scanData.default || models[0];
+          }
+        }
+      } catch (_) {}
+    }
 
-    if(models.length){
+    modelSelect.innerHTML = '';
 
-      models.forEach(model=>{
-        const option=
+    if (models.length) {
+
+      models.forEach(model => {
+        const option =
           document.createElement('option');
 
-        option.value=model;
-        option.textContent=model;
+        option.value = model;
+        option.textContent = model;
 
         modelSelect.appendChild(option);
       });
 
-      state.modelsAvailable=true;
-      modelSelect.disabled=false;
+      state.modelsAvailable = true;
+      modelSelect.disabled = false;
 
-      state.model=
-        d.default_model||
-        d.model||
+      state.model =
+        d.default_model ||
+        d.model ||
         models[0];
 
-      modelSelect.value=state.model;
+      modelSelect.value = state.model;
 
-      create.disabled=!state.source;
+      if (window.refreshModelHub) {
+        window.refreshModelHub();
+      }
+
+      create.disabled = !state.source;
 
       $('#healthDot')?.classList.add('online');
 
       // Models are up: stop any pending retry loop.
       modelRetries = MODEL_RETRY_LIMIT;
-      if(modelRetryTimer){
+      if (modelRetryTimer) {
         clearTimeout(modelRetryTimer);
         modelRetryTimer = null;
       }
 
-      if($('#healthText'))
-        $('#healthText').textContent=
-          `${models.length} local model${models.length===1?'':'s'} ready`;
+      if ($('#healthText'))
+        $('#healthText').textContent =
+          `${models.length} local model${models.length === 1 ? '' : 's'} ready`;
 
-      if($('#statusPill'))
-        $('#statusPill').innerHTML=
+      if ($('#statusPill'))
+        $('#statusPill').innerHTML =
           '<span></span> Local AI ready';
 
       if (scanModelsBtn) scanModelsBtn.style.display = 'none';
 
-    }else{
+    } else {
 
-      state.modelsAvailable=false;
-      state.model='';
-      modelSelect.disabled=false;
-      create.disabled=!state.source;
+      state.modelsAvailable = false;
+      state.model = '';
+      modelSelect.disabled = false;
+      create.disabled = !state.source;
 
       if (scanModelsBtn) scanModelsBtn.style.display = 'inline-flex';
 
-      modelSelect.innerHTML=
+      modelSelect.innerHTML =
         '<option value="">⚡ Built-in Heuristic AI (No Ollama needed)</option>';
 
-      if($('#healthText'))
-        $('#healthText').textContent=
+      if ($('#healthText'))
+        $('#healthText').textContent =
           'Built-in Heuristic AI (Ollama offline)';
 
-      if($('#statusPill'))
-        $('#statusPill').innerHTML=
+      if ($('#statusPill'))
+        $('#statusPill').innerHTML =
           '<span></span> Heuristic Mode';
 
       _scheduleModelRetry();
 
     }
 
-  }catch(error){
+  } catch (error) {
 
     console.error(
       '[Health] failed:',
       error
     );
 
-    state.modelsAvailable=false;
-    state.model='';
-    modelSelect.disabled=false;
-    create.disabled=!state.source;
+    state.modelsAvailable = false;
+    state.model = '';
+    modelSelect.disabled = false;
+    create.disabled = !state.source;
 
     if (scanModelsBtn) scanModelsBtn.style.display = 'inline-flex';
 
-    modelSelect.innerHTML=
+    modelSelect.innerHTML =
       '<option value="">⚡ Built-in Heuristic AI (No Ollama needed)</option>';
 
-    if($('#healthText'))
-      $('#healthText').textContent=
+    if ($('#healthText'))
+      $('#healthText').textContent =
         'Built-in Heuristic AI';
 
-    if($('#statusPill'))
-      $('#statusPill').innerHTML=
+    if ($('#statusPill'))
+      $('#statusPill').innerHTML =
         '<span></span> Heuristic Mode';
 
     _scheduleModelRetry();
@@ -1067,9 +1269,9 @@ const MODEL_RETRY_LIMIT = 8;
 let modelRetries = 0;
 let modelRetryTimer = null;
 
-function _scheduleModelRetry(){
-  if(modelRetries >= MODEL_RETRY_LIMIT) return;
-  if(modelRetryTimer) clearTimeout(modelRetryTimer);
+function _scheduleModelRetry() {
+  if (modelRetries >= MODEL_RETRY_LIMIT) return;
+  if (modelRetryTimer) clearTimeout(modelRetryTimer);
   const delay = Math.min(1000 * (modelRetries + 1), 8000);
   modelRetryTimer = setTimeout(async () => {
     modelRetryTimer = null;
@@ -1078,149 +1280,239 @@ function _scheduleModelRetry(){
   }, delay);
 }
 
-function selectedBranding(){
+function selectedBranding() {
 
   return {
     logo_enabled:
-      $('#logoEnabled')?.checked||false,
+      $('#logoEnabled')?.checked || false,
 
     logo_path:
-      state.logoServerPath||
-      state.logoPath||
-      $('#logoPath')?.value||
+      state.logoServerPath ||
+      state.logoPath ||
+      $('#logoPath')?.value ||
       '',
 
     logo_position:
-      $('#logoPosition')?.value||
+      $('#logoPosition')?.value ||
       'top-right',
 
     logo_size:
-      +($('#logoSize')?.value||8),
+      +($('#logoSize')?.value || 8),
 
     logo_opacity:
-      +($('#logoOpacity')?.value||80),
+      +($('#logoOpacity')?.value || 80),
 
     logo_margin:
-      +($('#logoMargin')?.value||40),
+      +($('#logoMargin')?.value || 40),
 
     logo_x:
-      +($('#previewLogo')?.dataset.x||92),
+      +($('#previewLogo')?.dataset.x || 92),
 
     logo_y:
-      +($('#previewLogo')?.dataset.y||8),
+      +($('#previewLogo')?.dataset.y || 8),
 
     logo_bg_remove:
-      $('#logoBgRemove')?.checked||false,
+      $('#logoBgRemove')?.checked || false,
 
     logo_bg_color:
-      $('#logoBgColor')?.value||'#9B5CFF',
+      $('#logoBgColor')?.value || '#9B5CFF',
 
     logo_bg_similarity:
-      +($('#logoBgSimilarity')?.value||0.22),
+      +($('#logoBgSimilarity')?.value || 0.22),
 
     text_enabled:
-      $('#textEnabled')?.checked||false,
+      $('#textEnabled')?.checked || false,
 
     text:
-      $('#overlayText')?.value||'',
+      $('#overlayText')?.value || '',
 
     text_position:
-      $('#textPosition')?.value||
+      $('#textPosition')?.value ||
       'bottom-center',
 
     text_size:
-      +($('#textSize')?.value||6),
+      +($('#textSize')?.value || 6),
 
     text_color:
-      $('#textColor')?.value||
+      $('#textColor')?.value ||
       '#FFFFFF',
 
     text_bg_enabled:
-      $('#textBgEnabled')?.checked??true,
+      $('#textBgEnabled')?.checked ?? true,
 
     text_bg_color:
-      $('#textBgColor')?.value||
+      $('#textBgColor')?.value ||
       '#000000',
 
     text_bg_opacity:
-      +($('#textBgOpacity')?.value||65),
+      +($('#textBgOpacity')?.value || 65),
 
     text_margin:
-      +($('#textMargin')?.value||110),
+      +($('#textMargin')?.value || 110),
 
     text_x:
-      +($('#previewText')?.dataset.x||50),
+      +($('#previewText')?.dataset.x || 50),
 
     text_y:
-      +($('#previewText')?.dataset.y||75)
+      +($('#previewText')?.dataset.y || 75),
+
+    watermark_text_enabled:
+      $('#watermarkTextEnabled')?.checked || false,
+
+    watermark_text:
+      $('#watermarkTextInput')?.value || '',
+
+    watermark_text_position:
+      $('#watermarkTextPosition')?.value || 'center',
+
+    watermark_text_size:
+      +($('#watermarkTextSize')?.value || 6),
+
+    watermark_text_opacity:
+      +($('#watermarkTextOpacity')?.value || 35),
+
+    watermark_text_angle:
+      +($('#watermarkTextAngle')?.value || -20),
+
+    watermark_text_color:
+      $('#watermarkTextColor')?.value || '#FFFFFF',
+
+    watermark_text_x:
+      +($('#watermarkTextX')?.value || 50),
+
+    watermark_text_y:
+      +($('#watermarkTextY')?.value || 50),
+
+    premium_captions:
+      $('#premiumCaptionsToggle')?.checked ?? false,
+
+    situational_cues:
+      $('#situationalCuesToggle')?.checked ?? false,
+
+    caption_preset:
+      $('#captionPresetSelect')?.value || 'center_seam',
+
+    caption_accent:
+      $('#captionAccentSelect')?.value || 'gold_yellow'
   };
 }
 
-async function start(){
+async function start() {
+  const origBtnHtml = create.innerHTML;
+  create.disabled = true;
+  create.innerHTML = '<span class="spinner-inline"></span> <span>Preparing Video…</span>';
 
-  if(!state.source && youtubeUrl && youtubeUrl.value.trim()){
+  if (!state.source && youtubeUrl && youtubeUrl.value.trim()) {
     const trimmedUrl = youtubeUrl.value.trim();
-    if(trimmedUrl.includes('youtube.com/') || trimmedUrl.includes('youtu.be/')){
+    if (trimmedUrl.includes('youtube.com/') || trimmedUrl.includes('youtu.be/')) {
       addLog('[YouTube] Importing video link before generating…');
+      create.innerHTML = '<span class="spinner-inline"></span> <span>Importing YouTube Video…</span>';
       await importYouTube();
-      if(!state.source){
-        create.disabled=false;
+      if (!state.source) {
+        create.disabled = false;
+        create.innerHTML = origBtnHtml;
         return;
       }
     }
   }
 
-  if(!state.source){
+  if (!state.source) {
+    create.disabled = false;
+    create.innerHTML = origBtnHtml;
     alert('Please upload a video or paste a YouTube link to generate Shorts.');
-    if(drop){
-      drop.scrollIntoView({behavior:'smooth',block:'center'});
+    if (drop) {
+      drop.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
     return;
   }
 
-  if(!state.modelsAvailable){
-    try{await loadOptions();}catch{}
-    if(!state.modelsAvailable){
+  if (!state.modelsAvailable) {
+    try { await loadOptions(); } catch { }
+    if (!state.modelsAvailable) {
       addLog('[AI] Ollama offline: Using built-in candidate & audio density heuristics.');
       state.model = '';
     }
   }
 
-  try{
-    if(!state.jobId){
-      if(state.source && state.source.origin === 'youtube' && state.source.jobId){
+  try {
+    if (!state.jobId) {
+      if (state.source && state.source.origin === 'youtube' && state.source.jobId) {
         state.jobId = state.source.jobId;
-      }else if(state.source instanceof File){
-        const uploadForm=new FormData();
-        uploadForm.append('video',state.source);
-        const uploadResponse=await fetch('/api/upload',{method:'POST',body:uploadForm});
-        const uploadData=await safeJson(uploadResponse, 'Could not upload the video.');
-        if(!uploadResponse.ok) throw Error(uploadData.error||'Could not upload the video.');
-        state.jobId=uploadData.job_id;
+      } else if (state.source instanceof File) {
+        // Immediate visual feedback for long video uploads
+        progressPanel.hidden = false;
+        results.hidden = true;
+        progressPanel.dataset.state = 'running';
+        progressPanel.dataset.progress = '0';
+        $('#progressTitle').textContent = 'Uploading Source Video…';
+        $('#progressStatus').textContent = 'UPLOADING';
+        $('#progressBar').style.width = '0%';
+        $('#progressPercent').textContent = '0%';
+        $('#stageIcon').textContent = '↑';
+        $('#stageText').textContent = 'Transferring video file to Clipify AI workspace…';
+        $('#subStage').textContent = `${state.source.name} (${formatBytes(state.source.size)})`;
+        addLog(`[Upload] Uploading ${state.source.name} (${formatBytes(state.source.size)})…`);
+
+        const uploadForm = new FormData();
+        uploadForm.append('video', state.source);
+
+        const uploadData = await new Promise((resolve, reject) => {
+          const xhr = new XMLHttpRequest();
+          xhr.open('POST', '/api/upload');
+          xhr.upload.onprogress = (e) => {
+            if (e.lengthComputable && e.total > 0) {
+              const pct = Math.min(99, Math.round((e.loaded / e.total) * 100));
+              $('#progressBar').style.width = pct + '%';
+              $('#progressPercent').textContent = pct + '%';
+              $('#subStage').textContent = `${formatBytes(e.loaded)} / ${formatBytes(e.total)} (${pct}%)`;
+              create.innerHTML = `<span class="spinner-inline"></span> <span>Uploading (${pct}%)…</span>`;
+            }
+          };
+          xhr.onload = () => {
+            if (xhr.status >= 200 && xhr.status < 300) {
+              try {
+                const res = JSON.parse(xhr.responseText);
+                resolve(res);
+              } catch (err) { reject(err); }
+            } else {
+              try {
+                const res = JSON.parse(xhr.responseText);
+                reject(new Error(res.error || `Upload failed (${xhr.status})`));
+              } catch {
+                reject(new Error(`Upload failed with status ${xhr.status}`));
+              }
+            }
+          };
+          xhr.onerror = () => reject(new Error('Network error uploading video.'));
+          xhr.send(uploadForm);
+        });
+
+        state.jobId = uploadData.job_id;
         addLog(`[Upload] Video ready as project ${state.jobId}`);
-      }else{
+      } else {
         throw Error('Could not find video project. Please re-select or re-import the video.');
       }
     }
 
-    if(state.logoFile){
-      const logoForm=new FormData();
-      logoForm.append('logo',state.logoFile);
-      const logoResponse=await fetch(`/api/upload-logo/${state.jobId}`,{method:'POST',body:logoForm});
-      const logoData=await safeJson(logoResponse, 'Could not upload the logo.');
-      if(!logoResponse.ok) throw Error(logoData.error||'Could not upload the logo.');
-      state.logoServerPath=logoData.path;
+    if (state.logoFile) {
+      const logoForm = new FormData();
+      logoForm.append('logo', state.logoFile);
+      const logoResponse = await fetch(`/api/upload-logo/${state.jobId}`, { method: 'POST', body: logoForm });
+      const logoData = await safeJson(logoResponse, 'Could not upload the logo.');
+      if (!logoResponse.ok) throw Error(logoData.error || 'Could not upload the logo.');
+      state.logoServerPath = logoData.path;
     }
 
-  }catch(error){
+  } catch (error) {
     addLog(`[Error] ${error.message}`);
     alert(error.message);
-    create.disabled=false;
+    create.disabled = false;
+    create.innerHTML = origBtnHtml;
     return;
   }
 
-  const form=new FormData();
-  form.append('job_id',state.jobId);
+  const form = new FormData();
+  form.append('job_id', state.jobId);
 
   form.append(
     'mode',
@@ -1258,49 +1550,84 @@ async function start(){
   );
 
   form.append(
+    'gaming_split',
+    $('#gamingSplitToggle')?.checked ? '1' : '0'
+  );
+
+  form.append(
+    'fast_whisper',
+    $('#fastWhisperToggle')?.checked ? '1' : '0'
+  );
+
+  form.append(
+    'premium_captions',
+    $('#premiumCaptionsToggle')?.checked ? '1' : '0'
+  );
+
+  form.append(
+    'situational_cues',
+    $('#situationalCuesToggle')?.checked ? '1' : '0'
+  );
+
+  form.append(
+    'caption_preset',
+    $('#captionPresetSelect')?.value || 'center_seam'
+  );
+
+  form.append(
+    'caption_accent',
+    $('#captionAccentSelect')?.value || 'gold_yellow'
+  );
+
+  form.append(
+    'upscale_quality',
+    $('#upscaleQuality')?.value || 'high'
+  );
+
+  form.append(
     'branding',
     JSON.stringify(selectedBranding())
   );
 
-  create.disabled=true;
-  progressPanel.hidden=false;
-  results.hidden=true;
+  create.disabled = true;
+  progressPanel.hidden = false;
+  results.hidden = true;
 
-  progressPanel.dataset.state='running';
-  progressPanel.dataset.progress='0';
-  progressPanel.setAttribute('role','region');
-  progressPanel.setAttribute('aria-live','polite');
-  $('#progressTitle').textContent='Processing locally';
-  $('#progressStatus').textContent='LIVE';
-  $('#progressBar').style.width='0%';
-  $('#progressBar').setAttribute('aria-valuenow','0');
-  $('#progressPercent').textContent='0%';
-  $('#stageIcon').textContent='\u25cc';
-  $('#stageText').textContent='Preparing\u2026';
-  $('#subStage').textContent='Clipify AI is working locally';
-  renderPipelineSteps(0,false);
+  progressPanel.dataset.state = 'running';
+  progressPanel.dataset.progress = '0';
+  progressPanel.setAttribute('role', 'region');
+  progressPanel.setAttribute('aria-live', 'polite');
+  $('#progressTitle').textContent = 'Processing locally';
+  $('#progressStatus').textContent = 'LIVE';
+  $('#progressBar').style.width = '0%';
+  $('#progressBar').setAttribute('aria-valuenow', '0');
+  $('#progressPercent').textContent = '0%';
+  $('#stageIcon').textContent = '\u25cc';
+  $('#stageText').textContent = 'Preparing\u2026';
+  $('#subStage').textContent = 'Clipify AI is working locally';
+  renderPipelineSteps(0, false);
 
   addLog('[Start] Starting Clipify AI…');
 
-  try{
+  try {
 
-    const r=await fetch(
+    const r = await fetch(
       '/api/start',
       {
-        method:'POST',
-        body:form
+        method: 'POST',
+        body: form
       }
     );
 
-    const d=await safeJson(r, 'Could not start the job.');
+    const d = await safeJson(r, 'Could not start the job.');
 
-    if(!r.ok)
+    if (!r.ok)
       throw Error(
-        d.error||
+        d.error ||
         'Could not start the job.'
       );
 
-    state.jobId=d.job_id;
+    state.jobId = d.job_id;
 
     addLog(
       `[Start] Job ${state.jobId}`
@@ -1308,7 +1635,7 @@ async function start(){
 
     await watchJob(state.jobId);
 
-  }catch(error){
+  } catch (error) {
 
     addLog(
       `[Error] ${error.message}`
@@ -1316,159 +1643,160 @@ async function start(){
 
     alert(error.message);
 
-    create.disabled=false;
+    create.disabled = false;
   }
 }
 
-function renderPipelineSteps(progress, failed=false){
-  const helper=window.ClipifyPipelineStatus;
-  if(!helper)return;
-  const marks={complete:'\u2713',active:'\u2026',failed:'!',pending:'\u00b7'};
-  helper.stepStates(progress,failed).forEach(step=>{
-    const node=document.querySelector('[data-step="'+step.name+'"]');
-    if(!node)return;
-    node.dataset.state=step.state;
-    const indicator=node.querySelector('.step-indicator');
-    if(indicator)indicator.textContent=marks[step.state]||'';
+function renderPipelineSteps(progress, failed = false) {
+  const helper = window.ClipifyPipelineStatus;
+  if (!helper) return;
+  const marks = { complete: '\u2713', active: '\u2026', failed: '!', pending: '\u00b7' };
+  helper.stepStates(progress, failed).forEach(step => {
+    const node = document.querySelector('[data-step="' + step.name + '"]');
+    if (!node) return;
+    node.dataset.state = step.state;
+    const indicator = node.querySelector('.step-indicator');
+    if (indicator) indicator.textContent = marks[step.state] || '';
   });
 }
 
-function setPipelineFailure(message){
-  if(progressPanel.dataset.state==='error'||progressPanel.dataset.state==='complete')return;
-  const pct=Math.max(0,Math.min(100,Number(progressPanel.dataset.progress)||0));
-  const detail=window.ClipifyPipelineStatus
+function setPipelineFailure(message) {
+  if (progressPanel.dataset.state === 'error' || progressPanel.dataset.state === 'complete') return;
+  const pct = Math.max(0, Math.min(100, Number(progressPanel.dataset.progress) || 0));
+  const detail = window.ClipifyPipelineStatus
     ? window.ClipifyPipelineStatus.cleanFailure(message)
-    : String(message||'The pipeline stopped before a Short was created.').trim();
-  progressPanel.dataset.state='error';
-  progressPanel.setAttribute('role','alert');
-  progressPanel.setAttribute('aria-live','assertive');
-  $('#progressTitle').textContent='Processing failed';
-  $('#progressPercent').textContent=pct?('Stopped at '+pct+'%'):'Stopped';
-  $('#progressBar').setAttribute('aria-valuenow',String(pct));
-  $('#stageIcon').textContent='!';
-  $('#stageText').textContent='No Short was created';
-  $('#subStage').textContent=detail;
-  $('#progressStatus').textContent='FAILED';
-  renderPipelineSteps(pct,true);
+    : String(message || 'The pipeline stopped before a Short was created.').trim();
+  progressPanel.dataset.state = 'error';
+  progressPanel.setAttribute('role', 'alert');
+  progressPanel.setAttribute('aria-live', 'assertive');
+  $('#progressTitle').textContent = 'Processing failed';
+  $('#progressPercent').textContent = pct ? ('Stopped at ' + pct + '%') : 'Stopped';
+  $('#progressBar').setAttribute('aria-valuenow', String(pct));
+  $('#stageIcon').textContent = '!';
+  $('#stageText').textContent = 'No Short was created';
+  $('#subStage').textContent = detail;
+  $('#progressStatus').textContent = 'FAILED';
+  renderPipelineSteps(pct, true);
 }
 
-function setPipelineComplete(){
+function setPipelineComplete() {
   updateProgress({
-    progress:100,
-    stage:'Shorts ready',
-    detail:'Your finished Shorts are ready to review.'
+    progress: 100,
+    stage: 'Shorts ready',
+    detail: 'Your finished Shorts are ready to review.'
   });
-  progressPanel.dataset.state='complete';
-  progressPanel.setAttribute('role','status');
-  progressPanel.setAttribute('aria-live','polite');
-  $('#progressTitle').textContent='Processing complete';
-  $('#progressStatus').textContent='DONE';
-  $('#stageIcon').textContent='\u2713';
+  progressPanel.dataset.state = 'complete';
+  progressPanel.setAttribute('role', 'status');
+  progressPanel.setAttribute('aria-live', 'polite');
+  $('#progressTitle').textContent = 'Processing complete';
+  $('#progressStatus').textContent = 'DONE';
+  $('#stageIcon').textContent = '\u2713';
 }
 
-function updateProgress(d){
-  if(progressPanel.dataset.state==='error'||progressPanel.dataset.state==='complete')return;
-  const pct=Math.max(0,Math.min(100,Number(d.progress)||0));
-  progressPanel.dataset.state='running';
-  progressPanel.dataset.progress=String(pct);
-  const bar=$('#progressBar');
-  if(bar){
-    bar.style.width=pct+'%';
-    bar.setAttribute('aria-valuenow',String(pct));
+function updateProgress(d) {
+  if (progressPanel.dataset.state === 'error' || progressPanel.dataset.state === 'complete') return;
+  const pct = Math.max(0, Math.min(100, Number(d.progress) || 0));
+  progressPanel.dataset.state = 'running';
+  progressPanel.dataset.progress = String(pct);
+  const bar = $('#progressBar');
+  if (bar) {
+    bar.style.width = pct + '%';
+    bar.setAttribute('aria-valuenow', String(pct));
   }
-  if($('#progressPercent'))$('#progressPercent').textContent=String(pct)+'%';
-  if($('#progressTitle'))$('#progressTitle').textContent='Processing locally';
-  if($('#progressStatus'))$('#progressStatus').textContent='LIVE';
-  if($('#stageText'))$('#stageText').textContent=d.stage||'Working...';
-  if($('#subStage'))$('#subStage').textContent=d.detail||'';
-  if($('#stageIcon'))$('#stageIcon').textContent=pct>=100?'\u2713':'\u2726';
-  renderPipelineSteps(pct,false);
+  if ($('#progressPercent')) $('#progressPercent').textContent = String(pct) + '%';
+  if ($('#progressTitle')) $('#progressTitle').textContent = 'Processing locally';
+  if ($('#progressStatus')) $('#progressStatus').textContent = 'LIVE';
+  if ($('#stageText')) $('#stageText').textContent = d.stage || 'Working...';
+  if ($('#subStage')) $('#subStage').textContent = d.detail || '';
+  if ($('#stageIcon')) $('#stageIcon').textContent = pct >= 100 ? '\u2713' : '\u2726';
+  renderPipelineSteps(pct, false);
 }
 
-async function watchJob(jobId){
-  if(state.es){
-    try{state.es.close()}catch{}
+async function watchJob(jobId) {
+  if (state.es) {
+    try { state.es.close() } catch { }
   }
-  let terminal=false;
-  const stream=new EventSource('/api/events/'+jobId);
-  state.es=stream;
+  let terminal = false;
+  const stream = new EventSource('/api/events/' + jobId);
+  state.es = stream;
 
-  stream.onmessage=event=>{
-    try{
-      const d=JSON.parse(event.data);
-      const failed=d.kind==='error'||(d.kind==='status'&&d.status==='error');
-      const succeeded=(d.kind==='complete'&&d.pipeline===true)||d.kind==='done'||(d.kind==='status'&&d.status==='done');
+  stream.onmessage = event => {
+    try {
+      const d = JSON.parse(event.data);
+      const failed = d.kind === 'error' || (d.kind === 'status' && d.status === 'error');
+      const succeeded = (d.kind === 'complete' && d.pipeline === true) || d.kind === 'done' || (d.kind === 'status' && d.status === 'done');
 
-      if(d.kind==='log'){
+      if (d.kind === 'log') {
         addLog(d.message);
         return;
       }
-      if(failed){
-        const detail=d.detail||d.message||d.error||'The pipeline stopped before a Short was created.';
-        addLog('[Error] '+detail);
+      if (failed) {
+        const detail = d.detail || d.message || d.error || 'The pipeline stopped before a Short was created.';
+        addLog('[Error] ' + detail);
         setPipelineFailure(detail);
-        terminal=true;
+        terminal = true;
         stream.close();
-        if(state.es===stream)state.es=null;
-        create.disabled=false;
+        if (state.es === stream) state.es = null;
+        create.disabled = false;
         return;
       }
-      if(succeeded){
+      if (succeeded) {
         setPipelineComplete();
-        terminal=true;
+        terminal = true;
         stream.close();
-        if(state.es===stream)state.es=null;
+        if (state.es === stream) state.es = null;
         loadJobResult(jobId);
         return;
       }
-      if(d.kind==='progress'||d.kind==='status')updateProgress(d);
-    }catch(error){
-      console.error('[SSE]',error);
+      if (d.kind === 'progress' || d.kind === 'status') updateProgress(d);
+    } catch (error) {
+      console.error('[SSE]', error);
     }
   };
 
-  stream.onerror=()=>{
-    if(!terminal&&stream.readyState===EventSource.CLOSED){
-      terminal=true;
+  stream.onerror = () => {
+    if (!terminal && stream.readyState === EventSource.CLOSED) {
+      terminal = true;
       stream.close();
-      if(state.es===stream)state.es=null;
+      if (state.es === stream) state.es = null;
       setPipelineFailure('Connection to the local processing service was lost before the job finished.');
-      create.disabled=false;
+      create.disabled = false;
     }
   };
 }
 
-async function loadJobResult(jobId){
+async function loadJobResult(jobId) {
 
-  try{
+  try {
 
-    const r=await fetch(
+    const r = await fetch(
       `/api/status/${jobId}`,
-      {cache:'no-store'}
+      { cache: 'no-store' }
     );
 
-    const d=await r.json();
+    const d = await r.json();
 
-    if(!r.ok)
+    if (!r.ok)
       throw Error(
-        d.error||
+        d.error ||
         'Could not load job result.'
       );
 
-    const outputs=
-      d.outputs||
-      d.output_files||
+    const outputs =
+      d.outputs ||
+      d.output_files ||
       [];
 
     await loadResults(outputs, jobId);
 
-    if(outputs.length){
+    if (outputs.length) {
 
       await selectReview(jobId, outputs[0]);
 
-      $('#editor')?.scrollIntoView({
-        behavior:'smooth',
-        block:'start'
+      // Present all generated clips in the results view
+      $('#results')?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
       });
 
       addLog(
@@ -1482,62 +1810,62 @@ async function loadJobResult(jobId){
         }
       }, 700);
 
-    }else{
+    } else {
 
       addLog(
         '[Done] Job completed but no output files were returned.'
       );
 
-      create.disabled=false;
+      create.disabled = false;
     }
 
-  }catch(error){
+  } catch (error) {
 
     addLog(
       `[Error] ${error.message}`
     );
 
-    create.disabled=false;
+    create.disabled = false;
   }
 }
 
-async function fetchMetadata(job,file){
+async function fetchMetadata(job, file) {
 
-  try{
+  try {
 
-    const r=await fetch(
+    const r = await fetch(
       `/api/metadata/${job}/${encodeURIComponent(file)}`,
-      {cache:'no-store'}
+      { cache: 'no-store' }
     );
 
-    if(!r.ok)return null;
+    if (!r.ok) return null;
 
     return await r.json();
 
-  }catch{
+  } catch {
 
     return null;
   }
 }
 
-function metadataMarkup(m){
+function metadataMarkup(m) {
 
-  if(!m)return '';
+  if (!m) return '';
 
-  const title=
-    escapeHtml(m.title||'');
+  const title =
+    escapeHtml(m.title || '');
 
-  const description=
-    escapeHtml(m.description||'');
+  const description =
+    escapeHtml(m.description || '');
 
-  const hashes=
+  const hashes =
     escapeHtml(
-      (m.hashtags||[]).join(' ')
+      (m.hashtags || []).join(' ')
     );
 
-  const tags=
+  const tags =
     escapeHtml(
-      (m.tags||[]).join(', ')
+      (m.tags || []).join(', ')
     );
 
   return `
@@ -1556,24 +1884,24 @@ function metadataMarkup(m){
   `;
 }
 
-async function copyMetadataValue(value,button){
+async function copyMetadataValue(value, button) {
 
-  if(!value)return;
+  if (!value) return;
 
-  try{
+  try {
 
-    if(navigator.clipboard?.writeText){
+    if (navigator.clipboard?.writeText) {
 
       await navigator.clipboard.writeText(value);
 
-    }else{
+    } else {
 
-      const area=
+      const area =
         document.createElement('textarea');
 
-      area.value=value;
-      area.style.position='fixed';
-      area.style.opacity='0';
+      area.value = value;
+      area.style.position = 'fixed';
+      area.style.opacity = '0';
 
       document.body.appendChild(area);
 
@@ -1584,16 +1912,16 @@ async function copyMetadataValue(value,button){
       area.remove();
     }
 
-    const label=button.textContent;
+    const label = button.textContent;
 
-    button.textContent='Copied';
+    button.textContent = 'Copied';
 
     setTimeout(
-      ()=>button.textContent=label,
+      () => button.textContent = label,
       1200
     );
 
-  }catch(error){
+  } catch (error) {
 
     console.error(
       '[Metadata] copy failed:',
@@ -1602,21 +1930,21 @@ async function copyMetadataValue(value,button){
   }
 }
 
-function bindMetadataCopyButtons(container,m){
+function bindMetadataCopyButtons(container, m) {
 
-  const values={
-    title:String(m.title||''),
-    description:String(m.description||''),
-    hashtags:(m.hashtags||[]).join(' '),
-    tags:(m.tags||[]).join(', ')
+  const values = {
+    title: String(m.title || ''),
+    description: String(m.description || ''),
+    hashtags: (m.hashtags || []).join(' '),
+    tags: (m.tags || []).join(', ')
   };
 
   container
     .querySelectorAll('[data-copy-field]')
-    .forEach(button=>
+    .forEach(button =>
       button.addEventListener(
         'click',
-        ()=>{
+        () => {
           copyMetadataValue(
             values[button.dataset.copyField],
             button
@@ -1626,32 +1954,32 @@ function bindMetadataCopyButtons(container,m){
     );
 }
 
-function renderOutputCarousel(){
-  const featured=$('#featuredResult');
-  if(!featured) return;
-  if(!state.outputs.length){
-    featured.hidden=true;
+function renderOutputCarousel() {
+  const featured = $('#featuredResult');
+  if (!featured) return;
+  if (!state.outputs.length) {
+    featured.hidden = true;
     return;
   }
 
-  const total=state.outputs.length;
-  const currentFile=state.outputs[state.currentOutputIndex] || state.outputs[0];
-  const src=`/media/${state.jobId}/${encodeURIComponent(currentFile)}`;
-  const title=currentFile.replace(/\.mp4$/i,'');
+  const total = state.outputs.length;
+  const currentFile = state.outputs[state.currentOutputIndex] || state.outputs[0];
+  const src = `/media/${state.jobId}/${encodeURIComponent(currentFile)}`;
+  const title = currentFile.replace(/\.mp4$/i, '');
 
-  featured.hidden=false;
+  featured.hidden = false;
   featured.classList.remove('featured-pop');
   void featured.offsetWidth;
   featured.classList.add('featured-pop');
 
-  featured.innerHTML=`
+  featured.innerHTML = `
     <div class="featured-carousel-shell">
-      <button class="carousel-nav prev" type="button" aria-label="Previous clip" ${state.currentOutputIndex===0 ? 'disabled' : ''}>‹</button>
+      <button class="carousel-nav prev" type="button" aria-label="Previous clip" ${state.currentOutputIndex === 0 ? 'disabled' : ''}>‹</button>
       <div class="featured-video-shell">
         <video id="featuredVideo" controls playsinline preload="metadata" muted autoplay loop src="${src}?v=${Date.now()}"></video>
         <div class="featured-badge">${state.currentOutputIndex + 1} / ${total} · FINISHED SHORT</div>
       </div>
-      <button class="carousel-nav next" type="button" aria-label="Next clip" ${state.currentOutputIndex===total-1 ? 'disabled' : ''}>›</button>
+      <button class="carousel-nav next" type="button" aria-label="Next clip" ${state.currentOutputIndex === total - 1 ? 'disabled' : ''}>›</button>
     </div>
     <div class="featured-copy">
       <div class="featured-meta-row">
@@ -1661,7 +1989,7 @@ function renderOutputCarousel(){
       <h3 id="featuredTitle">${escapeHtml(title)}</h3>
       <p id="featuredMeta">1080 × 1920 · finished captions · optional branding</p>
       <div class="featured-dots" aria-label="Select clip">
-        ${state.outputs.map((_, index)=>`<button class="dot ${index===state.currentOutputIndex ? 'active' : ''}" type="button" aria-label="Go to clip ${index + 1}" data-index="${index}"></button>`).join('')}
+        ${state.outputs.map((_, index) => `<button class="dot ${index === state.currentOutputIndex ? 'active' : ''}" type="button" aria-label="Go to clip ${index + 1}" data-index="${index}"></button>`).join('')}
       </div>
       <div class="featured-actions">
         <button class="primary" id="featuredReview" type="button"><span>✏️ Edit in Studio</span><b>→</b></button>
@@ -1672,246 +2000,332 @@ function renderOutputCarousel(){
     </div>
   `;
 
-  const featuredVideo=$('#featuredVideo');
-  const featuredReview=$('#featuredReview');
-  const featuredDownload=$('#featuredDownload');
+  const featuredVideo = $('#featuredVideo');
+  const featuredReview = $('#featuredReview');
+  const featuredDownload = $('#featuredDownload');
 
-  if(featuredVideo){
-    featuredVideo.muted=true;
-    featuredVideo.autoplay=true;
-    featuredVideo.loop=true;
+  if (featuredVideo) {
+    featuredVideo.muted = true;
+    featuredVideo.autoplay = true;
+    featuredVideo.loop = true;
     featuredVideo.load();
-    featuredVideo.play().catch(()=>{});
+    featuredVideo.play().catch(() => { });
   }
 
-  featuredReview?.addEventListener('click', ()=>selectReview(state.jobId, currentFile));
-  featured.querySelector('#featuredPublish')?.addEventListener('click', ()=>{
-    if(window.openPublishModal){
+  featuredReview?.addEventListener('click', () => selectReview(state.jobId, currentFile));
+  featured.querySelector('#featuredPublish')?.addEventListener('click', () => {
+    if (window.openPublishModal) {
       window.openPublishModal(state.jobId, currentFile);
     }
   });
-  featured.querySelector('#featuredNew')?.addEventListener('click', ()=>{
+  featured.querySelector('#featuredNew')?.addEventListener('click', () => {
     $('#newBtn')?.click();
   });
-  featuredDownload?.addEventListener('click', (event)=>{
+  featuredDownload?.addEventListener('click', (event) => {
     event.preventDefault();
     window.location.href = `${src}?download=1`;
   });
 
-  featured.querySelector('.carousel-nav.prev')?.addEventListener('click', ()=>{
-    if(state.currentOutputIndex>0){
+  featured.querySelector('.carousel-nav.prev')?.addEventListener('click', () => {
+    if (state.currentOutputIndex > 0) {
       state.currentOutputIndex -= 1;
       renderOutputCarousel();
     }
   });
 
-  featured.querySelector('.carousel-nav.next')?.addEventListener('click', ()=>{
-    if(state.currentOutputIndex < state.outputs.length - 1){
+  featured.querySelector('.carousel-nav.next')?.addEventListener('click', () => {
+    if (state.currentOutputIndex < state.outputs.length - 1) {
       state.currentOutputIndex += 1;
       renderOutputCarousel();
     }
   });
 
-  featured.querySelectorAll('.featured-dots .dot').forEach((dot)=>{
-    dot.addEventListener('click', ()=>{
+  featured.querySelectorAll('.featured-dots .dot').forEach((dot) => {
+    dot.addEventListener('click', () => {
       state.currentOutputIndex = Number(dot.dataset.index || 0);
       renderOutputCarousel();
     });
   });
 
-  featured.querySelector('.featured-video-shell')?.addEventListener('dblclick', ()=>selectReview(state.jobId, currentFile));
+  featured.querySelector('.featured-video-shell')?.addEventListener('dblclick', () => selectReview(state.jobId, currentFile));
 
   const reviewFile = currentFile;
   const renderedJob = state.jobId;
-  fetchMetadata(renderedJob, reviewFile).then((m)=>{
-    if(state.jobId!==renderedJob || state.outputs[state.currentOutputIndex]!==reviewFile) return;
-    const titleEl=$('#featuredTitle');
-    if(titleEl && m?.title) titleEl.textContent = m.title;
-    const metaEl=$('#featuredMeta');
-    const selection=m?.selection||{};
-    if(metaEl && selection.method==='qwen' && selection.decision==='reject'){
-      metaEl.textContent=`1080 × 1920 · Qwen (${selection.model||'local model'}) rejected this clip · recovery used`;
-    }else if(metaEl && selection.method==='qwen' && selection.decision==='keep'){
-      metaEl.textContent=`1080 × 1920 · Qwen (${selection.model||'local model'}) selected this clip`;
-    }else if(metaEl && selection.method==='deterministic_fallback'){
-      metaEl.textContent='1080 × 1920 · deterministic fallback · Qwen score unavailable';
+  fetchMetadata(renderedJob, reviewFile).then((m) => {
+    if (state.jobId !== renderedJob || state.outputs[state.currentOutputIndex] !== reviewFile) return;
+    const titleEl = $('#featuredTitle');
+    if (titleEl && m?.title) titleEl.textContent = m.title;
+    const metaEl = $('#featuredMeta');
+    const selection = m?.selection || {};
+    let timePrefix = '';
+    if (m?.duration) {
+      const dur = Math.round(m.duration);
+      const dm = Math.floor(dur / 60);
+      const ds = String(dur % 60).padStart(2, '0');
+      timePrefix = `⏱️ ${dm}:${ds} (${dur}s) · `;
+    }
+    if (metaEl && selection.method === 'qwen' && selection.decision === 'reject') {
+      metaEl.textContent = `${timePrefix}1080 × 1920 · Qwen (${selection.model || 'local model'}) rejected this clip · recovery used`;
+    } else if (metaEl && selection.method === 'qwen' && selection.decision === 'keep') {
+      metaEl.textContent = `${timePrefix}1080 × 1920 · Qwen (${selection.model || 'local model'}) selected this clip`;
+    } else if (metaEl && selection.method === 'deterministic_fallback') {
+      metaEl.textContent = `${timePrefix}1080 × 1920 · deterministic fallback · Qwen score unavailable`;
+    } else if (metaEl) {
+      metaEl.textContent = `${timePrefix}1080 × 1920 · finished captions · local render`;
     }
   });
 }
 
-async function loadResults(outputs, jobId = state.jobId){
+async function loadResults(outputs, jobId = state.jobId) {
 
   state.jobId = jobId || state.jobId;
   state.outputs = outputs || [];
   state.currentOutputIndex = 0;
 
-  grid.innerHTML='';
+  grid.innerHTML = '';
 
   renderOutputCarousel();
 
-  for(let i=0;i<state.outputs.length;i++){
-    const file=state.outputs[i];
-    const src=`/media/${state.jobId}/${encodeURIComponent(file)}`;
-    const card=document.createElement('button');
-    card.type='button';
-    card.className='result-thumb';
-    card.dataset.index=String(i);
-    card.innerHTML=`
+  for (let i = 0; i < state.outputs.length; i++) {
+    const file = state.outputs[i];
+    const src = `/media/${state.jobId}/${encodeURIComponent(file)}`;
+    const card = document.createElement('button');
+    card.type = 'button';
+    card.className = 'result-thumb';
+    card.dataset.index = String(i);
+    card.innerHTML = `
       <video muted playsinline preload="metadata" src="${src}"></video>
       <span>${i + 1}</span>
     `;
-    card.addEventListener('click', ()=>{
-      state.currentOutputIndex=i;
+    card.addEventListener('click', () => {
+      state.currentOutputIndex = i;
       renderOutputCarousel();
     });
     grid.appendChild(card);
   }
 
-  results.hidden=!state.outputs.length;
+  results.hidden = !state.outputs.length;
 
-  if(state.outputs.length){
-    results.scrollIntoView({behavior:'smooth',block:'start'});
-    setTimeout(()=>$('#featuredVideo')?.focus({preventScroll:true}), 450);
+  if (state.outputs.length) {
+    results.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    setTimeout(() => $('#featuredVideo')?.focus({ preventScroll: true }), 450);
   }
 
-  create.disabled=false;
+  updateEditorClipSwitcher();
+  create.disabled = false;
 }
 
-async function selectReview(job,file){
+function updateEditorClipSwitcher() {
+  const switcher = $('#editorClipSwitcher');
+  if (!switcher) return;
+  if (!state.outputs || state.outputs.length <= 1) {
+    switcher.hidden = true;
+    switcher.innerHTML = '';
+    return;
+  }
+  switcher.hidden = false;
+  switcher.innerHTML = state.outputs.map((out, idx) => {
+    const active = (out === state.reviewFile || (!state.reviewFile && idx === 0));
+    return `<button type="button" class="editor-short-pill ${active ? 'active' : ''}" data-file="${out}" style="background:${active ? 'rgba(215,187,148,0.28)' : 'rgba(255,255,255,0.06)'};border:1px solid ${active ? 'var(--warm,#d6b388)' : 'rgba(190,176,159,0.3)'};color:var(--text);padding:6px 12px;border-radius:8px;font-size:0.8rem;font-weight:600;cursor:pointer;">Short #${idx + 1}</button>`;
+  }).join('');
+  switcher.querySelectorAll('button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const f = btn.dataset.file;
+      if (f) selectReview(state.jobId, f);
+    });
+  });
+}
 
-  state.jobId=job;
-  state.reviewFile=file;
+function updateEditorFramingPreview() {
+  const panX = +$('#editorPanX')?.value || 0;
+  const panY = +$('#editorPanY')?.value || 0;
+  const zoom = (+$('#editorZoom')?.value || 100) / 100;
+  if ($('#editorPanXOut')) $('#editorPanXOut').textContent = (panX >= 0 ? `+${panX}%` : `${panX}%`);
+  if ($('#editorPanYOut')) $('#editorPanYOut').textContent = (panY >= 0 ? `+${panY}%` : `${panY}%`);
+  if ($('#editorZoomOut')) $('#editorZoomOut').textContent = `${zoom.toFixed(1)}x`;
 
-  const src=
+  const video = $('#reviewVideo');
+  if (video) {
+    if (panX === 0 && panY === 0 && zoom === 1) {
+      video.style.transform = 'none';
+    } else {
+      video.style.transform = `scale(${zoom}) translate(${panX * 0.3}%, ${panY * 0.3}%)`;
+      video.style.transformOrigin = 'center center';
+    }
+  }
+}
+
+async function selectReview(job, file) {
+
+  state.jobId = job;
+  state.reviewFile = file;
+
+  const src =
     `/media/${job}/${encodeURIComponent(file)}`;
 
-  $('#reviewTitle').textContent=file;
+  $('#reviewTitle').textContent = file;
 
-  $('#reviewMeta').textContent=
+  $('#reviewMeta').textContent =
     '1080 × 1920 · local render · post-render branding available';
+
+  // Reset framing preview controls to automatic defaults
+  if ($('#editorPanX')) $('#editorPanX').value = 0;
+  if ($('#editorPanY')) $('#editorPanY').value = 0;
+  if ($('#editorZoom')) $('#editorZoom').value = 100;
+  if ($('#editorSplitRatio')) $('#editorSplitRatio').value = 50;
+  updateEditorFramingPreview();
+  updateEditorClipSwitcher();
 
   // The editor renders its primary actions twice (panel + footer). Both copies
   // must be wired, otherwise the visible one stays a dead href="#".
-  editorDownloads().forEach(a=>{a.href=src;a.hidden=false;});
+  editorDownloads().forEach(a => { a.href = src; a.hidden = false; });
 
-  editorApplyButtons().forEach(b=>b.disabled=false);
+  editorApplyButtons().forEach(b => b.disabled = false);
 
-  $('#editorLogoImg').removeAttribute('src');
+  const editorImg = $('#editorLogoImg');
+  if (editorImg) {
+    editorImg.removeAttribute('src');
+    editorImg.style.display = 'none';
+  }
+  const editorPlaceholder = $('#editorLogoPlaceholder');
+  if (editorPlaceholder) editorPlaceholder.style.display = 'none';
 
-  state.editorLogoFile=null;
-  state.editorLogoPath=null;
+  state.editorLogoFile = null;
+  state.editorLogoPath = null;
 
-  $('#editorLogoEnabled').checked=false;
-  $('#editorTextEnabled').checked=false;
-  $('#editorTextValue').value='';
+  if ($('#editorLogoEnabled')) $('#editorLogoEnabled').checked = false;
+  if ($('#editorLogoPosition')) $('#editorLogoPosition').value = 'top-right';
+  if ($('#editorLogoMargin')) $('#editorLogoMargin').value = 40;
+  if ($('#editorLogoSize')) $('#editorLogoSize').value = 8;
+  if ($('#editorLogoSizeOut')) $('#editorLogoSizeOut').textContent = '8%';
+  if ($('#editorLogoOpacity')) $('#editorLogoOpacity').value = 80;
+  if ($('#editorLogoOpacityOut')) $('#editorLogoOpacityOut').textContent = '80%';
+  if ($('#editorLogo')) {
+    $('#editorLogo').dataset.x = '92';
+    $('#editorLogo').dataset.y = '8';
+  }
 
-  $('#editorLogo').dataset.x='92';
-  $('#editorLogo').dataset.y='8';
+  // Check if job already has a saved logo on server
+  try {
+    const testImg = new Image();
+    testImg.onload = () => {
+      state.editorLogoPath = `/api/logo/${job}`;
+      if ($('#editorLogoEnabled')) $('#editorLogoEnabled').checked = true;
+      editorPreviewUpdate();
+    };
+    testImg.src = `/api/logo/${job}?t=${Date.now()}`;
+  } catch {}
 
-  $('#editorText').dataset.x='50';
-  $('#editorText').dataset.y='75';
+  if ($('#editorTextEnabled')) $('#editorTextEnabled').checked = false;
+  $('#editorTextValue').value = '';
 
-  const m=
+  $('#editorLogo').dataset.x = '92';
+  $('#editorLogo').dataset.y = '8';
+
+  $('#editorText').dataset.x = '50';
+  $('#editorText').dataset.y = '75';
+
+  const m =
     await fetchMetadata(
       job,
       file
     );
 
-  const meta=
+  const meta =
     $('#editorMetadata');
 
-  if(m){
+  if (m) {
 
-    meta.hidden=false;
+    meta.hidden = false;
 
-    const selectionNote=$('#editorSelectionNote');
-    const selection=m.selection||{};
-    if(selectionNote){
-      selectionNote.hidden=true;
-      selectionNote.textContent='';
-      selectionNote.dataset.decision='';
-      if(selection.method==='qwen' && selection.decision==='reject'){
-        selectionNote.textContent=`Qwen (${selection.model||'local model'}) marked this clip reject. It was retained by the older recovery policy after boundary and duration validation.`;
-        selectionNote.dataset.decision='reject';
-        selectionNote.hidden=false;
-      }else if(selection.method==='qwen' && selection.decision==='keep'){
-        selectionNote.textContent=`Selected by Qwen (${selection.model||'local model'}); decision: keep.`;
-        selectionNote.dataset.decision='keep';
-        selectionNote.hidden=false;
-      }else if(selection.method==='deterministic_fallback'){
-        selectionNote.textContent='Selected by deterministic fallback because no usable Qwen score was available.';
-        selectionNote.dataset.decision='fallback';
-        selectionNote.hidden=false;
+    const selectionNote = $('#editorSelectionNote');
+    const selection = m.selection || {};
+    if (selectionNote) {
+      selectionNote.hidden = true;
+      selectionNote.textContent = '';
+      selectionNote.dataset.decision = '';
+      if (selection.method === 'qwen' && selection.decision === 'reject') {
+        selectionNote.textContent = `Qwen (${selection.model || 'local model'}) marked this clip reject. It was retained by the older recovery policy after boundary and duration validation.`;
+        selectionNote.dataset.decision = 'reject';
+        selectionNote.hidden = false;
+      } else if (selection.method === 'qwen' && selection.decision === 'keep') {
+        selectionNote.textContent = `Selected by Qwen (${selection.model || 'local model'}); decision: keep.`;
+        selectionNote.dataset.decision = 'keep';
+        selectionNote.hidden = false;
+      } else if (selection.method === 'deterministic_fallback') {
+        selectionNote.textContent = 'Selected by deterministic fallback because no usable Qwen score was available.';
+        selectionNote.dataset.decision = 'fallback';
+        selectionNote.hidden = false;
       }
     }
 
-    $('#reviewTitle').textContent=
-      m.title||file;
+    $('#reviewTitle').textContent =
+      m.title || file;
 
-    $('#editorMetaDescription').textContent=
-      m.description||
-      m.title||
+    $('#editorMetaDescription').textContent =
+      m.description ||
+      m.title ||
       '';
 
-    $('#editorMetaHashtags').textContent=
-      (m.hashtags||[]).join(' ');
+    $('#editorMetaHashtags').textContent =
+      (m.hashtags || []).join(' ');
 
-    $('#editorMetaTags').textContent=
-      'Tags: '+
-      (m.tags||[]).join(', ');
+    $('#editorMetaTags').textContent =
+      'Tags: ' +
+      (m.tags || []).join(', ');
 
-  }else{
+  } else {
 
-    meta.hidden=true;
+    meta.hidden = true;
   }
 
   navigateTo('editor');
   // Let the editor section become visible before asking Chromium to fetch media.
-  await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
-  $('#reviewEmpty').hidden=true;
-  if(reviewPlayer){
+  await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+  $('#reviewEmpty').hidden = true;
+  if (reviewPlayer) {
     reviewPlayer.load(src);
-  }else{
-    const video=$('#reviewVideo');
-    video.hidden=false;
-    video.src=src;
+  } else {
+    const video = $('#reviewVideo');
+    video.hidden = false;
+    video.src = src;
     video.load();
   }
   editorPreviewUpdate();
 }
 
-async function applyEditorBranding(){
+async function applyEditorBranding() {
 
-  if(
-    !state.jobId||
+  if (
+    !state.jobId ||
     !state.reviewFile
-  )return;
+  ) return;
 
-  const b={
+  const b = {
 
     logo_enabled:
-      $('#editorLogoEnabled').checked,
+      $('#editorLogoEnabled')?.checked || false,
 
     logo_path:
-      state.editorLogoPath||'',
+      state.editorLogoPath || '',
 
     logo_position:
-      'custom',
+      $('#editorLogoPosition')?.value || 'custom',
 
     logo_size:
-      +$('#editorLogoSize').value,
+      +($('#editorLogoSize')?.value || 8),
 
     logo_opacity:
-      +$('#editorLogoOpacity').value,
+      +($('#editorLogoOpacity')?.value || 80),
 
     logo_margin:
-      40,
+      +($('#editorLogoMargin')?.value || 40),
 
     logo_x:
-      +$('#editorLogo').dataset.x||92,
+      +$('#editorLogo').dataset.x || 92,
 
     logo_y:
-      +$('#editorLogo').dataset.y||8,
+      +$('#editorLogo').dataset.y || 8,
 
     logo_bg_remove:
       $('#editorLogoBgRemove').checked,
@@ -1953,197 +2367,219 @@ async function applyEditorBranding(){
       110,
 
     text_x:
-      +$('#editorText').dataset.x||50,
+      +$('#editorText').dataset.x || 50,
 
     text_y:
-      +$('#editorText').dataset.y||75
+      +$('#editorText').dataset.y || 75,
+
+    framing: {
+      pan_x: +$('#editorPanX')?.value || 0,
+      pan_y: +$('#editorPanY')?.value || 0,
+      zoom: (+$('#editorZoom')?.value || 100) / 100,
+      split_ratio: +$('#editorSplitRatio')?.value || 50
+    },
+    upscale_quality: $('#editorUpscaleQuality')?.value || $('#upscaleQuality')?.value || 'high'
   };
 
-  try{
+  try {
 
-    editorApplyButtons().forEach(b=>{
-      b.disabled=true;
-      const span=b.querySelector('span');
-      if(span)span.textContent='Rendering…';
+    editorApplyButtons().forEach(b => {
+      b.disabled = true;
+      const span = b.querySelector('span');
+      if (span) span.textContent = 'Rendering…';
     });
 
-    if(state.editorLogoFile){
+    if (state.editorLogoFile) {
 
-      const fd=new FormData();
+      const fd = new FormData();
 
       fd.append(
         'logo',
         state.editorLogoFile
       );
 
-      const ur=
+      const ur =
         await fetch(
-          '/api/upload-logo/'+state.jobId,
+          '/api/upload-logo/' + state.jobId,
           {
-            method:'POST',
-            body:fd
+            method: 'POST',
+            body: fd
           }
         );
 
-      const ud=
+      const ud =
         await ur.json();
 
-      if(!ur.ok)
+      if (!ur.ok)
         throw Error(
-          ud.error||
+          ud.error ||
           'Logo upload failed'
         );
 
-      state.editorLogoPath=ud.path;
-      b.logo_path=ud.path;
+      b.logo_path = ud.path;
+      if (!state.editorLogoPath || !state.editorLogoPath.startsWith('data:')) {
+        state.editorLogoPath = ud.url || `/api/logo/${state.jobId}`;
+      }
     }
 
-    const r=
+    const r =
       await fetch(
-        '/api/apply-branding/'+state.jobId,
+        '/api/apply-branding/' + state.jobId,
         {
-          method:'POST',
-          headers:{
+          method: 'POST',
+          headers: {
             'Content-Type':
               'application/json'
           },
-          body:JSON.stringify({
-            filename:state.reviewFile,
-            branding:b,
-            font:fontSelect.value
+          body: JSON.stringify({
+            filename: state.reviewFile,
+            branding: b,
+            font: fontSelect.value
           })
         }
       );
 
-    const d=
+    const d =
       await r.json();
 
-    if(!r.ok)
+    if (!r.ok)
       throw Error(
-        d.error||
+        d.error ||
         'Branding render failed'
       );
 
-    state.reviewFile=d.filename;
+    state.reviewFile = d.filename;
 
-    const src=
-      d.url+
-      '?v='+
+    const src =
+      d.url +
+      '?v=' +
       Date.now();
 
-    if(reviewPlayer) reviewPlayer.load(src);
-    else { $('#reviewVideo').src=src; $('#reviewVideo').load(); }
+    if (reviewPlayer) reviewPlayer.load(src);
+    else { $('#reviewVideo').src = src; $('#reviewVideo').load(); }
 
-    editorDownloads().forEach(a=>a.href=d.url);
+    editorDownloads().forEach(a => a.href = d.url);
 
-    $('#reviewTitle').textContent=
+    $('#reviewTitle').textContent =
       d.filename;
 
     addLog(
-      '[Editor] '+
-      d.filename+
+      '[Editor] ' +
+      d.filename +
       ' created'
     );
 
-    const m=
+    const m =
       await fetchMetadata(
         state.jobId,
         state.reviewFile
       );
 
-    if(m){
+    if (m) {
 
-      $('#editorMetadata').hidden=false;
+      $('#editorMetadata').hidden = false;
 
-      $('#editorMetaDescription').textContent=
-        m.description||
-        m.title||
+      $('#editorMetaDescription').textContent =
+        m.description ||
+        m.title ||
         '';
 
-      $('#editorMetaHashtags').textContent=
-        (m.hashtags||[]).join(' ');
+      $('#editorMetaHashtags').textContent =
+        (m.hashtags || []).join(' ');
 
-      $('#editorMetaTags').textContent=
-        'Tags: '+
-        (m.tags||[]).join(', ');
+      $('#editorMetaTags').textContent =
+        'Tags: ' +
+        (m.tags || []).join(', ');
     }
 
     loadProjects();
 
-  }catch(e){
+  } catch (e) {
 
     alert(e.message);
 
-  }finally{
+  } finally {
 
-    editorApplyButtons().forEach(b=>{
-      b.disabled=false;
-      const span=b.querySelector('span');
-      if(span)span.textContent='Apply to Finished Short';
+    editorApplyButtons().forEach(b => {
+      b.disabled = false;
+      const span = b.querySelector('span');
+      if (span) span.textContent = 'Apply to Finished Short';
     });
   }
 }
 
-editorApplyButtons().forEach(btn=>btn.addEventListener('click',applyEditorBranding));
+editorApplyButtons().forEach(btn => btn.addEventListener('click', applyEditorBranding));
 
-async function loadProjects(){
+['#editorPanX', '#editorPanY', '#editorZoom', '#editorSplitRatio'].forEach(sel => {
+  $(sel)?.addEventListener('input', updateEditorFramingPreview);
+});
 
-  const r=
+$('#resetFramingBtn')?.addEventListener('click', () => {
+  if ($('#editorPanX')) $('#editorPanX').value = 0;
+  if ($('#editorPanY')) $('#editorPanY').value = 0;
+  if ($('#editorZoom')) $('#editorZoom').value = 100;
+  if ($('#editorSplitRatio')) $('#editorSplitRatio').value = 50;
+  updateEditorFramingPreview();
+});
+
+async function loadProjects() {
+
+  const r =
     await fetch('/api/projects');
 
-  const d=
+  const d =
     await r.json();
 
-  const list=
+  const list =
     $('#projectList');
 
-  list.innerHTML='';
+  list.innerHTML = '';
 
-  const sel=
+  const sel =
     $('#assetProject');
 
-  if(sel)
-    sel.innerHTML=
+  if (sel)
+    sel.innerHTML =
       '<option value="">Choose a project</option>';
 
-  const visibleProjects=(d.projects||[]).filter(x=>x.outputs?.length||['running','uploaded'].includes(x.status));
+  const visibleProjects = (d.projects || []).filter(x => x.outputs?.length || ['running', 'uploaded'].includes(x.status));
 
-  visibleProjects.forEach(x=>{
+  visibleProjects.forEach(x => {
 
-    if(sel){
+    if (sel) {
 
       sel.add(
         new Option(
-          `${x.source||x.id} · ${x.outputs.length} Short(s)`,
+          `${x.source || x.id} · ${x.outputs.length} Short(s)`,
           x.id
         )
       );
     }
 
-    const el=
+    const el =
       document.createElement('article');
 
-    el.className=
+    el.className =
       'project-card panel';
-    const firstOutput=x.outputs?.[0];
-    const firstMetadata=x.output_metadata?.[firstOutput]||{};
-    const projectTitle=firstMetadata.title||x.name||x.source||x.id;
-    const projectDescription=firstMetadata.description||'No description generated yet.';
-    const outputTitles=(x.outputs||[]).map((output,index)=>{
-      const metadata=x.output_metadata?.[output]||{};
-      return `<button class="project-output" type="button" data-output="${escapeHtml(output)}">${escapeHtml(metadata.title||`Short ${index+1}`)}</button>`;
+    const firstOutput = x.outputs?.[0];
+    const firstMetadata = x.output_metadata?.[firstOutput] || {};
+    const projectTitle = firstMetadata.title || x.name || x.source || x.id;
+    const projectDescription = firstMetadata.description || 'No description generated yet.';
+    const outputTitles = (x.outputs || []).map((output, index) => {
+      const metadata = x.output_metadata?.[output] || {};
+      return `<button class="project-output" type="button" data-output="${escapeHtml(output)}">${escapeHtml(metadata.title || `Short ${index + 1}`)}</button>`;
     }).join('');
-    const thumbnail=firstOutput?`<video class="project-thumb" muted playsinline preload="metadata" src="/media/${encodeURIComponent(x.id)}/${encodeURIComponent(firstOutput)}"></video>`:'<div class="project-thumb project-thumb-empty">✦</div>';
+    const thumbnail = firstOutput ? `<video class="project-thumb" muted playsinline preload="metadata" src="/media/${encodeURIComponent(x.id)}/${encodeURIComponent(firstOutput)}"></video>` : '<div class="project-thumb project-thumb-empty">✦</div>';
 
-    el.innerHTML=`
+    el.innerHTML = `
       ${thumbnail}
 
       <div class="project-main">
 
         <b>
           ${escapeHtml(
-            projectTitle
-          )}
+      projectTitle
+    )}
         </b>
 
         <small>
@@ -2168,11 +2604,11 @@ async function loadProjects(){
 
     el
       .querySelector('.project-open')
-      .onclick=async (e)=>{
+      .onclick = async (e) => {
         e.preventDefault();
         e.stopPropagation();
         const output = (x.outputs && x.outputs.length) ? x.outputs[0] : null;
-        if(output)
+        if (output)
           await selectReview(
             x.id,
             output
@@ -2189,94 +2625,94 @@ async function loadProjects(){
       }
     });
 
-    el.querySelectorAll('.project-output').forEach(button=>{
-      button.onclick=()=>selectReview(x.id,button.dataset.output);
+    el.querySelectorAll('.project-output').forEach(button => {
+      button.onclick = () => selectReview(x.id, button.dataset.output);
     });
 
-    el.querySelector('.project-rename').onclick=async()=>{
-      const next=prompt('Project name',x.name||x.source||x.id);
-      if(next===null)return;
-      const response=await fetch(`/api/projects/${x.id}/rename`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:next})});
-      const data=await response.json();
-      if(!response.ok){alert(data.error||'Could not rename project.');return;}
+    el.querySelector('.project-rename').onclick = async () => {
+      const next = prompt('Project name', x.name || x.source || x.id);
+      if (next === null) return;
+      const response = await fetch(`/api/projects/${x.id}/rename`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: next }) });
+      const data = await response.json();
+      if (!response.ok) { alert(data.error || 'Could not rename project.'); return; }
       loadProjects();
     };
 
-    el.querySelector('.project-delete').onclick=async()=>{
-      if(!confirm('Move this project to Recently deleted?'))return;
-      const response=await fetch(`/api/projects/${x.id}`,{method:'DELETE'});
-      const data=await response.json();
-      if(!response.ok){alert(data.error||'Could not delete project.');return;}
+    el.querySelector('.project-delete').onclick = async () => {
+      if (!confirm('Move this project to Recently deleted?')) return;
+      const response = await fetch(`/api/projects/${x.id}`, { method: 'DELETE' });
+      const data = await response.json();
+      if (!response.ok) { alert(data.error || 'Could not delete project.'); return; }
       await loadProjects();
       loadTrash();
     };
 
     list.appendChild(el);
 
-    const thumb=el.querySelector('.project-thumb');
-    if(thumb?.tagName==='VIDEO'){
-      thumb.addEventListener('loadedmetadata',()=>{
-        thumb.currentTime=Math.min(1,thumb.duration||1);
+    const thumb = el.querySelector('.project-thumb');
+    if (thumb?.tagName === 'VIDEO') {
+      thumb.addEventListener('loadedmetadata', () => {
+        thumb.currentTime = Math.min(1, thumb.duration || 1);
       });
     }
   });
 
-  if(!visibleProjects.length){
+  if (!visibleProjects.length) {
 
-    list.innerHTML=
+    list.innerHTML =
       '<div class="empty-state">No projects yet. Generate your first Short.</div>';
   }
 }
 
-async function loadTrash(){
-  const list=$('#trashList');
-  if(!list)return;
-  const response=await fetch('/api/projects/trash',{cache:'no-store'});
-  const data=await response.json();
-  if(!response.ok){list.innerHTML='<div class="empty-state">Could not load deleted projects.</div>';return;}
-  list.innerHTML=(data.projects||[]).map(x=>`
+async function loadTrash() {
+  const list = $('#trashList');
+  if (!list) return;
+  const response = await fetch('/api/projects/trash', { cache: 'no-store' });
+  const data = await response.json();
+  if (!response.ok) { list.innerHTML = '<div class="empty-state">Could not load deleted projects.</div>'; return; }
+  list.innerHTML = (data.projects || []).map(x => `
     <div class="trash-row">
-      <div><b>${escapeHtml(x.name||x.id)}</b><small>${escapeHtml(x.id)}</small></div>
+      <div><b>${escapeHtml(x.name || x.id)}</b><small>${escapeHtml(x.id)}</small></div>
       <button class="ghost" data-restore="${escapeHtml(x.id)}">Restore</button>
-    </div>`).join('')||'<div class="empty-state">No deleted projects.</div>';
-  list.querySelectorAll('[data-restore]').forEach(button=>button.onclick=async()=>{
-    const response=await fetch(`/api/projects/${encodeURIComponent(button.dataset.restore)}/restore`,{method:'POST'});
-    const result=await response.json();
-    if(!response.ok){alert(result.error||'Could not restore project.');return;}
+    </div>`).join('') || '<div class="empty-state">No deleted projects.</div>';
+  list.querySelectorAll('[data-restore]').forEach(button => button.onclick = async () => {
+    const response = await fetch(`/api/projects/${encodeURIComponent(button.dataset.restore)}/restore`, { method: 'POST' });
+    const result = await response.json();
+    if (!response.ok) { alert(result.error || 'Could not restore project.'); return; }
     await loadProjects();
     loadTrash();
   });
 }
 
-async function loadAssets(){
+async function loadAssets() {
 
-  const id=
+  const id =
     $('#assetProject').value;
 
-  if(!id){
+  if (!id) {
 
-    $('#assetList').innerHTML=
+    $('#assetList').innerHTML =
       '<div class="empty-state">Choose a project to load assets.</div>';
 
     return;
   }
 
-  const r=
+  const r =
     await fetch(
-      '/api/assets/'+id
+      '/api/assets/' + id
     );
 
-  const d=
+  const d =
     await r.json();
 
-  $('#assetList').innerHTML=
-    (d.assets||[])
-      .map(a=>`
+  $('#assetList').innerHTML =
+    (d.assets || [])
+      .map(a => `
 
         <div class="asset-row">
 
           <span>
-            ${a.kind==='source'?'🎬':'✦'}
+            ${a.kind === 'source' ? '🎬' : '✦'}
           </span>
 
           <div>
@@ -2303,70 +2739,103 @@ async function loadAssets(){
         </div>
 
       `)
-      .join('')||
-      '<div class="empty-state">No assets.</div>';
+      .join('') ||
+    '<div class="empty-state">No assets.</div>';
 }
 
 $('#refreshProjects')
-  .onclick=loadProjects;
+  .onclick = loadProjects;
 
 $('#refreshTrash')
-  ?.addEventListener('click',loadTrash);
+  ?.addEventListener('click', loadTrash);
 
 $('#refreshAssets')
-  .onclick=loadAssets;
+  .onclick = loadAssets;
 
 $('#assetProject')
-  .onchange=loadAssets;
+  .onchange = loadAssets;
 
 $('#newBtn')
-  .onclick=()=>{
+  .onclick = () => {
 
-    state.jobId=null;
-    state.source=null;
-    state.logoFile=null;
-    state.logoPath=null;
+    state.jobId = null;
+    state.source = null;
+    state.logoFile = null;
+    state.logoPath = null;
 
-    input.value='';
+    input.value = '';
 
-    if(youtubeUrl)
-      youtubeUrl.value='';
+    if (youtubeUrl)
+      youtubeUrl.value = '';
 
-    if(youtubeStatus)
-      youtubeStatus.textContent='';
+    if (youtubeStatus)
+      youtubeStatus.textContent = '';
 
-    $('#logoInput').value='';
+    $('#logoInput').value = '';
 
-    chip.hidden=true;
-    results.hidden=true;
-    progressPanel.hidden=true;
-    create.disabled=true;
+    chip.hidden = true;
+    results.hidden = true;
+    progressPanel.hidden = true;
+    create.disabled = true;
 
-    location.hash='create';
+    location.hash = 'create';
   };
 
-create.onclick=start;
+if (create) create.onclick = start;
 
-function navigateTo(id){
+function navigateTo(id) {
   const target = id || 'create';
-  if(location.hash.slice(1) !== target){
+  if (target === 'live') {
+    if (!window.location.pathname.includes('/live')) {
+      window.location.href = '/live';
+    }
+    return;
+  }
+  if (target === 'narrate') {
+    if (!window.location.pathname.includes('/narrate')) {
+      window.location.href = '/narrate';
+    }
+    return;
+  }
+  if (['support', 'promoters', 'models', 'update', 'guide'].includes(target)) {
+    // Ensure base section is visible so the main workspace is never pitch black behind modals
+    const currentVisible = document.querySelector('.page-section.visible') || document.getElementById('create');
+    if (currentVisible) {
+      currentVisible.classList.add('visible');
+      currentVisible.style.display = 'block';
+    }
+    if (target === 'models' && window.openModelHub) window.openModelHub();
+    if (target === 'update' && window.openClipifyUpdate) window.openClipifyUpdate();
+    if (target === 'guide' && window.startClipifyTour) window.startClipifyTour();
+    if (target === 'support' && window.showSupportModal) window.showSupportModal();
+    if (target === 'promoters' && window.showPromotersModal) window.showPromotersModal();
+    return;
+  }
+  if (location.hash.slice(1) !== target) {
     location.hash = target;
   }
-  $$('.page-section').forEach(s=>
-    s.classList.toggle('visible', s.id === target)
+  const knownSection = document.getElementById(target);
+  const activeSectionId = (knownSection && knownSection.classList.contains('page-section')) ? target : 'create';
+  $$('.page-section').forEach(s => {
+    const isTarget = s.id === activeSectionId;
+    s.classList.toggle('visible', isTarget);
+    s.style.display = isTarget ? 'block' : 'none';
+  });
+  $$('[data-nav]').forEach(a =>
+    a.classList.toggle('active', a.dataset.nav === activeSectionId)
   );
-  $$('[data-nav]').forEach(a=>
-    a.classList.toggle('active', a.dataset.nav === target)
-  );
-  if(target === 'projects') loadProjects();
-  if(target === 'assets') loadProjects().then(loadAssets);
-  const el = document.getElementById(target);
-  if(el){
-    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  } else {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
+  if (target === 'projects') loadProjects();
+  if (target === 'assets') loadProjects().then(loadAssets);
+  window.scrollTo({ top: 0, behavior: 'instant' });
 }
+
+$('#navGuideLink')?.addEventListener('click', (e) => {
+  e.preventDefault();
+  const activeNav = document.querySelector('[data-nav].active')?.dataset?.nav;
+  const h = (window.location.hash || '').replace('#', '').split('?')[0].toLowerCase();
+  const ctx = activeNav || h || null;
+  if (window.startClipifyTour) window.startClipifyTour(ctx);
+});
 
 $('#previewReview')?.addEventListener('click', (e) => {
   e.preventDefault();
@@ -2379,19 +2848,53 @@ $('#previewReview')?.addEventListener('click', (e) => {
   }
 });
 
-$('#openOutput2')?.addEventListener('click', (e) => {
-  e.preventDefault();
+async function handleOpenOutput(e) {
+  if (e) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+  const btn = e?.currentTarget || $('#openOutput') || $('#openOutput2');
+  const originalText = btn ? btn.textContent : 'Open output';
+  if (btn) btn.textContent = 'Opening…';
+
+  try {
+    const res = await fetch('/api/open-output-folder', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ jobId: state.jobId || null })
+    });
+    const data = await res.json();
+    if (data && data.opened) {
+      if (btn) {
+        btn.textContent = 'Opened ✓';
+        setTimeout(() => { if (btn) btn.textContent = originalText; }, 2000);
+      }
+      return;
+    }
+  } catch (err) {
+    console.warn('Native folder open failed:', err);
+  }
+
+  if (btn) {
+    btn.textContent = originalText;
+  }
+
+  // Graceful browser fallback: if in a remote/sandbox browser or explorer failed
   if (state.jobId && state.outputs?.[0]) {
-    window.location.href = `/media/${state.jobId}/${encodeURIComponent(state.outputs[0])}?download=1`;
+    selectReview(state.jobId, state.outputs[0]);
   } else {
     navigateTo('projects');
   }
-});
+}
+
+$('#openOutput')?.addEventListener('click', handleOpenOutput);
+$('#openOutput2')?.addEventListener('click', handleOpenOutput);
 
 window.addEventListener(
   'hashchange',
-  ()=>{
-    const raw = location.hash.slice(1) || 'create';
+  () => {
+    const searchParams = new URLSearchParams(location.search);
+    const raw = location.hash.slice(1) || searchParams.get('section') || 'create';
     const id = raw.split('?')[0];
     navigateTo(id);
 
@@ -2419,15 +2922,30 @@ window.addEventListener(
   }
 );
 
-window.dispatchEvent(
-  new Event('hashchange')
-);
-
-loadOptions();
-loadProjects();
-loadTrash();
-updatePreview();
-editorPreviewUpdate();
+const initialHash = (location.hash.slice(1) || '').split('?')[0];
+if (initialHash === 'live') {
+  window.location.href = '/live';
+} else if (initialHash === 'narrate') {
+  window.location.href = '/narrate';
+} else if (initialHash && document.getElementById(initialHash)) {
+  try { navigateTo(initialHash); } catch (e) { console.warn(e); }
+} else if (initialHash === 'models') {
+  if (window.openModelHub) window.openModelHub();
+} else if (initialHash === 'support') {
+  try { navigateTo('create'); } catch (e) { }
+  if (window.showSupportModal) setTimeout(() => window.showSupportModal(), 100);
+} else if (initialHash === 'promoters') {
+  try { navigateTo('create'); } catch (e) { }
+  if (window.showPromotersModal) setTimeout(() => window.showPromotersModal(), 100);
+} else {
+  try { window.dispatchEvent(new Event('hashchange')); } catch (e) { console.warn(e); }
+  try { navigateTo('create'); } catch (e) { console.warn(e); }
+}
+try { loadOptions(); } catch (e) { console.warn(e); }
+try { loadProjects(); } catch (e) { console.warn(e); }
+try { loadTrash(); } catch (e) { console.warn(e); }
+try { updatePreview(); } catch (e) { console.warn(e); }
+try { editorPreviewUpdate(); } catch (e) { console.warn(e); }
 
 const revealSections = $$('.page-section');
 if ('IntersectionObserver' in window) {
@@ -2463,11 +2981,12 @@ function initSocialPublishing() {
   function openPublish(jobId, filename, optionalTitle) {
     if (!modal) return;
     const jId = jobId || state.jobId;
-    const fName = filename || state.outputs[state.currentOutputIndex] || 'short_01.mp4';
-    if (!jId || !fName) {
+    const rawName = filename || state.outputs?.[state.currentOutputIndex] || state.reviewFile || 'short_01.mp4';
+    if (!jId || !rawName) {
       alert('Please generate or select a Short first.');
       return;
     }
+    const fName = String(rawName).split('?')[0].split('#')[0].split('/').pop() || 'short_01.mp4';
     $('#publishJobId').value = jId;
     $('#publishFilename').value = fName;
     $('#publishTitle').value = optionalTitle || fName.replace(/\.[^/.]+$/, '').replace(/_/g, ' ');
@@ -2480,7 +2999,7 @@ function initSocialPublishing() {
         const hashtags = Array.isArray(meta.hashtags) ? meta.hashtags.join(' ') : (Array.isArray(meta.tags) ? meta.tags.map(t => t.startsWith('#') ? t : '#' + t).join(' ') : '#Shorts');
         $('#publishDescription').value = `${meta.description}\n\n${hashtags}`;
       }
-    }).catch(() => {});
+    }).catch(() => { });
 
     modal.style.display = 'flex';
     modal.hidden = false;
@@ -2496,9 +3015,12 @@ function initSocialPublishing() {
   window.openPublishModal = openPublish;
   window.closePublishModal = closePublish;
 
-  featuredPublish?.addEventListener('click', () => openPublish());
+  featuredPublish?.addEventListener('click', () => {
+    const cur = state.outputs?.[state.currentOutputIndex] || state.reviewFile || 'short_01.mp4';
+    openPublish(state.jobId, cur);
+  });
   reviewPublish?.addEventListener('click', () => {
-    const curFile = state.reviewFile || state.outputs[state.currentOutputIndex];
+    const curFile = state.reviewFile || state.outputs?.[state.currentOutputIndex] || 'short_01.mp4';
     openPublish(state.jobId, curFile);
   });
   closeBtn?.addEventListener('click', closePublish);
@@ -2580,3 +3102,1288 @@ function initSocialPublishing() {
   });
 }
 initSocialPublishing();
+
+
+// --- AI Model & Cloud Integration (Hugging Face + Ollama) ---
+function initAIModelManagement() {
+  const tabOllama = $('#provTabOllama');
+  const tabHf = $('#provTabHuggingFace');
+  const hfPanel = $('#hfConfigPanel');
+  const ollamaRow = $('#ollamaDownloadRow');
+  const hfTokenInput = $('#hfTokenInput');
+  const hfModelSelect = $('#hfModelSelect');
+  const btnVerifyHf = $('#btnVerifyHfToken');
+  const hfStatusMsg = $('#hfStatusMsg');
+  const btnDownloadOllama = $('#btnDownloadOllama');
+  const ollamaInput = $('#ollamaDownloadInput');
+  const dlProgress = $('#modelDlProgress');
+  const dlBar = $('#dlProgressBar');
+  const dlText = $('#dlStatusText');
+
+  let currentProvider = 'ollama';
+
+  async function loadConfig() {
+    try {
+      const res = await fetch('/api/models/config');
+      const data = await res.json();
+      if (data.ok) {
+        currentProvider = data.provider || 'ollama';
+        if (hfModelSelect && data.hf_model) hfModelSelect.value = data.hf_model;
+        if (hfTokenInput && data.hf_token_masked) hfTokenInput.value = data.hf_token_masked;
+        updateUI();
+      }
+    } catch (_) { }
+  }
+
+  function updateUI() {
+    if (currentProvider === 'huggingface') {
+      tabHf?.classList.add('active');
+      tabOllama?.classList.remove('active');
+      if (hfPanel) hfPanel.style.display = 'block';
+      if (ollamaRow) ollamaRow.style.display = 'none';
+      if ($('#healthText')) $('#healthText').textContent = 'Hugging Face API (Cloud)';
+      if ($('#statusPill')) $('#statusPill').innerHTML = '<span></span> HF Cloud Mode';
+    } else {
+      tabOllama?.classList.add('active');
+      tabHf?.classList.remove('active');
+      if (hfPanel) hfPanel.style.display = 'none';
+      if (ollamaRow) ollamaRow.style.display = 'block';
+    }
+  }
+
+  tabOllama?.addEventListener('click', async () => {
+    currentProvider = 'ollama';
+    updateUI();
+    try {
+      await fetch('/api/models/config', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ provider: 'ollama' })
+      });
+      loadOptions();
+    } catch (_) { }
+  });
+
+  tabHf?.addEventListener('click', async () => {
+    currentProvider = 'huggingface';
+    updateUI();
+    try {
+      await fetch('/api/models/config', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ provider: 'huggingface' })
+      });
+    } catch (_) { }
+  });
+
+  hfModelSelect?.addEventListener('change', async () => {
+    try {
+      await fetch('/api/models/config', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ hf_model: hfModelSelect.value })
+      });
+    } catch (_) { }
+  });
+
+  btnVerifyHf?.addEventListener('click', async () => {
+    const token = hfTokenInput?.value.trim();
+    if (!token) {
+      if (hfStatusMsg) hfStatusMsg.textContent = 'Please paste a valid Hugging Face token (starts with hf_).';
+      return;
+    }
+    btnVerifyHf.disabled = true;
+    btnVerifyHf.textContent = 'Verifying…';
+    if (hfStatusMsg) hfStatusMsg.textContent = 'Connecting to Hugging Face API…';
+    try {
+      const res = await fetch('/api/models/huggingface/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token })
+      });
+      const data = await res.json();
+      if (data.ok) {
+        if (hfStatusMsg) {
+          hfStatusMsg.innerHTML = `<span style="color:#4ade80;">✓ Verified & Connected as <b>${data.name}</b> (${data.type})</span>`;
+        }
+        if ($('#healthDot')) $('#healthDot').classList.add('online');
+        if ($('#healthText')) $('#healthText').textContent = 'Hugging Face API connected';
+      } else {
+        if (hfStatusMsg) {
+          hfStatusMsg.innerHTML = `<span style="color:#ef4444;">✗ ${data.error || 'Invalid token'}</span>`;
+        }
+      }
+    } catch (err) {
+      if (hfStatusMsg) hfStatusMsg.innerHTML = `<span style="color:#ef4444;">✗ Error: ${err.message}</span>`;
+    } finally {
+      btnVerifyHf.disabled = false;
+      btnVerifyHf.textContent = 'Verify Token';
+    }
+  });
+
+  const modelPresetSelect = $('#ollamaModelPresetSelect');
+  modelPresetSelect?.addEventListener('change', () => {
+    const val = modelPresetSelect.value;
+    if (val && val !== 'custom') {
+      if (ollamaInput) ollamaInput.value = val;
+    } else if (val === 'custom') {
+      if (ollamaInput) {
+        ollamaInput.value = '';
+        ollamaInput.focus();
+      }
+    }
+  });
+
+  let pollInterval = null;
+  btnDownloadOllama?.addEventListener('click', async () => {
+    const model = ollamaInput?.value.trim();
+    if (!model) {
+      alert('Please enter an Ollama model tag (e.g. qwen2.5:3b, llama3.2:3b).');
+      return;
+    }
+    btnDownloadOllama.disabled = true;
+    if (dlProgress) dlProgress.style.display = 'block';
+    if (dlBar) dlBar.style.width = '0%';
+    if (dlText) dlText.textContent = `Requesting pull of ${model}…`;
+
+    try {
+      const res = await fetch('/api/models/ollama/download', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ model })
+      });
+      const data = await res.json();
+      if (!data.ok) {
+        alert(data.error || 'Failed to start download.');
+        btnDownloadOllama.disabled = false;
+        return;
+      }
+      pollInterval = setInterval(async () => {
+        try {
+          const sRes = await fetch('/api/models/ollama/download-status');
+          const sData = await sRes.json();
+          if (dlBar) dlBar.style.width = `${sData.percent || 0}%`;
+          if (dlText) dlText.textContent = sData.status || 'Downloading…';
+          if (!sData.active) {
+            clearInterval(pollInterval);
+            btnDownloadOllama.disabled = false;
+            if (sData.percent === 100) {
+              await loadOptions();
+              if (ollamaInput) ollamaInput.value = '';
+            } else if (sData.error) {
+              alert(sData.error);
+            }
+          }
+        } catch (_) { }
+      }, 1200);
+    } catch (err) {
+      alert('Error initiating model pull: ' + err.message);
+      btnDownloadOllama.disabled = false;
+    }
+  });
+
+  loadConfig();
+}
+
+initAIModelManagement();
+initWatermarkAndCaptionsUI();
+initBetaTestingSection();
+
+// --- Watermark & Caption UI Setup ---
+function initWatermarkAndCaptionsUI() {
+  const premToggle = $('#premiumCaptionsToggle');
+  const premDrawer = $('#premiumCaptionDrawer');
+  if (premToggle && premDrawer) {
+    premToggle.addEventListener('change', () => {
+      premDrawer.style.display = premToggle.checked ? 'block' : 'none';
+    });
+  }
+
+  const wmToggle = $('#watermarkTextEnabled');
+  const wmDrawer = $('#watermarkControlsDrawer');
+  if (wmToggle && wmDrawer) {
+    wmToggle.addEventListener('change', () => {
+      wmDrawer.style.display = wmToggle.checked ? 'block' : 'none';
+      updatePreview();
+    });
+  }
+
+  const wmPos = $('#watermarkTextPosition');
+  const wmCoords = $('#watermarkCustomCoords');
+  if (wmPos && wmCoords) {
+    wmPos.addEventListener('change', () => {
+      wmCoords.style.display = wmPos.value === 'custom' ? 'grid' : 'none';
+      updatePreview();
+    });
+  }
+
+  const bindSlider = (sliderId, outId, suffix = '') => {
+    const s = $(sliderId);
+    const o = $(outId);
+    if (s && o) {
+      s.addEventListener('input', () => {
+        o.textContent = s.value + suffix;
+        updatePreview();
+      });
+    }
+  };
+
+  bindSlider('#watermarkTextOpacity', '#watermarkTextOpacityOut', '%');
+  bindSlider('#watermarkTextAngle', '#watermarkTextAngleOut', '°');
+  bindSlider('#watermarkTextSize', '#watermarkTextSizeOut', '%');
+  bindSlider('#watermarkTextX', '#watermarkTextXOut', '%');
+  bindSlider('#watermarkTextY', '#watermarkTextYOut', '%');
+
+  ['#watermarkTextInput', '#watermarkTextColor', '#captionPresetSelect', '#captionAccentSelect'].forEach(sel => {
+    $(sel)?.addEventListener('input', updatePreview);
+  });
+}
+
+// --- Beta Testing Section Controller ---
+function initBetaTestingSection() {
+  const dropZone = $('#betaDropZone');
+  const fileInput = $('#betaFileInput');
+  const ytUrl = $('#betaYtUrl');
+  const ytImportBtn = $('#betaYtImportBtn');
+  const sourceInfo = $('#betaSourceInfo');
+  const sourceName = $('#betaSourceName');
+  const sourceMeta = $('#betaSourceMeta');
+  const clearSource = $('#betaClearSource');
+  const runBtn = $('#betaRunPipelineBtn');
+  const progressBox = $('#betaProgressBox');
+  const progressBar = $('#betaProgressBar');
+  const progressPct = $('#betaProgressPct');
+  const stageText = $('#betaStageText');
+  const logBox = $('#betaLog');
+  const resultVideo = $('#betaResultVideo');
+  const placeholder = $('#betaPlaceholder');
+  const clipSwitcher = $('#betaClipSwitcher');
+  const downloadBtn = $('#betaDownloadBtn');
+  const openInEditorBtn = $('#betaOpenInEditor');
+
+  let betaState = {
+    sourceFile: null,
+    jobId: null,
+    downloading: false,
+    running: false,
+    outputs: [],
+    selectedClip: null,
+  };
+
+  const bindBetaSlider = (sliderId, outId, suffix = '') => {
+    const s = $(sliderId);
+    const o = $(outId);
+    if (s && o) {
+      s.addEventListener('input', () => { o.textContent = s.value + suffix; });
+    }
+  };
+  bindBetaSlider('#betaWmOpacity', '#betaWmOpacityOut', '%');
+  bindBetaSlider('#betaWmAngle', '#betaWmAngleOut', '°');
+
+  // Draggable Split Screen Resizer
+  const betaLayout = $('#betaLayout');
+  const betaSplitRow = $('#betaSplitRatioRow');
+  const betaSplitSlider = $('#betaSplitRatio');
+  const betaSplitText = $('#betaSplitRatioText');
+  const betaSplitOverlay = $('#betaSplitOverlay');
+  const betaSplitTop = $('#betaSplitTop');
+  const betaSplitBottom = $('#betaSplitBottom');
+  const betaSplitHandle = $('#betaSplitHandle');
+  const betaSplitBadge = $('#betaSplitBadge');
+  const betaPreviewFrame = $('#betaPreviewFrame');
+
+  function updateSplitRatioUI(pct) {
+    pct = Math.round(Math.max(30, Math.min(70, pct)));
+    if (betaSplitSlider) betaSplitSlider.value = pct;
+    if (betaSplitText) betaSplitText.textContent = `Top ${pct}% / Bottom ${100 - pct}%`;
+    if (betaSplitTop) betaSplitTop.style.height = `${pct}%`;
+    if (betaSplitBottom) betaSplitBottom.style.height = `${100 - pct}%`;
+    if (betaSplitHandle) betaSplitHandle.style.top = `${pct}%`;
+    if (betaSplitBadge) betaSplitBadge.textContent = `⇕ Top ${pct}% · Bottom ${100 - pct}%`;
+  }
+
+  function syncBetaLayoutVisibility() {
+    const isSplit = betaLayout && (betaLayout.value === 'gaming_split' || betaLayout.value === 'two_person');
+    if (betaSplitRow) betaSplitRow.style.display = isSplit ? 'block' : 'none';
+    if (betaSplitOverlay) betaSplitOverlay.style.display = isSplit ? 'flex' : 'none';
+  }
+
+  if (betaLayout) {
+    betaLayout.addEventListener('change', syncBetaLayoutVisibility);
+    syncBetaLayoutVisibility();
+  }
+
+  if (betaSplitSlider) {
+    betaSplitSlider.addEventListener('input', (e) => {
+      updateSplitRatioUI(+e.target.value);
+    });
+  }
+
+  if (betaSplitHandle && betaPreviewFrame) {
+    let isDraggingSplit = false;
+
+    const onSplitMove = (clientY) => {
+      const rect = betaPreviewFrame.getBoundingClientRect();
+      if (rect.height <= 0) return;
+      const relativeY = clientY - rect.top;
+      const pct = (relativeY / rect.height) * 100;
+      updateSplitRatioUI(pct);
+    };
+
+    betaSplitHandle.addEventListener('mousedown', (e) => {
+      e.preventDefault();
+      isDraggingSplit = true;
+      betaSplitHandle.classList.add('dragging');
+      document.body.style.cursor = 'row-resize';
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (!isDraggingSplit) return;
+      e.preventDefault();
+      onSplitMove(e.clientY);
+    });
+
+    window.addEventListener('mouseup', () => {
+      if (isDraggingSplit) {
+        isDraggingSplit = false;
+        betaSplitHandle.classList.remove('dragging');
+        document.body.style.cursor = '';
+      }
+    });
+
+    // Touch support for mobile / touchscreens
+    betaSplitHandle.addEventListener('touchstart', (e) => {
+      if (e.touches && e.touches[0]) {
+        isDraggingSplit = true;
+        betaSplitHandle.classList.add('dragging');
+      }
+    }, { passive: true });
+
+    window.addEventListener('touchmove', (e) => {
+      if (isDraggingSplit && e.touches && e.touches[0]) {
+        onSplitMove(e.touches[0].clientY);
+      }
+    }, { passive: true });
+
+    window.addEventListener('touchend', () => {
+      if (isDraggingSplit) {
+        isDraggingSplit = false;
+        betaSplitHandle.classList.remove('dragging');
+      }
+    });
+  }
+
+  if (dropZone && fileInput) {
+    dropZone.addEventListener('click', () => fileInput.click());
+    dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.style.borderColor = '#ffffff'; });
+    dropZone.addEventListener('dragleave', () => { dropZone.style.borderColor = 'rgba(255,255,255,0.18)'; });
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.style.borderColor = 'rgba(255,255,255,0.18)';
+      if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+        handleBetaFile(e.dataTransfer.files[0]);
+      }
+    });
+    fileInput.addEventListener('change', () => {
+      if (fileInput.files && fileInput.files[0]) {
+        handleBetaFile(fileInput.files[0]);
+      }
+    });
+  }
+
+  async function handleBetaFile(file) {
+    betaState.sourceFile = file;
+    betaState.jobId = null;
+    dropZone.style.display = 'none';
+    sourceInfo.style.display = 'flex';
+    sourceName.textContent = file.name;
+    sourceMeta.textContent = `${(file.size / (1024 * 1024)).toFixed(1)} MB · Local Upload`;
+
+    // Immediately show video in preview and reveal the dual-handle timeline trimmer under it!
+    try {
+      const objUrl = URL.createObjectURL(file);
+      placeholder.style.display = 'none';
+      if (betaSplitOverlay) betaSplitOverlay.style.display = 'none';
+      resultVideo.style.display = 'block';
+      resultVideo.src = objUrl;
+      resultVideo.load();
+      resultVideo.onloadedmetadata = () => {
+        const dur = Math.round(resultVideo.duration || 0);
+        const scrubber = $('#betaScrubberTimeline');
+        if (scrubber) scrubber.style.display = 'block';
+        if (betaTextEnd) betaTextEnd.value = dur.toFixed(1);
+        syncTextOverlayStyles();
+      };
+    } catch (e) {
+      console.warn('Could not preview local file:', e);
+    }
+  }
+
+  if (clearSource) {
+    clearSource.addEventListener('click', () => {
+      betaState.sourceFile = null;
+      betaState.jobId = null;
+      dropZone.style.display = 'block';
+      sourceInfo.style.display = 'none';
+      if (fileInput) fileInput.value = '';
+      placeholder.style.display = 'flex';
+      resultVideo.style.display = 'none';
+      resultVideo.src = '';
+      const scrubber = $('#betaScrubberTimeline');
+      if (scrubber) scrubber.style.display = 'none';
+    });
+  }
+
+  if (ytImportBtn && ytUrl) {
+    ytImportBtn.addEventListener('click', async () => {
+      const url = ytUrl.value.trim();
+      if (!url) return alert('Enter a valid YouTube URL first.');
+      ytImportBtn.disabled = true;
+      ytImportBtn.textContent = 'Fetching...';
+      betaState.downloading = true;
+      if (runBtn) {
+        runBtn.disabled = true;
+        runBtn.textContent = '⏳ Downloading YouTube video…';
+      }
+      try {
+        const res = await fetch('/api/import-youtube', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url })
+        });
+        const data = await res.json();
+        if (!res.ok || (!data.ok && !data.job_id)) throw new Error(data.error || 'Failed to import YouTube video');
+        const jobId = data.job_id;
+        betaState.jobId = jobId;
+        betaState.sourceFile = null;
+        dropZone.style.display = 'none';
+        sourceInfo.style.display = 'flex';
+        sourceName.textContent = 'Connecting to YouTube...';
+        sourceMeta.textContent = `Project ${jobId} · Downloading...`;
+
+        // Poll /api/status/${jobId} until uploaded or error
+        await new Promise((resolve, reject) => {
+          let pollCount = 0;
+          const pollTimer = setInterval(async () => {
+            pollCount++;
+            try {
+              const sr = await fetch(`/api/status/${jobId}`, { cache: 'no-store' });
+              if (!sr.ok) return;
+              const sd = await sr.json();
+              if (sd.status === 'uploaded') {
+                clearInterval(pollTimer);
+                betaState.downloading = false;
+                sourceName.textContent = sd.filename || 'YouTube Video';
+                sourceMeta.textContent = `Project ${jobId} · Ready to Clip`;
+                if (runBtn) {
+                  runBtn.disabled = false;
+                  runBtn.textContent = 'Run Beta AI Pipeline';
+                }
+                resolve();
+              } else if (sd.status === 'error') {
+                clearInterval(pollTimer);
+                betaState.downloading = false;
+                if (runBtn) {
+                  runBtn.disabled = false;
+                  runBtn.textContent = 'Run Beta AI Pipeline';
+                }
+                reject(new Error(sd.detail || sd.error || 'YouTube download failed'));
+              } else {
+                sourceName.textContent = sd.stage || 'Downloading YouTube video...';
+                sourceMeta.textContent = `${sd.progress || 0}% · ${sd.detail || 'Connecting...'}`;
+              }
+            } catch (err) {
+              if (pollCount > 180) {
+                clearInterval(pollTimer);
+                betaState.downloading = false;
+                if (runBtn) {
+                  runBtn.disabled = false;
+                  runBtn.textContent = 'Run Beta AI Pipeline';
+                }
+                reject(err);
+              }
+            }
+          }, 1000);
+        });
+      } catch (err) {
+        dropZone.style.display = 'block';
+        sourceInfo.style.display = 'none';
+        betaState.jobId = null;
+        betaState.downloading = false;
+        if (runBtn) {
+          runBtn.disabled = false;
+          runBtn.textContent = 'Run Beta AI Pipeline';
+        }
+        alert(err.message || 'Failed to import YouTube video');
+      } finally {
+        ytImportBtn.disabled = false;
+        ytImportBtn.textContent = 'Fetch Link';
+      }
+    });
+  }
+
+  if (runBtn) {
+    runBtn.addEventListener('click', async () => {
+      if (betaState.downloading) {
+        alert('YouTube video is still downloading. Please wait for the download to finish before running the pipeline.');
+        return;
+      }
+      if (!betaState.sourceFile && !betaState.jobId) {
+        alert('Please select a video file or fetch a YouTube link first.');
+        return;
+      }
+      runBtn.disabled = true;
+      progressBox.style.display = 'block';
+      progressBar.style.width = '3%';
+      progressPct.textContent = '3%';
+      stageText.textContent = 'Uploading / Preparing workspace...';
+      logBox.textContent = '[Beta] Initializing run...\n';
+
+      try {
+        if (!betaState.jobId && betaState.sourceFile) {
+          const upForm = new FormData();
+          upForm.append('video', betaState.sourceFile);
+          stageText.textContent = `Uploading ${betaState.sourceFile.name}… (0%)`;
+          const upData = await new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '/api/upload');
+            xhr.upload.onprogress = (e) => {
+              if (e.lengthComputable && e.total > 0) {
+                const pct = Math.min(99, Math.round((e.loaded / e.total) * 100));
+                progressBar.style.width = pct + '%';
+                progressPct.textContent = pct + '%';
+                stageText.textContent = `Uploading ${betaState.sourceFile.name}… (${pct}%)`;
+              }
+            };
+            xhr.onload = () => {
+              if (xhr.status >= 200 && xhr.status < 300) {
+                try { resolve(JSON.parse(xhr.responseText)); } catch (err) { reject(err); }
+              } else {
+                try {
+                  const res = JSON.parse(xhr.responseText);
+                  reject(new Error(res.error || `Upload failed (${xhr.status})`));
+                } catch { reject(new Error(`Upload failed (${xhr.status})`)); }
+              }
+            };
+            xhr.onerror = () => reject(new Error('Network error uploading video.'));
+            xhr.send(upForm);
+          });
+          if (!upData.job_id) throw new Error(upData.error || 'Failed to upload video');
+          betaState.jobId = upData.job_id;
+          logBox.textContent += `[Upload] Created project ${betaState.jobId}\n`;
+        }
+
+        const layout = $('#betaLayout')?.value || 'gaming_split';
+        const splitScreen = layout !== 'normal' ? '1' : '0';
+        const gamingSplit = layout === 'gaming_split' ? '1' : '0';
+
+        const brandingPayload = {
+          watermark_text_enabled: $('#betaWatermarkEnabled')?.checked || false,
+          watermark_text: $('#betaWatermarkText')?.value || '',
+          watermark_text_position: $('#betaWatermarkPosition')?.value || 'center',
+          watermark_text_opacity: +($('#betaWmOpacity')?.value || 35),
+          watermark_text_angle: +($('#betaWmAngle')?.value || -20),
+          watermark_text_size: 6,
+          watermark_text_color: '#FFFFFF',
+          premium_captions: $('#betaPremiumCaptions')?.checked ?? true,
+          situational_cues: $('#betaSituationalCues')?.checked ?? true,
+          caption_preset: $('#betaCaptionPreset')?.value || 'center_seam',
+          caption_accent: $('#betaCaptionAccent')?.value || 'gold_yellow',
+        };
+
+        const splitRatioVal = parseInt($('#betaSplitRatio')?.value || 50);
+
+        const startPayload = {
+          job_id: betaState.jobId,
+          mode: 'viral',
+          clips: $('#betaClipsCount')?.value || 2,
+          min_duration: 25,
+          max_duration: 60,
+          split_screen: splitScreen,
+          gaming_split: gamingSplit,
+          split_ratio: splitRatioVal,
+          fast_whisper: '1',
+          branding: brandingPayload,
+          premium_captions: $('#betaPremiumCaptions')?.checked ?? true,
+          situational_cues: $('#betaSituationalCues')?.checked ?? true,
+          caption_preset: $('#betaCaptionPreset')?.value || 'center_seam',
+          caption_accent: $('#betaCaptionAccent')?.value || 'gold_yellow',
+        };
+
+        const startRes = await fetch('/api/start', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(startPayload)
+        });
+        const startData = await startRes.json();
+        if (!startRes.ok || !startData.ok) throw new Error(startData.error || 'Failed to start pipeline');
+
+        logBox.textContent += `[Pipeline] Job ${betaState.jobId} started with Premium Captions & Watermark...\n`;
+
+        let terminal = false;
+        let pollTimer = null;
+
+        const updateBetaUI = (info) => {
+          if (!info) return;
+          const rawProg = info.progress !== undefined ? info.progress : (info.message && info.message.progress);
+          if (rawProg !== undefined) {
+            const pct = Math.min(100, Math.max(0, parseInt(rawProg)));
+            progressBar.style.width = `${pct}%`;
+            progressPct.textContent = `${pct}%`;
+          }
+          const stage = info.stage || (info.message && info.message.stage);
+          if (stage) stageText.textContent = stage;
+          const detail = info.detail || (info.message && info.message.detail);
+          if (detail && detail !== stage) stageText.title = detail;
+        };
+
+        const onFinished = () => {
+          if (terminal) return;
+          terminal = true;
+          if (pollTimer) clearInterval(pollTimer);
+          try { sse.close(); } catch (_) {}
+          progressBar.style.width = '100%';
+          progressPct.textContent = '100%';
+          stageText.textContent = 'Finished rendering all Shorts!';
+          runBtn.disabled = false;
+          loadBetaOutputs(betaState.jobId);
+        };
+
+        const onError = (msg) => {
+          if (terminal) return;
+          terminal = true;
+          if (pollTimer) clearInterval(pollTimer);
+          try { sse.close(); } catch (_) {}
+          runBtn.disabled = false;
+          stageText.textContent = 'Pipeline stopped';
+          logBox.textContent += `[Error] ${msg || 'Pipeline stopped before completion.'}\n`;
+        };
+
+        const sse = new EventSource(`/api/events/${betaState.jobId}`);
+        sse.onmessage = (event) => {
+          try {
+            const data = JSON.parse(event.data);
+            const kind = data.kind || data.type;
+
+            if (kind === 'log') {
+              const line = data.message || data.text || '';
+              if (line) {
+                logBox.textContent += `${line}\n`;
+                logBox.scrollTop = logBox.scrollHeight;
+              }
+              return;
+            }
+
+            if (kind === 'progress' || kind === 'status') {
+              updateBetaUI(data);
+              if (data.status === 'done' || data.status === 'complete') {
+                onFinished();
+              } else if (data.status === 'error') {
+                onError(data.detail || data.message);
+              }
+              return;
+            }
+
+            if (kind === 'complete' || kind === 'done') {
+              onFinished();
+              return;
+            }
+
+            if (kind === 'error') {
+              onError(data.message || data.detail);
+              return;
+            }
+          } catch (_) {}
+        };
+
+        sse.onerror = () => {
+          if (terminal) return;
+        };
+
+        // Resilient polling backup: polls status every 1.5 seconds so UI is never stuck
+        pollTimer = setInterval(async () => {
+          if (terminal) return;
+          try {
+            const res = await fetch(`/api/status/${betaState.jobId}`, { cache: 'no-store' });
+            if (!res.ok) return;
+            const statusData = await res.json();
+            updateBetaUI(statusData);
+            if (statusData.status === 'done') {
+              onFinished();
+            } else if (statusData.status === 'error') {
+              onError(statusData.detail || statusData.error);
+            }
+          } catch (_) {}
+        }, 1500);
+
+      } catch (err) {
+        alert(err.message);
+        runBtn.disabled = false;
+        stageText.textContent = 'Run failed';
+      }
+    });
+  }
+
+  async function loadBetaOutputs(jobId) {
+    try {
+      const res = await fetch(`/api/job/${jobId}`);
+      const data = await res.json();
+      const outputs = data.outputs || [];
+      if (!outputs.length) {
+        logBox.textContent += '[Warning] No outputs returned.\n';
+        return;
+      }
+      betaState.outputs = outputs;
+      clipSwitcher.innerHTML = '';
+      outputs.forEach((filename, idx) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = `ghost ${idx === 0 ? 'active' : ''}`;
+        btn.style.padding = '5px 12px';
+        btn.style.fontSize = '0.78rem';
+        btn.textContent = `Short #${idx + 1}`;
+        fetchMetadata(jobId, filename).then(m => {
+          if (m && m.duration) {
+            const mSec = Math.round(m.duration);
+            const mMin = Math.floor(mSec / 60);
+            const sSec = String(mSec % 60).padStart(2, '0');
+            btn.textContent = `Short #${idx + 1} (${mMin}:${sSec})`;
+            if (m.title) btn.title = `${m.title} · ${m.duration}s`;
+          }
+        });
+        btn.addEventListener('click', () => {
+          $$('#betaClipSwitcher button').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          playBetaClip(jobId, filename);
+        });
+        clipSwitcher.appendChild(btn);
+      });
+
+      playBetaClip(jobId, outputs[0]);
+    } catch (err) {
+      logBox.textContent += `[Error] Failed to fetch job outputs: ${err.message}\n`;
+    }
+  }
+
+  function playBetaClip(jobId, filename) {
+    betaState.selectedClip = filename;
+    const url = `/media/${jobId}/${encodeURIComponent(filename)}`;
+    placeholder.style.display = 'none';
+    if (betaSplitOverlay) betaSplitOverlay.style.display = 'none';
+    resultVideo.style.display = 'block';
+    resultVideo.src = url;
+    resultVideo.load();
+    resultVideo.play().catch(() => { });
+
+    const clipMeta = $('#betaClipMeta');
+    if (clipMeta) {
+      clipMeta.style.display = 'flex';
+      clipMeta.innerHTML = `<span style="color:#ffffff;font-weight:600;">⏱️ Result Time:</span> <span>Loading duration…</span>`;
+    }
+
+    resultVideo.onloadedmetadata = () => {
+      const dur = Math.round(resultVideo.duration || 0);
+      const dm = Math.floor(dur / 60);
+      const ds = String(dur % 60).padStart(2, '0');
+      if (clipMeta && !clipMeta.dataset.hasMeta) {
+        clipMeta.innerHTML = `<span style="color:#ffffff;font-weight:600;">⏱️ Result Time:</span> <b>${dm}:${ds}</b> (${dur}s duration) &nbsp;·&nbsp; <span style="color:var(--accent);">📐 1080×1920</span>`;
+      }
+      // Reveal timeline trimmer under video preview
+      const scrubber = $('#betaScrubberTimeline');
+      if (scrubber) scrubber.style.display = 'block';
+      if (betaTextEnd && (!+betaTextEnd.value || +betaTextEnd.value > dur)) {
+        betaTextEnd.value = dur.toFixed(1);
+      }
+      syncTextOverlayStyles();
+    };
+
+    fetchMetadata(jobId, filename).then((m) => {
+      if (m && clipMeta) {
+        clipMeta.dataset.hasMeta = '1';
+        const dur = Math.round(m.duration || resultVideo.duration || 0);
+        const dm = Math.floor(dur / 60);
+        const ds = String(dur % 60).padStart(2, '0');
+        const st = Math.round(m.start_time || 0);
+        const sm = Math.floor(st / 60);
+        const ss = String(st % 60).padStart(2, '0');
+        const et = Math.round(m.end_time || (st + dur));
+        const em = Math.floor(et / 60);
+        const es = String(et % 60).padStart(2, '0');
+        clipMeta.innerHTML = `<span style="color:#ffffff;font-weight:600;">⏱️ Result Time:</span> <b>${dm}:${ds}</b> (${dur}s) &nbsp;·&nbsp; <span>📍 Cut: ${sm}:${ss} – ${em}:${es}</span> &nbsp;·&nbsp; <span style="color:var(--accent);">📐 1080×1920</span>`;
+      }
+    });
+
+    downloadBtn.href = `${url}?download=1`;
+    downloadBtn.style.pointerEvents = 'auto';
+    downloadBtn.style.opacity = '1';
+
+    openInEditorBtn.disabled = false;
+    openInEditorBtn.onclick = () => {
+      window.location.hash = `#editor?video=${encodeURIComponent(url)}&title=${encodeURIComponent(filename)}`;
+    };
+
+    // Store original and current clip for text modification workflow
+    betaState.originalClipUrl = url;
+    betaState.originalFilename = filename;
+    betaState.currentClipUrl = url;
+    betaState.currentFilename = filename;
+
+    // Initialize interactive text overlay for this clip
+    if (betaTextDragOverlay) {
+      betaTextDragOverlay.style.display = 'block';
+      syncTextOverlayStyles();
+    }
+  }
+
+  // ==========================================
+  // Interactive Timed & Draggable Text Overlay
+  // ==========================================
+  const betaTextDragOverlay = $('#betaTextDragOverlay');
+  const betaTextDragContent = $('#betaTextDragContent');
+  const betaDragCoordBadge = $('#betaDragCoordBadge');
+  const betaDragTimeBadge = $('#betaDragTimeBadge');
+  const betaTextInput = $('#betaTextInput');
+  const betaTextEnableToggle = $('#betaTextEnableToggle');
+  const betaTextStart = $('#betaTextStart');
+  const betaTextEnd = $('#betaTextEnd');
+  const betaBtnSetStart = $('#betaBtnSetStart');
+  const betaBtnSetEnd = $('#betaBtnSetEnd');
+  const betaBtnFullDuration = $('#betaBtnFullDuration');
+  const betaTimelineSpanBar = $('#betaTimelineSpanBar');
+  const betaTimelineCurrentMarker = $('#betaTimelineCurrentMarker');
+  const betaTimelineActiveLabel = $('#betaTimelineActiveLabel');
+  const betaTimelineEndLabel = $('#betaTimelineEndLabel');
+  const betaTextX = $('#betaTextX');
+  const betaTextY = $('#betaTextY');
+  const betaTextXOut = $('#betaTextXOut');
+  const betaTextYOut = $('#betaTextYOut');
+  const betaPosTop = $('#betaPosTop');
+  const betaPosCenter = $('#betaPosCenter');
+  const betaPosBottom = $('#betaPosBottom');
+  const betaTextSize = $('#betaTextSize');
+  const betaTextSizeOut = $('#betaTextSizeOut');
+  const betaTextColor = $('#betaTextColor');
+  const betaTextFont = $('#betaTextFont');
+  const betaTextBgEnable = $('#betaTextBgEnable');
+  const betaTextBgColor = $('#betaTextBgColor');
+  const betaApplyTextBtn = $('#betaApplyTextBtn');
+  const betaResetTextBtn = $('#betaResetTextBtn');
+  const betaTextStatusMsg = $('#betaTextStatusMsg');
+
+  function syncTextOverlayStyles() {
+    if (!betaTextDragOverlay || !betaTextDragContent) return;
+
+    const text = (betaTextInput && betaTextInput.value) ? betaTextInput.value : 'WAIT FOR IT! 😱';
+    betaTextDragContent.textContent = text;
+
+    const xVal = betaTextX ? +betaTextX.value : 50;
+    const yVal = betaTextY ? +betaTextY.value : 25;
+    if (betaTextXOut) betaTextXOut.textContent = `${xVal}%`;
+    if (betaTextYOut) betaTextYOut.textContent = `${yVal}%`;
+
+    betaTextDragOverlay.style.left = `${xVal}%`;
+    betaTextDragOverlay.style.top = `${yVal}%`;
+
+    if (betaDragCoordBadge) betaDragCoordBadge.textContent = `${xVal}%, ${yVal}%`;
+
+    const sizeVal = betaTextSize ? +betaTextSize.value : 42;
+    if (betaTextSizeOut) betaTextSizeOut.textContent = `${sizeVal}px`;
+    betaTextDragContent.style.fontSize = `${(sizeVal / 32).toFixed(2)}rem`;
+
+    if (betaTextColor) betaTextDragContent.style.color = betaTextColor.value;
+    if (betaTextFont) betaTextDragContent.style.fontFamily = `"${betaTextFont.value}", Impact, sans-serif`;
+
+    const bgOn = betaTextBgEnable ? betaTextBgEnable.checked : true;
+    const bgCol = betaTextBgColor ? betaTextBgColor.value : '#000000';
+    if (bgOn) {
+      betaTextDragContent.style.background = `${bgCol}b3`;
+      betaTextDragContent.style.border = '2px dashed rgba(250, 204, 21, 0.7)';
+    } else {
+      betaTextDragContent.style.background = 'transparent';
+      betaTextDragContent.style.border = '2px dashed rgba(255, 255, 255, 0.4)';
+    }
+
+    function fmtMinSec(sec) {
+      if (isNaN(sec) || sec < 0) sec = 0;
+      const m = Math.floor(sec / 60);
+      const s = Math.floor(sec % 60);
+      return `${m}:${String(s).padStart(2, '0')}`;
+    }
+    function fmtDurMinSec(sec) {
+      if (isNaN(sec) || sec < 0) sec = 0;
+      const m = Math.floor(sec / 60);
+      const s = Math.round(sec % 60);
+      if (m > 0) return `${m}m ${s}s`;
+      return `0m ${s}s`;
+    }
+
+    const sTime = betaTextStart ? Math.max(0, +betaTextStart.value) : 0;
+    const eTime = betaTextEnd ? Math.max(sTime + 0.1, +betaTextEnd.value) : 5.0;
+    if (betaDragTimeBadge) betaDragTimeBadge.textContent = `${fmtMinSec(sTime)} – ${fmtMinSec(eTime)} (${fmtDurMinSec(eTime - sTime)})`;
+    if (betaTimelineActiveLabel) betaTimelineActiveLabel.textContent = `Active: ${fmtMinSec(sTime)} – ${fmtMinSec(eTime)}`;
+
+    const dur = (resultVideo && resultVideo.duration) ? resultVideo.duration : Math.max(10, eTime);
+    if (betaTimelineEndLabel && resultVideo && resultVideo.duration) {
+      betaTimelineEndLabel.textContent = fmtMinSec(dur);
+    }
+
+    const handleStart = $('#betaHandleStart');
+    const handleEnd = $('#betaHandleEnd');
+    const scrubHighlight = $('#betaScrubHighlight');
+    const tooltipStart = $('#betaTooltipStart');
+    const tooltipEnd = $('#betaTooltipEnd');
+    const trimSpanBadge = $('#betaTrimSpanBadge');
+    const trackMaxLabel = $('#betaTrackMaxLabel');
+
+    if (dur > 0) {
+      const sPct = Math.max(0, Math.min(100, (sTime / dur) * 100));
+      const ePct = Math.max(sPct, Math.min(100, (eTime / dur) * 100));
+      if (handleStart) handleStart.style.left = `${sPct}%`;
+      if (handleEnd) handleEnd.style.left = `${ePct}%`;
+      if (scrubHighlight) {
+        scrubHighlight.style.left = `${sPct}%`;
+        scrubHighlight.style.width = `${Math.max(1, ePct - sPct)}%`;
+      }
+      if (tooltipStart) tooltipStart.textContent = fmtMinSec(sTime);
+      if (tooltipEnd) tooltipEnd.textContent = fmtMinSec(eTime);
+      if (trimSpanBadge) {
+        const diff = Math.max(0.1, eTime - sTime);
+        trimSpanBadge.textContent = `${fmtMinSec(sTime)} – ${fmtMinSec(eTime)} (${fmtDurMinSec(diff)})`;
+      }
+      if (trackMaxLabel) {
+        trackMaxLabel.textContent = fmtMinSec(dur);
+      }
+    }
+
+    if (betaTimelineSpanBar) {
+      const sPct = Math.max(0, Math.min(100, (sTime / dur) * 100));
+      const ePct = Math.max(sPct, Math.min(100, (eTime / dur) * 100));
+      betaTimelineSpanBar.style.left = `${sPct}%`;
+      betaTimelineSpanBar.style.width = `${Math.max(2, ePct - sPct)}%`;
+    }
+
+    const enabled = betaTextEnableToggle ? betaTextEnableToggle.checked : true;
+    if (!enabled) {
+      betaTextDragOverlay.style.display = 'none';
+      return;
+    }
+
+    if (resultVideo && resultVideo.src) {
+      const cur = resultVideo.currentTime || 0;
+      const inRange = (cur >= sTime && cur <= eTime);
+      if (!resultVideo.paused) {
+        betaTextDragOverlay.style.display = inRange ? 'block' : 'none';
+      } else {
+        betaTextDragOverlay.style.display = 'block';
+        if (inRange) {
+          betaTextDragOverlay.classList.remove('inactive-time');
+        } else {
+          betaTextDragOverlay.classList.add('inactive-time');
+        }
+      }
+    }
+  }
+
+  // Draggable logic for text overlay
+  if (betaTextDragOverlay && betaPreviewFrame) {
+    let isDraggingText = false;
+    let dragStartX = 0;
+    let dragStartY = 0;
+    let initialXPct = 50;
+    let initialYPct = 25;
+
+    const onTextDragStart = (clientX, clientY) => {
+      isDraggingText = true;
+      dragStartX = clientX;
+      dragStartY = clientY;
+      initialXPct = betaTextX ? +betaTextX.value : 50;
+      initialYPct = betaTextY ? +betaTextY.value : 25;
+      betaTextDragOverlay.classList.add('dragging');
+      document.body.style.cursor = 'grabbing';
+    };
+
+    const onTextDragMove = (clientX, clientY) => {
+      if (!isDraggingText) return;
+      const rect = betaPreviewFrame.getBoundingClientRect();
+      if (rect.width <= 0 || rect.height <= 0) return;
+
+      const deltaX = clientX - dragStartX;
+      const deltaY = clientY - dragStartY;
+
+      const deltaXPct = (deltaX / rect.width) * 100;
+      const deltaYPct = (deltaY / rect.height) * 100;
+
+      const newX = Math.round(Math.max(5, Math.min(95, initialXPct + deltaXPct)));
+      const newY = Math.round(Math.max(5, Math.min(95, initialYPct + deltaYPct)));
+
+      if (betaTextX) betaTextX.value = newX;
+      if (betaTextY) betaTextY.value = newY;
+
+      syncTextOverlayStyles();
+    };
+
+    const onTextDragEnd = () => {
+      if (isDraggingText) {
+        isDraggingText = false;
+        betaTextDragOverlay.classList.remove('dragging');
+        document.body.style.cursor = '';
+      }
+    };
+
+    betaTextDragOverlay.addEventListener('mousedown', (e) => {
+      e.preventDefault();
+      onTextDragStart(e.clientX, e.clientY);
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (isDraggingText) {
+        e.preventDefault();
+        onTextDragMove(e.clientX, e.clientY);
+      }
+    });
+
+    window.addEventListener('mouseup', onTextDragEnd);
+
+    // Touch support for drag
+    betaTextDragOverlay.addEventListener('touchstart', (e) => {
+      if (e.touches && e.touches[0]) {
+        onTextDragStart(e.touches[0].clientX, e.touches[0].clientY);
+      }
+    }, { passive: true });
+
+    window.addEventListener('touchmove', (e) => {
+      if (isDraggingText && e.touches && e.touches[0]) {
+        onTextDragMove(e.touches[0].clientX, e.touches[0].clientY);
+      }
+    }, { passive: true });
+
+    window.addEventListener('touchend', onTextDragEnd);
+  }
+
+  // Input event bindings
+  [betaTextInput, betaTextColor, betaTextFont, betaTextBgColor].forEach((el) => {
+    if (el) el.addEventListener('input', syncTextOverlayStyles);
+  });
+
+  [betaTextX, betaTextY, betaTextSize].forEach((el) => {
+    if (el) el.addEventListener('input', syncTextOverlayStyles);
+  });
+
+  [betaTextStart, betaTextEnd, betaTextBgEnable, betaTextEnableToggle].forEach((el) => {
+    if (el) el.addEventListener('change', syncTextOverlayStyles);
+  });
+
+  // Quick alignment pills
+  if (betaPosTop) betaPosTop.addEventListener('click', () => { if (betaTextY) betaTextY.value = 15; syncTextOverlayStyles(); });
+  if (betaPosCenter) betaPosCenter.addEventListener('click', () => { if (betaTextY) betaTextY.value = 50; syncTextOverlayStyles(); });
+  if (betaPosBottom) betaPosBottom.addEventListener('click', () => { if (betaTextY) betaTextY.value = 75; syncTextOverlayStyles(); });
+
+  // Playhead timing buttons
+  if (betaBtnSetStart && resultVideo) {
+    betaBtnSetStart.addEventListener('click', () => {
+      const cur = +(resultVideo.currentTime || 0).toFixed(1);
+      if (betaTextStart) betaTextStart.value = cur;
+      if (betaBtnSetStart) betaBtnSetStart.textContent = `Start: ${cur}s`;
+      syncTextOverlayStyles();
+    });
+  }
+
+  if (betaBtnSetEnd && resultVideo) {
+    betaBtnSetEnd.addEventListener('click', () => {
+      const cur = +(resultVideo.currentTime || 0).toFixed(1);
+      if (betaTextEnd) betaTextEnd.value = Math.max(+(betaTextStart?.value || 0) + 0.1, cur);
+      if (betaBtnSetEnd) betaBtnSetEnd.textContent = `End: ${cur}s`;
+      syncTextOverlayStyles();
+    });
+  }
+
+  if (betaBtnFullDuration && resultVideo) {
+    betaBtnFullDuration.addEventListener('click', () => {
+      const dur = +(resultVideo.duration || 10).toFixed(1);
+      if (betaTextStart) betaTextStart.value = 0.0;
+      if (betaTextEnd) betaTextEnd.value = dur;
+      syncTextOverlayStyles();
+    });
+  }
+
+  // Dual-Handle Scrubber Timeline Dragging
+  const handleStartEl = $('#betaHandleStart');
+  const handleEndEl = $('#betaHandleEnd');
+  const trackContainerEl = $('#betaScrubTrackContainer');
+  const trimResetFullBtn = $('#betaTrimResetFull');
+
+  if (trimResetFullBtn) {
+    trimResetFullBtn.addEventListener('click', () => {
+      const dur = (resultVideo && resultVideo.duration) ? resultVideo.duration : 60;
+      if (betaTextStart) betaTextStart.value = '0.0';
+      if (betaTextEnd) betaTextEnd.value = dur.toFixed(1);
+      syncTextOverlayStyles();
+    });
+  }
+
+  function setupScrubberHandleDrag(handleEl, isStart) {
+    if (!handleEl || !trackContainerEl) return;
+    let dragging = false;
+
+    const onStart = (e) => {
+      dragging = true;
+      e.preventDefault();
+      handleEl.classList.add('active-drag');
+      document.body.style.userSelect = 'none';
+    };
+
+    const onMove = (clientX) => {
+      if (!dragging) return;
+      const rect = trackContainerEl.getBoundingClientRect();
+      if (rect.width <= 0) return;
+      const rawPct = Math.max(0, Math.min(100, ((clientX - rect.left) / rect.width) * 100));
+      const dur = (resultVideo && resultVideo.duration) ? resultVideo.duration : 60;
+
+      if (isStart) {
+        const curEndSec = betaTextEnd ? +betaTextEnd.value : dur;
+        const curEndPct = Math.min(100, (curEndSec / dur) * 100);
+        const clampedPct = Math.min(rawPct, Math.max(0, curEndPct - 1.0));
+        const newSec = Math.max(0, (clampedPct / 100) * dur);
+        if (betaTextStart) betaTextStart.value = newSec.toFixed(1);
+        if (resultVideo) resultVideo.currentTime = newSec;
+      } else {
+        const curStartSec = betaTextStart ? +betaTextStart.value : 0;
+        const curStartPct = Math.max(0, (curStartSec / dur) * 100);
+        const clampedPct = Math.max(rawPct, Math.min(100, curStartPct + 1.0));
+        const newSec = Math.min(dur, (clampedPct / 100) * dur);
+        if (betaTextEnd) betaTextEnd.value = newSec.toFixed(1);
+        if (resultVideo) resultVideo.currentTime = newSec;
+      }
+      syncTextOverlayStyles();
+    };
+
+    const onEnd = () => {
+      if (dragging) {
+        dragging = false;
+        handleEl.classList.remove('active-drag');
+        document.body.style.userSelect = '';
+      }
+    };
+
+    handleEl.addEventListener('mousedown', onStart);
+    window.addEventListener('mousemove', (e) => { if (dragging) onMove(e.clientX); });
+    window.addEventListener('mouseup', onEnd);
+
+    handleEl.addEventListener('touchstart', (e) => {
+      if (e.touches.length > 0) onStart(e);
+    }, { passive: false });
+    window.addEventListener('touchmove', (e) => {
+      if (dragging && e.touches.length > 0) onMove(e.touches[0].clientX);
+    }, { passive: true });
+    window.addEventListener('touchend', onEnd);
+  }
+
+  setupScrubberHandleDrag(handleStartEl, true);
+  setupScrubberHandleDrag(handleEndEl, false);
+
+  // Synchronize playback timeline and active overlay display
+  if (resultVideo) {
+    resultVideo.addEventListener('timeupdate', () => {
+      const dur = resultVideo.duration || 1;
+      const cur = resultVideo.currentTime || 0;
+      if (betaTimelineCurrentMarker) {
+        betaTimelineCurrentMarker.style.left = `${Math.min(100, Math.max(0, (cur / dur) * 100))}%`;
+      }
+      syncTextOverlayStyles();
+    });
+
+    resultVideo.addEventListener('play', () => syncTextOverlayStyles());
+    resultVideo.addEventListener('pause', () => syncTextOverlayStyles());
+  }
+
+  // Burn & Apply Text to Short
+  if (betaApplyTextBtn) {
+    betaApplyTextBtn.addEventListener('click', async () => {
+      if (!betaState.jobId || !betaState.selectedClip) {
+        alert('Please run or select a Short first.');
+        return;
+      }
+      const text = betaTextInput ? betaTextInput.value.trim() : '';
+      if (!text) {
+        alert('Enter some text to burn onto the video.');
+        return;
+      }
+
+      betaApplyTextBtn.disabled = true;
+      betaApplyTextBtn.innerHTML = '<span class="btn-update-icon spinning">↻</span> Rendering Text onto Short…';
+      if (betaTextStatusMsg) {
+        betaTextStatusMsg.style.display = 'block';
+        betaTextStatusMsg.style.color = '#facc15';
+        betaTextStatusMsg.textContent = 'Rendering timed text overlay with FFmpeg…';
+      }
+
+      try {
+        const payload = {
+          job_id: betaState.jobId,
+          filename: betaState.selectedClip,
+          text: text,
+          start_time: betaTextStart ? +betaTextStart.value : 0.0,
+          end_time: betaTextEnd ? +betaTextEnd.value : 5.0,
+          x: betaTextX ? +betaTextX.value : 50,
+          y: betaTextY ? +betaTextY.value : 25,
+          font_size: betaTextSize ? +betaTextSize.value : 42,
+          font_name: betaTextFont ? betaTextFont.value : 'Montserrat Extra Bold',
+          color: betaTextColor ? betaTextColor.value : '#facc15',
+          bg_enabled: betaTextBgEnable ? betaTextBgEnable.checked : true,
+          bg_color: betaTextBgColor ? betaTextBgColor.value : '#000000',
+          bg_opacity: 65,
+        };
+
+        const res = await fetch('/api/beta/apply-text', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (!res.ok || !data.ok) throw new Error(data.error || 'Failed to burn text');
+
+        // Update video to the newly rendered clip
+        betaState.currentClipUrl = data.url;
+        betaState.currentFilename = data.filename;
+        resultVideo.src = data.url;
+        resultVideo.load();
+        resultVideo.play().catch(() => {});
+
+        // Update download button
+        downloadBtn.href = `${data.url}&download=1`;
+        downloadBtn.download = data.filename;
+
+        if (betaTextStatusMsg) {
+          betaTextStatusMsg.style.color = '#4ade80';
+          betaTextStatusMsg.textContent = `✓ Text overlay successfully burned into video! (${data.filename})`;
+        }
+      } catch (err) {
+        if (betaTextStatusMsg) {
+          betaTextStatusMsg.style.color = '#ef4444';
+          betaTextStatusMsg.textContent = `Error: ${err.message}`;
+        }
+        alert('Could not apply text overlay: ' + err.message);
+      } finally {
+        betaApplyTextBtn.disabled = false;
+        betaApplyTextBtn.innerHTML = '<span>✨ Burn & Apply Text to Short</span>';
+      }
+    });
+  }
+
+  // Reset to original clip
+  if (betaResetTextBtn) {
+    betaResetTextBtn.addEventListener('click', () => {
+      if (betaState.originalClipUrl && resultVideo) {
+        resultVideo.src = betaState.originalClipUrl;
+        resultVideo.load();
+        resultVideo.play().catch(() => {});
+        downloadBtn.href = `${betaState.originalClipUrl}?download=1`;
+        downloadBtn.download = betaState.originalFilename || 'short.mp4';
+        if (betaTextStatusMsg) {
+          betaTextStatusMsg.style.color = '#38bdf8';
+          betaTextStatusMsg.textContent = 'Restored unmodified original Short.';
+        }
+      }
+    });
+  }
+}

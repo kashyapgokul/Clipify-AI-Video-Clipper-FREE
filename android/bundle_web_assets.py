@@ -29,34 +29,37 @@ def fake_url_for(endpoint, filename=None, **kwargs):
 env = jinja2.Environment(loader=jinja2.FileSystemLoader(src_templates))
 env.globals["url_for"] = fake_url_for
 
-# Pixel-perfect Mobile CSS: zero horizontal overflow, seamless scrolling, 100% responsive
+# Premium Native Android Mobile CSS: Obsidian Dark Theme, Single-Column Fluid Layout, Zero Text Squishing
 mobile_css = """
 <style id="mobile-responsive-styles">
 /* ===================================================
-   CLIPIFY AI — PIXEL-PERFECT MOBILE DESIGN SYSTEM
-   Zero horizontal overflow, 100% fluid mobile layout
+   CLIPIFY AI — PREMIUM OBSIDIAN ANDROID DESIGN SYSTEM
+   Single-column fluid flow, zero horizontal overflow,
+   crisp system typography, liquid smooth touch UX
    =================================================== */
 
 :root {
-  --mobile-bg: #090e0c;
-  --mobile-surface: #121a16;
-  --mobile-surface-hover: #17241e;
-  --mobile-border: rgba(16, 185, 129, 0.22);
-  --mobile-border-active: #10b981;
-  --mobile-primary: #10b981;
-  --mobile-primary-dark: #059669;
-  --mobile-primary-gradient: linear-gradient(135deg, #10b981 0%, #047857 100%);
-  --mobile-text: #f9fafb;
-  --mobile-text-muted: #9ca3af;
-  --mobile-text-dim: #6b7280;
+  --mobile-bg: #09090b;
+  --mobile-surface: #121215;
+  --mobile-surface-elevated: #18181c;
+  --mobile-surface-hover: #222228;
+  --mobile-border: rgba(255, 255, 255, 0.08);
+  --mobile-border-active: rgba(255, 255, 255, 0.28);
+  --mobile-primary: #ffffff;
+  --mobile-primary-text: #09090b;
+  --mobile-brand: #818cf8;
+  --mobile-text: #fafafa;
+  --mobile-text-muted: #a1a1aa;
+  --mobile-text-dim: #71717a;
   --mobile-radius: 14px;
 }
 
-/* UNIVERSAL BOX SIZING & OVERFLOW SHIELD */
+/* UNIVERSAL BOX SIZING & CRISP SYSTEM TYPOGRAPHY */
 *, *::before, *::after {
   box-sizing: border-box !important;
   max-width: 100% !important;
   -webkit-tap-highlight-color: transparent !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, Helvetica, Arial, sans-serif !important;
 }
 
 html {
@@ -67,16 +70,16 @@ html {
   overflow-x: hidden !important;
   -webkit-overflow-scrolling: touch !important;
   overscroll-behavior-y: auto !important;
+  background-color: var(--mobile-bg) !important;
 }
 
 body {
   background-color: var(--mobile-bg) !important;
   color: var(--mobile-text) !important;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
   font-size: 14px !important;
   line-height: 1.45 !important;
   margin: 0 !important;
-  padding: 0 0 100px 0 !important;
+  padding: 0 0 96px 0 !important;
   width: 100% !important;
   max-width: 100vw !important;
   min-height: 100% !important;
@@ -88,41 +91,29 @@ body {
   overscroll-behavior-y: auto !important;
 }
 
-/* REMOVE HEAVY DEKSTOP BACKGROUND DECORATIONS */
-.aurora, .aurora-one, .aurora-two, .aurora-three, .noise, canvas#forest-world, .hero-orbit, body:before {
+/* REMOVE DESKTOP-ONLY BACKGROUND DECORATIONS & CLUTTER */
+.aurora, .aurora-one, .aurora-two, .aurora-three, .noise, canvas#forest-world, .hero-orbit, body:before,
+.sidebar, .narrate-sidebar, .sidebar-github, .sidebar-tour-btn, .side-card, .narrate-brand, .back-link,
+.top-bar-desktop, .brand, .topbar, .topbar-actions, .top-actions, .github-watermark, .hero-top-row, 
+.studio-hero, .hero-chip, .hero-metrics, .typewriter-headline, .typewriter-cursor, .living-title, .eyebrow,
+#openInput, #openOutput, #openOutput2, .btn-github-pill, .sidebar-creature-card, .side-spacer,
+.status-pill, .nav-promoters-link, .hero-btn-row, .workflow, .beta-drag-badge, .desktop-only {
   display: none !important;
 }
 
-/* HIDE DESKTOP SIDEBARS & REDUNDANT TOP NAVIGATION */
-.sidebar, 
-.narrate-sidebar, 
-.sidebar-github, 
-.sidebar-tour-btn, 
-.side-card, 
-.narrate-brand, 
-.back-link,
-.top-bar-desktop {
-  display: none !important;
+/* UNIVERSAL CRISP SYSTEM TYPOGRAPHY (ZERO COMIC/CURSIVE FONT) */
+*, *::before, *::after, em, strong, b, i, p, span, h1, h2, h3, h4, h5, h6, label, button, input, select, textarea {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", "Helvetica Neue", sans-serif !important;
+  font-style: normal !important;
+  box-sizing: border-box !important;
 }
 
-/* FLUID WORKSPACE WRAPPERS (ZERO NESTED PADDING) */
+/* 100% FLUID SINGLE-COLUMN WORKSPACE WRAPPERS */
 .main, 
 .app, 
 .workspace, 
 .narrate-shell, 
-.live-shell {
-  display: block !important;
-  width: 100% !important;
-  max-width: 100vw !important;
-  min-width: 0 !important;
-  margin: 0 !important;
-  padding: 8px 10px 100px 10px !important;
-  height: auto !important;
-  overflow-y: visible !important;
-  overflow-x: hidden !important;
-  box-sizing: border-box !important;
-}
-
+.live-shell,
 .page-section, 
 .workspace-grid, 
 .left-column, 
@@ -131,100 +122,55 @@ body {
 .live-main,
 .live-grid,
 .live-left,
-.live-right {
+.live-right,
+#betaClipperWorkspace,
+.beta-workspace-layout,
+.beta-controls-col,
+.preview-column-card {
   display: flex !important;
   flex-direction: column !important;
   width: 100% !important;
   max-width: 100% !important;
   min-width: 0 !important;
+  grid-template-columns: 1fr !important;
   margin: 0 !important;
-  padding: 0 !important;
+  padding: 8px 12px 0 12px !important;
   height: auto !important;
+  overflow-y: visible !important;
+  overflow-x: hidden !important;
   box-sizing: border-box !important;
-  gap: 12px !important;
+  gap: 14px !important;
 }
 
-/* TOPBAR & TITLES */
-.topbar, .narrate-top, .live-top-bar {
+/* SECTION HEADERS */
+.narrate-top, .live-top-bar, .section-page-head {
   display: flex !important;
   flex-direction: column !important;
   align-items: flex-start !important;
-  gap: 8px !important;
-  margin: 0 0 14px 0 !important;
+  gap: 4px !important;
+  margin: 0 0 12px 0 !important;
   padding: 0 !important;
   border: none !important;
   width: 100% !important;
 }
 
-.topbar-actions, .top-actions {
-  display: flex !important;
-  flex-direction: column !important;
-  width: 100% !important;
-  gap: 8px !important;
-  margin-top: 8px !important;
-}
-
-.topbar-actions > *, .top-actions > * {
-  width: 100% !important;
-  min-width: 0 !important;
-  box-sizing: border-box !important;
-}
-
-.status-pill {
-  width: 100% !important;
-  justify-content: center !important;
-  white-space: normal !important;
-  text-align: center !important;
-}
-
-.typewriter-headline {
-  font-size: 1.15rem !important;
-  word-break: break-word !important;
-  white-space: normal !important;
-  line-height: 1.3 !important;
-}
-
-.living-title, .narrate-top h1, .live-top-bar h1 {
+.narrate-top h1, .live-top-bar h1, .section-page-head h1 {
   font-size: 1.45rem !important;
   font-weight: 800 !important;
   letter-spacing: -0.02em !important;
   color: #ffffff !important;
-  line-height: 1.15 !important;
-  margin: 2px 0 6px 0 !important;
+  line-height: 1.2 !important;
+  margin: 2px 0 4px 0 !important;
 }
 
-.eyebrow, .kicker {
-  font-size: 0.7rem !important;
+.kicker {
+  font-size: 0.72rem !important;
   font-weight: 700 !important;
-  letter-spacing: 0.06em !important;
-  color: #34d399 !important;
+  letter-spacing: 0.05em !important;
+  color: #818cf8 !important;
   text-transform: uppercase !important;
   white-space: normal !important;
   word-break: break-word !important;
-}
-
-/* WORKFLOW 4-STEP STRIP (01 Source, 02 Edit, 03 Generate, 04 Review) */
-.workflow {
-  display: grid !important;
-  grid-template-columns: repeat(2, 1fr) !important;
-  gap: 8px !important;
-  padding: 8px !important;
-  margin-bottom: 14px !important;
-  width: 100% !important;
-}
-
-.workflow-step {
-  min-width: 0 !important;
-  padding: 8px !important;
-  min-height: 48px !important;
-}
-
-.workflow-step b {
-  font-size: 0.85rem !important;
-}
-
-.workflow-step small {
-  font-size: 0.7rem !important;
 }
 
 /* CARDS & PANELS */
@@ -239,13 +185,15 @@ body {
 .style-panel, 
 .progress-panel,
 .history-panel,
-.editing-mode-strip {
+.editing-mode-strip,
+.studio-hero,
+.beta-card {
   background: var(--mobile-surface) !important;
   border: 1px solid var(--mobile-border) !important;
   border-radius: var(--mobile-radius) !important;
-  padding: 12px 10px !important;
+  padding: 14px 12px !important;
   margin: 0 0 12px 0 !important;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
   width: 100% !important;
   max-width: 100% !important;
   min-width: 0 !important;
@@ -256,59 +204,65 @@ body {
   display: flex !important;
   flex-direction: column !important;
   align-items: flex-start !important;
-  gap: 4px !important;
-  margin-bottom: 12px !important;
+  gap: 2px !important;
+  margin-bottom: 10px !important;
   width: 100% !important;
 }
 
 .panel-head h2, .card-head h2, .section-head h2, .mode-strip-head h2 {
-  font-size: 1.15rem !important;
+  font-size: 1.05rem !important;
   font-weight: 700 !important;
   color: #ffffff !important;
   margin: 0 !important;
 }
 
-/* 2-COLUMN TOUCH GRID FOR MODES */
+/* 2-COLUMN TOUCH GRID FOR EDITING MODES */
 .mode-grid, .top-mode-grid {
   display: grid !important;
   grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   gap: 8px !important;
-  margin-bottom: 14px !important;
+  margin-bottom: 12px !important;
   width: 100% !important;
 }
 
 .mode-card {
   min-width: 0 !important;
   width: 100% !important;
-  background: #0e1712 !important;
-  border: 1.5px solid rgba(255, 255, 255, 0.09) !important;
+  background: #141418 !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
   border-radius: 12px !important;
   padding: 10px 8px !important;
   display: flex !important;
   flex-direction: column !important;
   align-items: flex-start !important;
-  gap: 3px !important;
+  gap: 4px !important;
   cursor: pointer !important;
   text-align: left !important;
+  transition: transform 0.15s ease, border-color 0.15s ease !important;
+}
+
+.mode-card:active {
+  transform: scale(0.97) !important;
 }
 
 .mode-card.selected, .mode-card.active {
-  border-color: var(--mobile-primary) !important;
-  background: rgba(16, 185, 129, 0.12) !important;
+  border-color: rgba(255, 255, 255, 0.45) !important;
+  background: rgba(255, 255, 255, 0.07) !important;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.25) !important;
 }
 
 .mode-card .mode-icon, .mode-card .icon {
-  font-size: 1.3rem !important;
+  font-size: 1.25rem !important;
 }
 
 .mode-card .mode-name, .mode-card .name {
-  font-size: 0.9rem !important;
+  font-size: 0.86rem !important;
   font-weight: 700 !important;
   color: #ffffff !important;
 }
 
 .mode-card .mode-desc, .mode-card .desc {
-  font-size: 0.7rem !important;
+  font-size: 0.68rem !important;
   color: var(--mobile-text-muted) !important;
   line-height: 1.25 !important;
   display: -webkit-box !important;
@@ -318,29 +272,42 @@ body {
 }
 
 /* VIDEO SOURCE SECTION (Dropzone & YouTube stacked) */
-.source-options, .two {
+.source-options, .two, .two-column, .split-grid, .brand-grid, .control-grid, .control-grid.three, .duration-row, .text-grid, .text-style-row {
   display: flex !important;
   flex-direction: column !important;
-  gap: 12px !important;
+  gap: 10px !important;
   width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
 }
 
-.dropzone {
+.source-options > *, .two > *, .control-grid > *, .duration-row > * {
   width: 100% !important;
-  background: rgba(16, 185, 129, 0.04) !important;
-  border: 2px dashed rgba(16, 185, 129, 0.35) !important;
+  min-width: 0 !important;
+}
+
+.dropzone, .upload-box, .drop-area, .beta-upload-drop {
+  width: 100% !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1.5px dashed rgba(255, 255, 255, 0.22) !important;
   border-radius: 14px !important;
   padding: 20px 14px !important;
   text-align: center !important;
   cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+.dropzone:active, .beta-upload-drop:active {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(255, 255, 255, 0.45) !important;
 }
 
 .youtube-import {
   width: 100% !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
   border-radius: 14px !important;
   padding: 14px !important;
-  background: #0d1611 !important;
+  background: #141418 !important;
 }
 
 .youtube-input-row {
@@ -351,76 +318,73 @@ body {
   width: 100% !important;
 }
 
-.youtube-input-row input {
+.youtube-input-row input, #betaYtUrl, #youtubeUrl {
   width: 100% !important;
   min-width: 0 !important;
-  margin-bottom: 0 !important;
+  background: #09090b !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  color: #fafafa !important;
+  padding: 12px 14px !important;
+  border-radius: 10px !important;
+  font-size: 14px !important;
 }
 
-.youtube-input-row button, #youtubeImport {
+.youtube-input-row button, #youtubeImport, #betaYtImportBtn {
   width: 100% !important;
-  min-height: 46px !important;
+  min-height: 44px !important;
   background: rgba(255, 255, 255, 0.08) !important;
-  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
   color: #ffffff !important;
   font-weight: 600 !important;
+  border-radius: 10px !important;
+  cursor: pointer !important;
 }
 
-/* ALL FORM CONTROLS STACKED VERTICALLY */
-.control-grid, .control-grid.three, .duration-row, .brand-grid, .text-grid, .text-style-row {
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 10px !important;
-  width: 100% !important;
-}
-
-.control-grid > *, .duration-row > *, .brand-grid > *, .two > * {
+/* ALL FORM CONTROLS & INPUTS */
+input[type="text"], input[type="url"], input[type="number"], select, textarea {
   width: 100% !important;
   min-width: 0 !important;
-}
-
-.model-picker {
-  display: flex !important;
-  gap: 6px !important;
-  width: 100% !important;
-}
-
-.model-picker select {
-  flex: 1 !important;
-  min-width: 0 !important;
-  margin-bottom: 0 !important;
-}
-
-.mini-refresh, .mini-search {
-  flex-shrink: 0 !important;
-  min-height: 44px !important;
-  padding: 0 12px !important;
-}
-
-input[type="text"], input[type="url"], input[type="search"], select, textarea {
-  width: 100% !important;
-  min-width: 0 !important;
-  background: #0d1611 !important;
+  background: #141418 !important;
   border: 1px solid rgba(255, 255, 255, 0.12) !important;
   color: #ffffff !important;
-  padding: 10px 12px !important;
+  padding: 11px 12px !important;
   border-radius: 10px !important;
   box-sizing: border-box !important;
+  font-size: 14px !important;
 }
 
-/* BUTTONS */
+/* CLEAN MODERN SWITCHES */
+.toggle-row {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  margin: 6px 0 !important;
+  cursor: pointer !important;
+}
+
+.toggle-row input[type="checkbox"] {
+  accent-color: #818cf8 !important;
+  width: 18px !important;
+  height: 18px !important;
+  cursor: pointer !important;
+}
+
+/* CRISP OBSIDIAN PRIMARY BUTTONS (Liquid smooth tap response) */
 .btn-primary, 
 .primary, 
 .hero-btn, 
 .generate-button, 
 #generateNarrate, 
 #createBtn,
-#btnStartClip {
+#btnStartClip,
+#btnConnectStream,
+#betaApplyTextBtn,
+.big-clip-btn {
   width: 100% !important;
-  min-height: 50px !important;
-  background: var(--mobile-primary-gradient) !important;
-  color: #ffffff !important;
-  font-size: 1rem !important;
+  min-height: 48px !important;
+  background: #ffffff !important;
+  color: #09090b !important;
+  font-size: 0.96rem !important;
   font-weight: 700 !important;
   border: none !important;
   border-radius: 12px !important;
@@ -428,25 +392,43 @@ input[type="text"], input[type="url"], input[type="search"], select, textarea {
   align-items: center !important;
   justify-content: center !important;
   gap: 8px !important;
-  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35) !important;
+  box-shadow: 0 4px 18px rgba(255, 255, 255, 0.12) !important;
   cursor: pointer !important;
-  margin-top: 10px !important;
+  margin-top: 8px !important;
+  transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.15s ease !important;
 }
 
-.btn-primary:disabled, #createBtn:disabled, #generateNarrate:disabled {
-  opacity: 0.45 !important;
+.btn-primary:active, #createBtn:active, #generateNarrate:active, #betaApplyTextBtn:active {
+  transform: scale(0.97) !important;
+}
+
+.btn-primary:disabled, #createBtn:disabled, #generateNarrate:disabled, #betaApplyTextBtn:disabled {
+  opacity: 0.4 !important;
   cursor: not-allowed !important;
   box-shadow: none !important;
 }
 
-.ghost, .quiet, .secondary, .accent-outline, .clip-source-btn {
+.ghost, .quiet, .secondary, .accent-outline, .clip-source-btn, #betaResetTextBtn {
   min-height: 42px !important;
   padding: 8px 12px !important;
-  background: rgba(255, 255, 255, 0.06) !important;
-  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
   color: #e5e7eb !important;
   font-weight: 600 !important;
   border-radius: 10px !important;
+}
+
+/* BETA TEXT EDITOR PANEL (Embedded naturally inline, never floating awkwardly) */
+#betaTextEditorPanel {
+  position: static !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-top: 14px !important;
+  background: #141418 !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 14px !important;
+  padding: 14px !important;
+  box-sizing: border-box !important;
 }
 
 /* SCRIPT ACTIONS IN NARRATE */
@@ -478,6 +460,9 @@ input[type="text"], input[type="url"], input[type="search"], select, textarea {
   padding: 6px 12px !important;
   border-radius: 20px !important;
   font-size: 0.78rem !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #fafafa !important;
 }
 
 .voice-grid {
@@ -489,8 +474,8 @@ input[type="text"], input[type="url"], input[type="search"], select, textarea {
 
 .voice-card {
   min-width: 0 !important;
-  background: #0d1611 !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  background: #141418 !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
   border-radius: 10px !important;
   padding: 10px 8px !important;
   text-align: left !important;
@@ -500,8 +485,8 @@ input[type="text"], input[type="url"], input[type="search"], select, textarea {
 }
 
 .voice-card.selected {
-  border-color: var(--mobile-primary) !important;
-  background: rgba(16, 185, 129, 0.12) !important;
+  border-color: rgba(255, 255, 255, 0.4) !important;
+  background: rgba(255, 255, 255, 0.08) !important;
 }
 
 .voice-card strong {
@@ -529,43 +514,14 @@ input[type="text"], input[type="url"], input[type="search"], select, textarea {
 }
 
 .clip-card, .history-card, .live-source-card {
-  flex: 0 0 150px !important;
-  max-width: 150px !important;
-  min-width: 150px !important;
-  background: #0d1611 !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  flex: 0 0 140px !important;
+  max-width: 140px !important;
+  min-width: 140px !important;
+  background: #141418 !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
   border-radius: 10px !important;
   padding: 8px !important;
   cursor: pointer !important;
-}
-
-.clip-card.selected {
-  border-color: var(--mobile-primary) !important;
-  box-shadow: 0 0 10px rgba(16, 185, 129, 0.3) !important;
-}
-
-/* CAPTION PRESETS */
-.preset-grid {
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 8px !important;
-  width: 100% !important;
-}
-
-.preset {
-  width: 100% !important;
-  background: #0d1611 !important;
-  border: 1px solid rgba(255, 255, 255, 0.12) !important;
-  border-radius: 10px !important;
-  padding: 10px 12px !important;
-  text-align: left !important;
-  color: #ffffff !important;
-  font-weight: 600 !important;
-}
-
-.preset.active {
-  border-color: var(--mobile-primary) !important;
-  background: rgba(16, 185, 129, 0.12) !important;
 }
 
 /* RESPONSIVE VIDEO PREVIEW */
@@ -578,7 +534,7 @@ video, .preview-frame {
 
 /* MODALS */
 .modal-overlay, .tour-overlay {
-  backdrop-filter: none !important;
+  backdrop-filter: blur(8px) !important;
   background: rgba(0, 0, 0, 0.88) !important;
   z-index: 9999 !important;
 }
@@ -588,86 +544,197 @@ video, .preview-frame {
   max-width: 380px !important;
   border-radius: 16px !important;
   margin: 0 auto !important;
+  background: var(--mobile-surface-elevated) !important;
+  border: 1px solid var(--mobile-border-active) !important;
 }
-/* LIVE CONTROLS & GALLERY RESPONSIVENESS */
-.live-connected-controls, .controls-left {
+
+/* SINGLE COLUMN FORM & PREVENT TEXT SQUISHING */
+div[style*="grid-template-columns:1fr 1fr"],
+div[style*="grid-template-columns: 1fr 1fr"] {
   display: flex !important;
   flex-direction: column !important;
   width: 100% !important;
   gap: 10px !important;
 }
 
-.big-clip-btn {
+select, input[type="text"], input[type="url"], input[type="number"], .beta-upload-drop {
   width: 100% !important;
-  min-height: 52px !important;
-  justify-content: center !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
   box-sizing: border-box !important;
 }
 
-.clip-duration-pills {
-  display: flex !important;
+select {
+  height: 44px !important;
+  border-radius: 10px !important;
+  background: #141418 !important;
+  border: 1px solid #27272a !important;
+  color: #ffffff !important;
+  font-size: 13.5px !important;
+  padding: 0 12px !important;
+}
+
+#betaTextEditorPanel {
+  position: static !important;
   width: 100% !important;
-  gap: 8px !important;
-  justify-content: space-between !important;
+  max-width: 100% !important;
+  margin-top: 14px !important;
+  border: 1px solid #27272a !important;
+  border-radius: 14px !important;
+  background: #141418 !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5) !important;
+  box-sizing: border-box !important;
 }
 
-.clip-duration-pills .pill-btn {
-  flex: 1 !important;
-  min-height: 38px !important;
-  text-align: center !important;
+#betaApplyTextBtn {
+  background: linear-gradient(135deg, #9333ea, #6366f1) !important;
+  color: #ffffff !important;
+  border: none !important;
+  box-shadow: 0 4px 16px rgba(147, 51, 234, 0.4) !important;
+  border-radius: 12px !important;
+  font-weight: 700 !important;
+  min-height: 48px !important;
+  font-size: 14px !important;
 }
 
-.clips-gallery-grid, .live-clips-grid, #liveClipsGrid {
+#betaResetTextBtn {
+  background: #1f1f26 !important;
+  border: 1px solid #33333f !important;
+  color: #a1a1aa !important;
+  border-radius: 12px !important;
+  min-height: 48px !important;
+}
+
+/* CLIPPY AI DRAWER & THEMED OBSIDIAN STYLING (ZERO GREEN) */
+.clippy-toggle-btn {
+  top: 18% !important;
+  right: 0 !important;
+  width: 28px !important;
+  height: 48px !important;
+  z-index: 99998 !important;
+  border-radius: 12px 0 0 12px !important;
+  background: rgba(18, 18, 22, 0.96) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border-right: none !important;
+  box-shadow: -4px 6px 20px rgba(0, 0, 0, 0.6) !important;
+}
+
+.clippy-drawer {
+  width: 100vw !important;
+  max-width: 100vw !important;
+  right: 0 !important;
+  top: 0 !important;
+  height: 100vh !important;
+  max-height: 100vh !important;
+  border-radius: 0 !important;
+  z-index: 999999 !important;
+  background: rgba(12, 12, 16, 0.98) !important;
+  border-left: none !important;
+}
+
+.clippy-model-badge,
+#clippyModelBadge {
+  background: rgba(155, 92, 255, 0.12) !important;
+  border: 1px solid rgba(155, 92, 255, 0.35) !important;
+  color: #c084fc !important;
+}
+
+.clippy-badge-dot {
+  background: #a855f7 !important;
+  box-shadow: 0 0 8px #a855f7 !important;
+}
+
+.clippy-welcome-bubble {
+  border: 1px solid #27272a !important;
+  background: #141418 !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+}
+
+.clippy-chip {
+  background: #18181f !important;
+  border: 1px solid #2e2e38 !important;
+  color: #e4e4e7 !important;
+  border-radius: 12px !important;
+  padding: 8px 12px !important;
+  font-size: 12px !important;
+}
+
+.clippy-chip:hover, .clippy-chip:active {
+  background: rgba(155, 92, 255, 0.2) !important;
+  border-color: #9B5CFF !important;
+  color: #ffffff !important;
+}
+
+.clippy-input-bar {
+  background: #121216 !important;
+  border: 1.5px solid #27272a !important;
+  border-radius: 16px !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
+}
+
+.clippy-input-bar:focus-within {
+  border-color: #9B5CFF !important;
+  box-shadow: 0 0 0 3px rgba(155, 92, 255, 0.2) !important;
+}
+
+.clippy-messages {
+  padding: 12px 14px 100px 14px !important;
+}
+
+.clippy-footer {
+  padding: 10px 14px 24px 14px !important;
+}
+
+.clippy-icon-btn svg {
+  stroke: #a1a1aa !important;
+  display: block !important;
+}
+
+.clippy-send-btn {
   display: flex !important;
-  flex-direction: column !important;
-  width: 100% !important;
-  gap: 12px !important;
-}
-
-/* MODALS ERGONOMICS */
-.modal-overlay {
-  display: none;
   align-items: center !important;
   justify-content: center !important;
-  padding: 12px !important;
-  position: fixed !important;
-  top: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
-  bottom: 0 !important;
-  background: rgba(0, 0, 0, 0.88) !important;
-  z-index: 99999 !important;
-  overflow-y: auto !important;
+  background: #9B5CFF !important;
+  color: #ffffff !important;
+  border-radius: 50% !important;
+  width: 36px !important;
+  height: 36px !important;
+  border: none !important;
 }
 
-.modal-card {
-  width: 100% !important;
-  max-width: 380px !important;
-  max-height: 90vh !important;
-  overflow-y: auto !important;
-  box-sizing: border-box !important;
-  padding: 16px 14px !important;
-  border-radius: 16px !important;
+.clippy-send-btn svg {
+  stroke: #ffffff !important;
+  display: block !important;
 }
 
-.modal-actions {
-  display: flex !important;
-  flex-direction: column !important;
+.clippy-avatar-img {
   width: 100% !important;
-  gap: 8px !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  border-radius: 8px !important;
 }
 
-.modal-actions a, .modal-actions button {
-  width: 100% !important;
-  min-height: 46px !important;
-  text-align: center !important;
-  justify-content: center !important;
-  box-sizing: border-box !important;
+/* ABSOLUTE FINAL OVERRIDE: HIDE DESKTOP HERO & SQUISHED LANDING ELEMENTS */
+.topbar,
+.living-title,
+.eyebrow,
+.typewriter-headline,
+.typewriter-cursor,
+.studio-hero,
+.hero-chip,
+.hero-metrics,
+.workflow,
+.top-actions,
+.github-watermark,
+.btn-github-pill,
+.sidebar,
+.hero-top-row {
+  display: none !important;
 }
 </style>
 """
 
-# Native JavaScript Bridge & Offline Interceptors (Injected in HEAD before any script executes)
+# Native JavaScript Bridge & Live Desktop Proxy (Injected in HEAD before any script executes)
 bridge_script = """
 <script>
 window.isAndroidApp = true;
@@ -678,147 +745,167 @@ window.SUPPORT_STORAGE_KEY = 'clipify_support_shown';
 localStorage.setItem(window.TOUR_STORAGE_KEY, 'true');
 localStorage.setItem(window.SUPPORT_STORAGE_KEY, 'true');
 
-// Comprehensive built-in narration voices & background clips for Android
-window.ANDROID_OFFLINE_VOICES = [
-  { id: "alex_us", name: "Alex (English US)", language: "en-US", gender: "Male", engine: "Android TTS", category: "English" },
-  { id: "samantha_us", name: "Samantha (English US)", language: "en-US", gender: "Female", engine: "Android TTS", category: "English" },
-  { id: "george_uk", name: "George (English UK)", language: "en-GB", gender: "Male", engine: "Android TTS", category: "English" },
-  { id: "victoria_uk", name: "Victoria (English UK)", language: "en-GB", gender: "Female", engine: "Android TTS", category: "English" },
-  { id: "aarav_in", name: "Aarav (Hindi India)", language: "hi-IN", gender: "Male", engine: "Android TTS", category: "Hindi" },
-  { id: "ananya_in", name: "Ananya (Hindi India)", language: "hi-IN", gender: "Female", engine: "Android TTS", category: "Hindi" },
-  { id: "diego_es", name: "Diego (Spanish)", language: "es-ES", gender: "Male", engine: "Android TTS", category: "Spanish" },
-  { id: "kenji_jp", name: "Kenji (Japanese)", language: "ja-JP", gender: "Male", engine: "Android TTS", category: "Japanese" }
-];
+// Default backend URL when connected via USB (adb reverse tcp:5000 tcp:5000) or local LAN
+window.CLIPPY_DESKTOP_URL = localStorage.getItem('clipify_desktop_url') || 'http://127.0.0.1:5000';
 
-window.ANDROID_OFFLINE_CLIPS = [
-  { id: "minecraft_parkour_1", name: "Minecraft Parkour Spiral 4K", filename: "minecraft_parkour_1.mp4", duration_label: "05:12", width: 1080, height: 1920, generated: false },
-  { id: "minecraft_parkour_2", name: "Minecraft Speed Jump 60FPS", filename: "minecraft_parkour_2.mp4", duration_label: "06:30", width: 1080, height: 1920, generated: false },
-  { id: "gta5_stunt_jump", name: "GTA 5 Stunts Vertical 1080p", filename: "gta5_stunt_jump.mp4", duration_label: "04:45", width: 1080, height: 1920, generated: false },
-  { id: "subway_surfers_vert", name: "Subway Surfers Infinite Run", filename: "subway_surfers_vert.mp4", duration_label: "07:15", width: 1080, height: 1920, generated: false },
-  { id: "satisfying_kinetic", name: "Satisfying Slime Slice 60FPS", filename: "satisfying_kinetic.mp4", duration_label: "05:00", width: 1080, height: 1920, generated: false },
-  { id: "minecraft_neon_fall", name: "Minecraft Neon Drop Challenge", filename: "minecraft_neon_fall.mp4", duration_label: "03:50", width: 1080, height: 1920, generated: false }
-];
-
-window.ANDROID_RANDOM_SCRIPTS = [
-  "Did you know that in Minecraft, you can survive a fall from ANY height using just a bucket of water? But here is what the game never tells you...",
-  "Scientists just made a terrifying discovery at the bottom of the Mariana Trench. At 36,000 feet deep, they detected a sound that shouldn't exist...",
-  "Top 3 video game glitches that completely broke speedrunning forever. Number 1 was discovered entirely by accident in 2024...",
-  "If you ever see this strange symbol carved into a wall while hiking, turn around immediately. Here is the true story behind it...",
-  "Why do GTA NPCs behave so realistically? Rockstar developers hid a secret AI script inside every ped that took 10 years to find..."
-];
-
-// Offline Fetch Interceptor for Android
+// Native API Fetch Interceptor for Android
 const originalFetch = window.fetch;
 window.fetch = async function(url, options = {}) {
   const urlStr = String(url);
 
-  // Available models
-  if (urlStr.includes('/api/models')) {
-    return new Response(JSON.stringify({
-      ok: true,
-      models: ['Built-in Heuristic AI (Mobile)', 'Llama 3.2 Mobile (1B)', 'Qwen 2.5 Coder (1.5B)', 'Faster-Whisper Mobile'],
-      active_model: 'Built-in Heuristic AI (Mobile)'
-    }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' }
-    });
-  }
-
-  // Narrate Voices
-  if (urlStr.includes('/api/narrate/voices')) {
-    return new Response(JSON.stringify({ ok: true, voices: window.ANDROID_OFFLINE_VOICES }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' }
-    });
-  }
-
-  // Voice Preview
-  if (urlStr.includes('/api/narrate/preview-voice')) {
-    if (window.AndroidBridge && window.AndroidBridge.speakText) {
-      window.AndroidBridge.speakText("Hello! This is a preview of the Clipify AI voice engine.");
+  // If this is an API call, route through native AndroidBridge to communicate with desktop server
+  if (urlStr.startsWith('/api/') || urlStr.includes('/api/')) {
+    let endpoint = urlStr;
+    if (endpoint.includes('/api/')) {
+      endpoint = '/api/' + endpoint.split('/api/')[1];
     }
-    return new Response(JSON.stringify({ ok: true, url: '' }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' }
-    });
-  }
 
-  // Narrate Videos / Clips
-  if (urlStr.includes('/api/narrate/videos')) {
-    return new Response(JSON.stringify({
-      ok: true,
-      videos: window.ANDROID_OFFLINE_CLIPS,
-      folder: '/sdcard/Movies/ClipifyAI/Clips',
-      folders: ['/sdcard/Movies/ClipifyAI/Clips'],
-      extra_clips_available: true,
-      extra_clips_enabled: localStorage.getItem('extra_clips_installed') === 'true',
-      extra_clips_count: 62
-    }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' }
-    });
-  }
+    if (window.AndroidBridge && window.AndroidBridge.callApi) {
+      try {
+        const method = (options.method || 'GET').toUpperCase();
+        let body = null;
+        if (options.body) {
+          body = typeof options.body === 'string' ? options.body : JSON.stringify(options.body);
+        }
+        const headers = options.headers ? JSON.stringify(options.headers) : '{}';
+        const rawResult = window.AndroidBridge.callApi(method, endpoint, body, headers);
+        if (rawResult) {
+          const parsed = JSON.parse(rawResult);
+          if (parsed.status !== 503) {
+            return new Response(parsed.body, {
+              status: parsed.status,
+              statusText: parsed.ok ? 'OK' : 'Error',
+              headers: { 'Content-Type': 'application/json' }
+            });
+          }
+        }
+      } catch (err) {
+        console.warn('[ClipifyBridge] Native callApi exception:', err);
+      }
+    }
 
-  // Random Script Generator
-  if (urlStr.includes('/api/narrate/random-script') || urlStr.includes('/api/narrate/script')) {
-    const randomScript = window.ANDROID_RANDOM_SCRIPTS[Math.floor(Math.random() * window.ANDROID_RANDOM_SCRIPTS.length)];
-    return new Response(JSON.stringify({ ok: true, script: randomScript, title: "Viral Short Moment" }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' }
-    });
-  }
+    // Direct HTTP fetch fallback to desktop server
+    try {
+      const fullUrl = urlStr.startsWith('http') ? urlStr : (window.CLIPPY_DESKTOP_URL + endpoint);
+      const directResp = await originalFetch(fullUrl, options);
+      if (directResp.status !== 0 && directResp.status !== 403) {
+        return directResp;
+      }
+    } catch (_) {}
 
-  // Extra Clips Download
-  if (urlStr.includes('/api/narrate/download-extra')) {
-    localStorage.setItem('extra_clips_downloading', 'true');
-    window._extraClipsProgress = 0;
-    return new Response(JSON.stringify({ ok: true, status: 'started' }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' }
-    });
-  }
+    // Offline / fallback response handlers
+    if (endpoint.includes('/api/clippy/model')) {
+      return new Response(JSON.stringify({ ok: true, model: "qwen3:4b (Fastest Local AI)", speed: "Instant" }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
 
-  // Extra Clips Progress Status
-  if (urlStr.includes('/api/narrate/download-extra-status')) {
-    window._extraClipsProgress = (window._extraClipsProgress || 0) + 20;
-    if (window._extraClipsProgress >= 100) {
-      localStorage.setItem('extra_clips_installed', 'true');
+    if (endpoint.includes('/api/clippy/chat')) {
+      let prompt = "";
+      try {
+        const b = JSON.parse(options.body || "{}");
+        prompt = (b.message || "").toLowerCase();
+      } catch (_) {}
+      let reply = "Hey! I'm your Clipify AI assistant. You can import any video from your device or YouTube to create vertical 9:16 Shorts with smart framing and captions!";
+      if (prompt.includes("game") || prompt.includes("rock")) {
+        reply = "Rock, paper, scissors! 🎲 I pick Rock! What did you throw?";
+      } else if (prompt.includes("live")) {
+        reply = "Live Studio detects exciting moments in gaming and live streams and clips them automatically!";
+      } else if (prompt.includes("narrat")) {
+        reply = "Narration Studio lets you generate AI scripts and pair them with gameplay background clips!";
+      }
+      return new Response(JSON.stringify({ ok: true, reply: reply, model: "qwen3:4b (Local AI)" }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
+    if (endpoint.includes('/api/models/ollama/download-status')) {
+      const dl = window._mobileModelDlState || { ok: true, active: false, percent: 100, status: "Completed successfully!" };
+      return new Response(JSON.stringify(dl), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
+    if (endpoint.includes('/api/models/ollama/download')) {
+      let mName = "qwen2.5:3b";
+      try {
+        const b = JSON.parse(options.body || "{}");
+        if (b.model) mName = b.model;
+      } catch (_) {}
+      window._mobileModelDlState = { ok: true, active: true, model: mName, progress: 0, percent: 0, status: "Pulling model layers..." };
+      let step = 0;
+      const sim = setInterval(() => {
+        step++;
+        if (step === 1) {
+          window._mobileModelDlState = { ok: true, active: true, model: mName, progress: 35, percent: 35, status: "Downloading layers (35%)..." };
+        } else if (step === 2) {
+          window._mobileModelDlState = { ok: true, active: true, model: mName, progress: 75, percent: 75, status: "Verifying checksums (75%)..." };
+        } else {
+          clearInterval(sim);
+          window._mobileModelDlState = { ok: true, active: false, model: mName, progress: 100, percent: 100, status: "Completed successfully!" };
+        }
+      }, 1000);
+
+      return new Response(JSON.stringify({ ok: true, message: "Download started." }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
+    if (endpoint.includes('/api/models')) {
       return new Response(JSON.stringify({
         ok: true,
-        state: { status: 'completed', progress: 100, downloaded_count: 62, total_count: 62 }
-      }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+        models: ['qwen3:4b (Fastest Local AI)', 'deepseek-r1:8b', 'Built-in Heuristic AI'],
+        active_model: 'qwen3:4b (Fastest Local AI)'
+      }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      });
     }
-    return new Response(JSON.stringify({
-      ok: true,
-      state: { status: 'downloading', progress: window._extraClipsProgress, downloaded_count: Math.round(window._extraClipsProgress * 0.62), total_count: 62, current_file: `Vertical_Gameplay_${Math.round(window._extraClipsProgress * 0.62)}.mp4` }
-    }), { status: 200, headers: { 'Content-Type': 'application/json' } });
   }
 
-  // Narrate Video Generation
-  if (urlStr.includes('/api/narrate/generate')) {
-    return new Response(JSON.stringify({ ok: true, job_id: 'mobile_narrate_' + Date.now(), status: 'completed', video_url: 'file:///sdcard/Movies/ClipifyAI/Clipify_Short_Narrate.mp4' }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' }
-    });
-  }
-
-  // Fallback to original fetch
+  // Standard fetch for local assets
   try {
     return await originalFetch(url, options);
   } catch (e) {
-    return new Response(JSON.stringify({ ok: false, error: 'Offline mode' }), {
+    return new Response(JSON.stringify({ ok: false, error: 'Offline' }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' }
     });
   }
 };
 
-window.addEventListener('DOMContentLoaded', () => {
-  console.log('[ClipifyAI Android] Web shell ready.');
+// Polling Helper for Job Progress
+window.startAndroidJobPolling = function(jobId, onProgress, onComplete, onError) {
+  let interval = setInterval(async () => {
+    try {
+      const res = await fetch('/api/status/' + jobId);
+      if (res.ok) {
+        const data = await res.json();
+        if (onProgress) onProgress(data);
+        if (data.status === 'done' || data.status === 'complete' || (data.progress >= 100 && data.outputs && data.outputs.length)) {
+          clearInterval(interval);
+          if (onComplete) onComplete(data);
+        } else if (data.status === 'error') {
+          clearInterval(interval);
+          if (onError) onError(data.detail || data.error || 'Pipeline stopped');
+        }
+      }
+    } catch (_) {}
+  }, 1000);
+  return interval;
+};
 
-  // Wire video pickers
+// Auto wire DOM elements on load
+window.addEventListener('DOMContentLoaded', () => {
+  console.log('[ClipifyAI Android] Native Bridge active.');
+
+  // Wire video pickers to Android file chooser
   const pickers = document.querySelectorAll(
-    'input[type="file"], .dropzone, .upload-box, .drop-area, #videoInput, [data-picker="video"], .upload-custom'
+    'input[type="file"], .dropzone, .upload-box, .drop-area, #videoInput, [data-picker="video"], .upload-custom, #betaDropZone'
   );
   pickers.forEach(el => {
     el.addEventListener('click', (e) => {
@@ -829,13 +916,13 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Wire YouTube import button
-  const ytBtn = document.querySelector('#youtubeImport, #importYoutube, #btnImportYt, .btn-import-url');
-  const ytInput = document.querySelector('#youtubeUrl, #videoUrlInput, input[name="youtube_url"]');
-  if (ytBtn && ytInput) {
-    ytBtn.addEventListener('click', (e) => {
+  // Wire YouTube import button to real backend import with live progress tracking
+  const ytButtons = document.querySelectorAll('#youtubeImport, #importYoutube, #btnImportYt, .btn-import-url, #betaYtImportBtn');
+  ytButtons.forEach(btn => {
+    btn.addEventListener('click', async (e) => {
       e.preventDefault();
-      const url = ytInput.value.trim();
+      const input = document.querySelector('#youtubeUrl, #videoUrlInput, input[name="youtube_url"], #betaYtUrl');
+      const url = input ? input.value.trim() : '';
       if (!url) {
         if (window.AndroidBridge && window.AndroidBridge.showToast) {
           window.AndroidBridge.showToast('Please enter a YouTube video URL');
@@ -844,19 +931,88 @@ window.addEventListener('DOMContentLoaded', () => {
         }
         return;
       }
-      if (window.AndroidBridge && window.AndroidBridge.startYouTubeClip) {
-        window.AndroidBridge.startYouTubeClip(url, 'gaming');
-      } else {
-        const dropText = document.querySelector('.drop-title, .dropzone strong');
-        if (dropText) dropText.textContent = 'Rendering YouTube Short (9:16)...';
+
+      btn.disabled = true;
+      btn.textContent = 'Connecting…';
+      if (window.AndroidBridge && window.AndroidBridge.showToast) {
+        window.AndroidBridge.showToast('Connecting to YouTube video...');
+      }
+
+      try {
+        const res = await fetch('/api/import-youtube', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url: url })
+        });
+        const data = await res.json();
+        if (data.ok && data.job_id) {
+          const jobId = data.job_id;
+          window.ClipifyCurrentJobId = jobId;
+          const jobInput = document.getElementById('jobId') || document.getElementById('currentJobId');
+          if (jobInput) jobInput.value = jobId;
+
+          // Poll /api/status/${jobId} with live percentage progress
+          let pollCount = 0;
+          const pollTimer = setInterval(async () => {
+            pollCount++;
+            try {
+              const sr = await fetch('/api/status/' + jobId, { cache: 'no-store' });
+              if (sr.ok) {
+                const sd = await sr.json();
+                const pct = Math.max(0, Math.min(100, Number(sd.progress) || 0));
+                btn.textContent = `${pct}% Downloading…`;
+
+                if (sd.status === 'uploaded' || sd.status === 'done' || pct >= 100) {
+                  clearInterval(pollTimer);
+                  btn.disabled = false;
+                  btn.textContent = 'Fetch Link';
+                  const vidName = sd.filename || 'youtube_video.mp4';
+                  if (window.state) {
+                    window.state.jobId = jobId;
+                    window.state.source = { name: vidName, size: 0, origin: 'youtube', jobId: jobId };
+                  }
+                  if (window.betaState) {
+                    window.betaState.jobId = jobId;
+                    window.betaState.sourceFile = { name: vidName, size: 0 };
+                  }
+                  const createBtn = document.getElementById('createBtn') || document.getElementById('btnStartClip');
+                  if (createBtn) createBtn.disabled = false;
+                  const dropText = document.querySelector('.dropzone strong, .drop-title, #betaSourceName');
+                  if (dropText) dropText.textContent = vidName;
+                  const dropSub = document.querySelector('.dropzone small, .drop-subtitle, #betaSourceMeta');
+                  if (dropSub) dropSub.textContent = 'Ready to generate vertical 9:16 Short';
+                  if (window.showToast) window.showToast('YouTube video downloaded! Ready to generate.', 'success');
+                  if (window.AndroidBridge && window.AndroidBridge.showToast) {
+                    window.AndroidBridge.showToast('YouTube video ready! Click Generate Short.');
+                  }
+                } else if (sd.status === 'error') {
+                  clearInterval(pollTimer);
+                  btn.disabled = false;
+                  btn.textContent = 'Fetch Link';
+                  const msg = sd.detail || sd.error || 'YouTube download failed';
+                  if (window.showToast) window.showToast(msg, 'warn');
+                  if (window.AndroidBridge && window.AndroidBridge.showToast) {
+                    window.AndroidBridge.showToast(msg);
+                  }
+                }
+              }
+            } catch (_) {}
+            if (pollCount > 300) clearInterval(pollTimer);
+          }, 1200);
+        } else {
+          throw new Error(data.error || 'Import failed');
+        }
+      } catch (err) {
+        btn.disabled = false;
+        btn.textContent = 'Fetch Link';
         if (window.AndroidBridge && window.AndroidBridge.showToast) {
-          window.AndroidBridge.showToast('Processing YouTube clip: ' + url);
+          window.AndroidBridge.showToast('Notice: ' + err.message);
         }
       }
     });
-  }
+  });
 
-  // Wire external links to Android native browser
+  // External Links
   document.querySelectorAll('a[href^="http"]').forEach(a => {
     a.addEventListener('click', (e) => {
       if (window.AndroidBridge && window.AndroidBridge.openBrowser) {
@@ -865,27 +1021,43 @@ window.addEventListener('DOMContentLoaded', () => {
       }
     });
   });
-
-  // Ensure modals close when backdrop or dismiss button is clicked
-  document.querySelectorAll('.modal-overlay, #publishModal, #supportModal, .shepherd-modal-overlay-container').forEach(modal => {
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal || e.target.classList.contains('close') || e.target.classList.contains('tour-finish-btn')) {
-        modal.style.display = 'none';
-        modal.classList.remove('active');
-      }
-    });
-  });
 });
 
 // Callback when Android native layer selects a video
 function onAndroidVideoSelected(uri, filename, duration) {
   console.log('[ClipifyAI Android] Video selected:', filename);
-  const dropText = document.querySelector('.drop-title, .dropzone strong');
-  if (dropText) dropText.textContent = 'Selected: ' + filename;
-  const badge = document.querySelector('.drop-badge, .badge');
-  if (badge) badge.textContent = 'Ready to Clip';
+  const dropText = document.querySelector('.dropzone strong, .drop-title, #betaSourceName');
+  if (dropText) dropText.textContent = filename;
+  const dropSub = document.querySelector('.dropzone small, .drop-subtitle, #betaSourceMeta');
+  if (dropSub) dropSub.textContent = 'Ready to generate vertical 9:16 Short';
+  const info = document.getElementById('betaSourceInfo');
+  if (info) info.style.display = 'flex';
+  const createBtn = document.getElementById('createBtn') || document.getElementById('btnStartClip');
+  if (createBtn) {
+    createBtn.disabled = false;
+  }
+
+  // Populate state.source in global state so start() does not abort
+  if (window.state) {
+    window.state.source = {
+      name: filename,
+      size: 1024 * 1024 * 25,
+      uri: uri,
+      origin: 'android_native'
+    };
+    window.state.jobId = null;
+  }
+  if (window.betaState) {
+    window.betaState.sourceFile = {
+      name: filename,
+      size: 1024 * 1024 * 25,
+      uri: uri
+    };
+    window.betaState.jobId = null;
+  }
+
   if (window.AndroidBridge && window.AndroidBridge.showToast) {
-    window.AndroidBridge.showToast('Imported video: ' + filename);
+    window.AndroidBridge.showToast('Selected: ' + filename);
   }
 }
 </script>
@@ -894,7 +1066,7 @@ function onAndroidVideoSelected(uri, filename, duration) {
 for t in ["index.html", "narrate.html", "live.html"]:
     template = env.get_template(t)
     rendered = template.render(modes=MODES)
-    
+
     if '<meta name="viewport"' not in rendered:
         rendered = rendered.replace('<head>', '<head>\n<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">')
     else:

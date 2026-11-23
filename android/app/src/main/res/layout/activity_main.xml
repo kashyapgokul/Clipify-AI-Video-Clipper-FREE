@@ -57,9 +57,10 @@
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="34dp"
-            android:text="💡 Tour"
-            android:textColor="@color/clipify_text"
+            android:text="✨ AI Assistant"
+            android:textColor="@color/clipify_purple"
             android:textSize="11sp"
+            android:textStyle="bold"
             android:paddingHorizontal="6dp"
             android:layout_marginEnd="4dp" />
 
