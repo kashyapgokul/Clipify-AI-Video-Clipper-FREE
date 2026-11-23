@@ -5,12 +5,12 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Clipify AI</title>
-  <link rel="icon" type="image/png" href="{{ url_for('static', filename='icon.png', v='4.0.7') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css', v='4.0.11.2') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='studio.css', v='4.0.9') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='model_hub.css', v='4.0.9') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='tour.css', v='4.0.11') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='cache_manager.css', v='4.0.9') }}">
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='icon.png', v='4.0.12') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css', v='4.0.12.3') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='studio.css', v='4.0.12') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='model_hub.css', v='4.0.12') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='tour.css', v='4.0.12.3') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='cache_manager.css', v='4.0.12') }}">
 </head>
 
 <body>
@@ -85,7 +85,7 @@
         <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67" />
         </svg>
-        <span>Update</span> <span class="nav-ver-tag" id="navVersionTag">v4.0.11</span>
+        <span>Update</span> <span class="nav-ver-tag" id="navVersionTag">v4.0.12</span>
       </a>
       <a href="#cache" id="navClearCacheLink" title="Clear transcription cache & imported YouTube videos">
         <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
@@ -107,6 +107,13 @@
         </svg>
         <span>Support Us</span>
         <span class="nav-star-pill">★ Star</span>
+      </a>
+      <a href="#promoters" id="navPromotersLink" class="nav-promoters-link" title="Promoters Highlighted — Creator Spotlight">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+        </svg>
+        <span>Promoters</span>
+        <span class="nav-promoter-pill">Spotlight</span>
       </a>
     </nav>
     <div class="side-spacer"></div>
@@ -886,7 +893,9 @@
       </div>
     </section>
 
-    <section id="beta" class="page-section secondary-section">
+    <section id="beta" class="page-section secondary-section" style="position:relative;overflow:hidden;">
+      <!-- Interactive ASCII Dot Matrix with Shimmering "CLIPIFY" Background -->
+      <canvas id="betaMatrixCanvas" class="beta-matrix-canvas"></canvas>
       <header class="section-page-head">
         <div>
           <span class="eyebrow" style="color:var(--accent);display:flex;align-items:center;gap:6px;"><span
@@ -1126,6 +1135,44 @@
                 <div class="beta-drag-badge">
                   <span>✥ Drag to Move</span> · <span id="betaDragCoordBadge">50%, 25%</span> · <span id="betaDragTimeBadge">0.0s – 5.0s</span>
                 </div>
+              </div>
+            </div>
+
+            <!-- Interactive Dual-Handle Scrubber Timeline Under Video Preview (Visible once video is previewed) -->
+            <div id="betaScrubberTimeline" class="beta-scrubber-timeline" style="display:none;margin-top:14px;padding:12px 14px;background:#121215;border:1px solid rgba(255,255,255,0.08);border-radius:12px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:6px;">
+                <div style="display:flex;align-items:center;gap:6px;">
+                  <span style="font-size:0.85rem;">✂️</span>
+                  <b style="font-size:0.82rem;color:#ffffff;">Visual Dual-Handle Timeline Scrubber</b>
+                  <span style="font-size:0.7rem;color:var(--muted-2);">(Drag handles to cut)</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <span id="betaTrimSpanBadge" class="format-pill" style="font-size:0.72rem;background:rgba(155,92,255,0.15);color:#c084fc;border-color:rgba(155,92,255,0.3);">0.0s – 5.0s (5.0s)</span>
+                  <button type="button" class="ghost compact" id="betaTrimResetFull" style="padding:2px 8px;font-size:0.7rem;">Reset Full</button>
+                </div>
+              </div>
+
+              <div class="beta-scrub-track-container" id="betaScrubTrackContainer">
+                <div class="beta-scrub-track" id="betaScrubTrack">
+                  <!-- Active span highlight -->
+                  <div class="beta-scrub-highlight" id="betaScrubHighlight"></div>
+                  <!-- Left / Start Handle -->
+                  <div class="beta-scrub-handle beta-scrub-handle-start" id="betaHandleStart" title="Drag to adjust Start Time">
+                    <div class="beta-handle-line"></div>
+                    <div class="beta-handle-tooltip" id="betaTooltipStart">0.0s</div>
+                  </div>
+                  <!-- Right / End Handle -->
+                  <div class="beta-scrub-handle beta-scrub-handle-end" id="betaHandleEnd" title="Drag to adjust End Time">
+                    <div class="beta-handle-line"></div>
+                    <div class="beta-handle-tooltip" id="betaTooltipEnd">5.0s</div>
+                  </div>
+                </div>
+              </div>
+
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;font-size:0.72rem;color:var(--muted-2);">
+                <span id="betaTrackMinLabel">00:00</span>
+                <span id="betaTrackMidLabel" style="color:rgba(255,255,255,0.4);">Drag left/right bars to preview trimmed cut points</span>
+                <span id="betaTrackMaxLabel">00:00</span>
               </div>
             </div>
 
@@ -1517,17 +1564,119 @@
       </div>
     </div>
 
+    <!-- Sub-window Update & Restarting Modal (Blurred background, app logo, live console) -->
+    <div id="clipifyRestartOverlay" class="clipify-restart-overlay" style="display:none;">
+      <canvas id="restartAsciiCanvas" class="restart-ascii-canvas"></canvas>
+      <div class="restart-modal-window">
+        <div class="restart-modal-header">
+          <div class="restart-logo-wrapper">
+            <img src="{{ url_for('static', filename='icon.png') }}" alt="Clipify AI Logo" class="restart-app-logo" />
+            <div class="restart-logo-glow"></div>
+          </div>
+          <div class="restart-title-group">
+            <h2 class="restart-modal-title">Updating Clipify AI...</h2>
+            <div class="restart-modal-subtitle">
+              <span class="restart-pulse-dot"></span>
+              <span id="restartStatusLabel">Applying core updates &amp; rebooting local AI engine…</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="restart-console-wrapper">
+          <div class="restart-console-header">
+            <div class="restart-console-dots">
+              <span class="dot-red"></span>
+              <span class="dot-yellow"></span>
+              <span class="dot-green"></span>
+            </div>
+            <span class="restart-console-title">Live Update Console</span>
+            <span class="restart-console-badge" id="restartConsoleBadge">SYNCING</span>
+          </div>
+          <div class="restart-console-body" id="restartConsoleBody">
+            <div class="console-line info">[Init] Connecting to local update controller...</div>
+          </div>
+        </div>
+
+        <div class="restart-footer">
+          <div class="restart-progress-info">
+            <span id="restartProgressDetail">Downloading &amp; syncing latest assets...</span>
+            <span id="restartProgressPct">15%</span>
+          </div>
+          <div class="restart-progress-track">
+            <div class="restart-progress-bar" id="restartProgressBar" style="width: 15%;"></div>
+          </div>
+          <div class="restart-action-row" id="restartActionRow" style="display:none;margin-top:10px;">
+            <button type="button" class="btn-restart-retry" id="btnRestartForceReload">Force Reload Clipify</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sub-window Update & Restarting Modal (Blurred background, app logo, live console) -->
+    <div id="clipifyRestartOverlay" class="clipify-restart-overlay" style="display:none;">
+      <canvas id="restartAsciiCanvas" class="restart-ascii-canvas"></canvas>
+      <div class="restart-modal-window">
+        <div class="restart-modal-header">
+          <div class="restart-logo-wrapper">
+            <img src="{{ url_for('static', filename='icon.png') }}" alt="Clipify AI Logo" class="restart-app-logo" />
+            <div class="restart-logo-glow"></div>
+          </div>
+          <div class="restart-title-group">
+            <h2 class="restart-modal-title">Updating Clipify AI...</h2>
+            <div class="restart-modal-subtitle">
+              <span class="restart-pulse-dot"></span>
+              <span id="restartStatusLabel">Applying core updates &amp; rebooting local AI engine…</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="restart-console-wrapper">
+          <div class="restart-console-header">
+            <div class="restart-console-dots">
+              <span class="dot-red"></span>
+              <span class="dot-yellow"></span>
+              <span class="dot-green"></span>
+            </div>
+            <span class="restart-console-title">Live Update Console</span>
+            <span class="restart-console-badge" id="restartConsoleBadge">SYNCING</span>
+          </div>
+          <div class="restart-console-body" id="restartConsoleBody">
+            <div class="console-line info">[Init] Connecting to local update controller...</div>
+          </div>
+        </div>
+
+        <div class="restart-footer">
+          <div class="restart-progress-info">
+            <span id="restartProgressDetail">Downloading &amp; syncing latest assets...</span>
+            <span id="restartProgressPct">15%</span>
+          </div>
+          <div class="restart-progress-track">
+            <div class="restart-progress-bar" id="restartProgressBar" style="width: 15%;"></div>
+          </div>
+          <div class="restart-action-row" id="restartActionRow" style="display:none;margin-top:10px;">
+            <button type="button" class="btn-restart-retry" id="btnRestartForceReload">Force Reload Clipify</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <footer>Clipify AI · local AI editing workspace · WhisperX + ClipsAI + Ollama + FFmpeg</footer>
   </main>
-  <script src="{{ url_for('static', filename='pipeline_status.js', v='4.0.7') }}"></script>
-  <script src="{{ url_for('static', filename='review_player.js', v='4.0.7') }}"></script>
-  <script src="{{ url_for('static', filename='forest_game.js', v='4.0.7') }}"></script>
-  <script src="{{ url_for('static', filename='updater.js', v='4.0.7') }}"></script>
-  <script src="{{ url_for('static', filename='model_hub.js', v='4.0.7') }}"></script>
-  <script src="{{ url_for('static', filename='app.js', v='4.0.11.2') }}"></script>
-  <script src="{{ url_for('static', filename='tour.js', v='4.0.11') }}"></script>
-  <script src="{{ url_for('static', filename='cache_manager.js', v='4.0.9') }}"></script>
-  <script src="{{ url_for('static', filename='clippy.js', v='4.0.11.2') }}"></script>
+  <script src="{{ url_for('static', filename='pipeline_status.js', v='4.0.12') }}"></script>
+  <script src="{{ url_for('static', filename='review_player.js', v='4.0.12') }}"></script>
+  <script src="{{ url_for('static', filename='forest_game.js', v='4.0.12') }}"></script>
+  <script src="{{ url_for('static', filename='updater.js', v='4.0.12.5') }}"></script>
+  <script src="{{ url_for('static', filename='model_hub.js', v='4.0.12') }}"></script>
+  <script src="{{ url_for('static', filename='app.js', v='4.0.12.3') }}"></script>
+  <script src="{{ url_for('static', filename='beta_matrix.js', v='4.0.12.3') }}"></script>
+  <script src="{{ url_for('static', filename='tour.js', v='4.0.12.3') }}"></script>
+  <script src="{{ url_for('static', filename='cache_manager.js', v='4.0.12') }}"></script>
+  <script src="{{ url_for('static', filename='clippy.js', v='4.0.12.3') }}"></script>
+  <script>
+    if (window.location.search.includes('open_support=1') || window.location.hash.includes('support')) {
+      window.addEventListener('load', () => setTimeout(() => window.showSupportModal && window.showSupportModal(), 300));
+    }
+  </script>
 </body>
 
 </html>
